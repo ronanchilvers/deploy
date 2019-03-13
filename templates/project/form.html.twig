@@ -1,0 +1,20 @@
+<form method="POST" action="">
+
+    <dl class="form-group">
+        <dt><label for="project_name">Name</label></dt>
+        <dd><input class="form-control" type="text" placeholder="My Cool Project" value="{{ project.name }}" id="project_name" name="project[name]"></dd>
+    </dl>
+
+    <dl class="form-group">
+        <dt><label for="project_notes">Notes</label></dt>
+        <dd>
+            <textarea class="form-control" id="project_notes" name="project[notes]">{{ project.notes }}</textarea>
+        </dd>
+    </dl>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save changes</button>
+        <a class="btn" href="{{ path_for('project.index') }}">Cancel</a>
+    </div>
+
+</form>

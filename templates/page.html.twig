@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="/css/app.css">
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <div class="container-xl">
+        <div class="pagehead">
+            <h1>Deploy</h1>
+        </div>
+            <div class="col-2 float-left p-2">
+                <nav class="menu" aria-label="Person settings">
+                {% for item in main_nav %}
+                    {% set selected = is_current_path(item.route) %}
+                    <a class="menu-item{% if selected %} selected{% endif %}" href="{{ path_for(item.route) }}"{% if selected %} aria-current="page"{% endif %}>{{ item.name }}</a>
+                {% endfor %}
+                </nav>
+            </div>
+            <div class="col-10 float-left p-2">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

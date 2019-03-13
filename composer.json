@@ -1,0 +1,44 @@
+{
+    "name": "ronanchilvers/slim-base",
+    "description": "Base framework that extends slim and adds some useful components",
+    "type": "project",
+    "require": {
+        "defuse/php-encryption": "^2.1",
+        "dflydev/fig-cookies": "^1.0",
+        "illuminate/database": "^5.5",
+        "monolog/monolog": "^1.23",
+        "robmorgan/phinx": "^0.10.6",
+        "ronanchilvers/container-bridge-slim": "~1.0",
+        "ronanchilvers/foundation": "dev-master",
+        "ronanchilvers/sessions": "dev-master",
+        "slim/slim": "^3.9",
+        "slim/twig-view": "^2.3",
+        "symfony/console": "^3.4"
+    },
+    "authors": [
+        {
+            "name": "Ronan Chilvers",
+            "email": "ronan@thelittledot.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src"
+        }
+    },
+    "config": {
+        "process-timeout" : 0,
+        "platform": {
+            "php": "7.1.8"
+        }
+    },
+    "scripts": {
+        "serve": "/usr/bin/env php -S localhost:8001 -t web"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:ronanchilvers/foundation.git"
+        }
+    ]
+}
