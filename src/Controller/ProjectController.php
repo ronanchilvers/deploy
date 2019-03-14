@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Facades\Router;
 use App\Facades\View;
+use App\MessageCollection;
 use App\Model\Project;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -48,17 +49,21 @@ class ProjectController
         if ($request->isMethod('POST')) {
             $data = $request->getParsedBody()['project'];
             $project->fill($data);
-            if ($project->save()) {
+            if ($project->validate() && $project->save()) {
                 return $response->withRedirect(
                     Router::pathFor('project.index')
                 );
             }
+            $errors = $project->getErrors();
         }
 
         return View::render(
             $response,
             'project/add.html.twig',
-            []
+            [
+                'errors'  => $errors,
+                'project' => $project
+            ]
         );
     }
 
@@ -81,19 +86,21 @@ class ProjectController
         if ($request->isMethod('POST')) {
             $data = $request->getParsedBody()['project'];
             $project->fill($data);
-            if ($project->save()) {
+            if ($project->validate() && $project->save()) {
                 return $response->withRedirect(
                     Router::pathFor('project.edit', [
                         'id' => $project->id
                     ])
                 );
             }
+            $errors = $project->getErrors();
         }
 
         return View::render(
             $response,
             'project/edit.html.twig',
             [
+                'errors'  => $errors,
                 'project' => $project
             ]
         );

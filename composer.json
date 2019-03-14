@@ -13,7 +13,8 @@
         "ronanchilvers/sessions": "dev-master",
         "slim/slim": "^3.9",
         "slim/twig-view": "^2.3",
-        "symfony/console": "^3.4"
+        "symfony/console": "^3.4",
+        "respect/validation": "^1.1"
     },
     "authors": [
         {

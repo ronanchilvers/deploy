@@ -1,8 +1,9 @@
 <form method="POST" action="">
 
-    <dl class="form-group">
+    <dl class="form-group {% if errors.has('name') %}errored{% endif %}">
         <dt><label for="project_name">Name</label></dt>
         <dd><input class="form-control" type="text" placeholder="My Cool Project" value="{{ project.name }}" id="project_name" name="project[name]"></dd>
+        <dd class="error" id="project_name_error">{{ errors.str('name') }}</dd>
     </dl>
 
     <dl class="form-group">
