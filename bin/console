@@ -5,8 +5,8 @@
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 
+use App\Console\Application;
 use Ronanchilvers\Container\Container;
-use Ronanchilvers\Foundation\Console\Application;
 
 require(__DIR__ . "/../vendor/autoload.php");
 
