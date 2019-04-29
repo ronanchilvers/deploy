@@ -62,7 +62,7 @@ class ProjectController
             'project/add.html.twig',
             [
                 'errors'  => $errors,
-                'project' => $project
+                'project' => $project,
             ]
         );
     }

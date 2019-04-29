@@ -6,6 +6,24 @@
         <dd class="error" id="project_name_error">{{ errors.str('name') }}</dd>
     </dl>
 
+    <dl class="form-group {% if errors.has('provider') %}errored{% endif %}">
+        <dt><label for="project_provider">Provider</label></dt>
+        <dd>
+            <select class="form-control" id="project_provider" name="project[provider]">
+            {% for key,name in project.getProviderOptions() %}
+                <option value="{{ key }}" {% if key == project.provider %}selected="selected"{% endif %}>{{ name }}</option>
+            {% endfor %}
+            </select>
+        </dd>
+        <dd class="error" id="project_provider_error">{{ errors.str('provider') }}</dd>
+    </dl>
+
+    <dl class="form-group {% if errors.has('repository') %}errored{% endif %}">
+        <dt><label for="project_repository">Repository</label></dt>
+        <dd><input class="form-control" type="text" placeholder="vendor/project" value="{{ project.repository }}" id="project_repository" name="project[repository]"></dd>
+        <dd class="error" id="project_repository_error">{{ errors.str('repository') }}</dd>
+    </dl>
+
     <dl class="form-group">
         <dt><label for="project_notes">Notes</label></dt>
         <dd>

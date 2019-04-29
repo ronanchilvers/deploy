@@ -30,8 +30,8 @@ class Release extends AbstractModel
     {
         return [
             'project' => Validator::notEmpty()->intVal()->min(1),
-            'hash' => Validator::stringType(),
-            'status' => Validator::notEmpty()->in(['new', 'deployed', 'error']),
+            'hash'    => Validator::stringType(),
+            'status'  => Validator::notEmpty()->in(['new', 'deployed', 'error']),
         ];
     }
 }
