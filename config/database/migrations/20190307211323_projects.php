@@ -20,6 +20,7 @@ class Projects extends AbstractMigration
             ->addColumn('keep_releases', 'integer', [ 'default' => 5 ])
             ->addColumn('provider', 'string', [ 'length' => 15, 'null' => false ])
             ->addColumn('repository', 'string', [ 'length' => 1024, 'null' => false ])
+            ->addColumn('branch', 'string', [ 'length' => 1024, 'null' => false ])
             ->addColumn('last_deployment', 'datetime', [ 'null' => true, 'default' => null ])
             ->addTimestamps()
             ->create();

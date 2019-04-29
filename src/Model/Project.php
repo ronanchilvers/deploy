@@ -22,11 +22,16 @@ class Project extends AbstractModel
         'name',
         'provider',
         'repository',
+        'branch',
         'notes',
     ];
 
     protected $fieldNames = [
         // 'name' => 'Project Name',
+    ];
+
+    protected $attributes = [
+        'branch' => 'master',
     ];
 
     /**
@@ -53,7 +58,7 @@ class Project extends AbstractModel
      */
     public function getCloneUrl()
     {
-        return $this->strategy->getCloneUrl();
+        return $this->strategy()->getCloneUrl();
     }
 
     /**

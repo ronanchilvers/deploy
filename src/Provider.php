@@ -43,6 +43,7 @@ class Provider implements ServiceProviderInterface
                     )
                 );
             }
+            Registry::clear();
             Registry::addLogger($logger);
 
             return $logger;

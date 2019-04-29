@@ -36,7 +36,7 @@ class Builder
     protected $gitCommands = [
         'clone'    => 'clone --progress --recursive %url% %dir% --branch %localbranch%',
         'prepare'  => 'submodule update --init --recursive',
-        'checkout' => 'checkout -q -f %branch%',
+        'checkout' => 'checkout -q -f %localbranch%',
         'reset'    => 'reset --hard %revision%',
     ];
 
@@ -218,7 +218,8 @@ class Builder
                 'checkout',
                 [ '%dir%' => $this->cloneDir ]
             ),
-            sprintf('Unable to prepare project %s (%d)', $this->project->name, $this->project->id)
+            sprintf('Unable to prepare project %s (%d)', $this->project->name, $this->project->id),
+            $this->cloneDir
         );
 
         Log::debug('Checking for composer support', [
@@ -235,7 +236,7 @@ class Builder
                 'release_number' => $release->number,
             ]);
             $this->execute(
-                $this->composerPath . ' --no-interaction --no-dev --optimize-autoloader'
+                $this->composerPath . ' install --no-interaction --no-dev --optimize-autoloader',
                 sprintf('Unable to run composer for new release'),
                 $this->cloneDir
             );

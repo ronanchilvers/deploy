@@ -24,6 +24,12 @@
         <dd class="error" id="project_repository_error">{{ errors.str('repository') }}</dd>
     </dl>
 
+    <dl class="form-group {% if errors.has('branch') %}errored{% endif %}">
+        <dt><label for="project_branch">Branch</label></dt>
+        <dd><input class="form-control" type="text" placeholder="vendor/project" value="{{ project.branch}}" id="project_branch" name="project[branch]"></dd>
+        <dd class="error" id="project_branch_error">{{ errors.str('branch') }}</dd>
+    </dl>
+
     <dl class="form-group">
         <dt><label for="project_notes">Notes</label></dt>
         <dd>
