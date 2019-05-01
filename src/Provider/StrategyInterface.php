@@ -12,9 +12,17 @@ namespace App\Provider;
 interface StrategyInterface
 {
     /**
+     * Get the deployment config from the repository
+     *
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getDeployConfig(): ?string;
+
+    /**
      * Get the clone URL for this strategy
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getCloneUrl();
+    public function getCloneUrl(): string;
 }

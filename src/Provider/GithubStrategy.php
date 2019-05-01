@@ -12,13 +12,24 @@ use App\Provider\StrategyInterface;
 class GithubStrategy extends AbstractStrategy implements StrategyInterface
 {
     /**
+     * Get the deployment config from the repository
+     *
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getDeployConfig(): ?string
+    {
+        return null;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getCloneUrl()
+    public function getCloneUrl(): string
     {
-        $repository = $this->getProject()->repository;
+        $repository = $this->project()->repository;
 
         return sprintf(
             "https://github.com/%s.git",

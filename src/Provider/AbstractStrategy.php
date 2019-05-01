@@ -33,7 +33,7 @@ abstract class AbstractStrategy
      * @return App\Model\Project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function getProject()
+    protected function project()
     {
         return $this->project;
     }

@@ -16,6 +16,7 @@ class Project extends AbstractModel
     protected $providers = [
         'github' => 'Github.com',
         'gitlab' => 'Gitlab.com',
+        'local'  => 'On local disk',
     ];
 
     protected $fillable = [
@@ -51,12 +52,23 @@ class Project extends AbstractModel
     }
 
     /**
+     * Get the deploy config for this project
+     *
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getDeployConfig(): ?string
+    {
+        return $this->strategy()->getDeployConfig();
+    }
+
+    /**
      * Get the Clone URL for this project
      *
      * @return string
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getCloneUrl()
+    public function getCloneUrl(): string
     {
         return $this->strategy()->getCloneUrl();
     }

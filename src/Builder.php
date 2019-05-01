@@ -8,6 +8,7 @@ use App\Facades\Settings;
 use App\Model\Project;
 use App\Model\Release;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * The builder is responsible for building a new release from a given repository
@@ -99,6 +100,11 @@ class Builder
     protected $release;
 
     /**
+     * @var array
+     */
+    protected $config;
+
+    /**
      * Class constructor
      *
      * @author Ronan Chilvers <ronan@d3r.com>
@@ -123,6 +129,7 @@ class Builder
         $this->projectDir   = $baseDir . '/' . $project->id;
         $this->sharedDir    = $this->projectDir . '/shared';
         $this->releaseDir   = $this->projectDir . '/releases';
+        $this->config       = [];
     }
 
     /**
@@ -133,6 +140,10 @@ class Builder
     public function scan()
     {
         Log::debug(sprintf('In %s:%d', __METHOD__, __LINE__));
+        $config = $this->project->getDeployConfig();
+        if (is_string($config)) {
+            $this->config = Yaml::parse($config);
+        }
     }
 
     /**
@@ -191,6 +202,11 @@ class Builder
             $command,
             sprintf('Unable to clone project %s (%d)', $this->project->name, $this->project->id)
         );
+
+        $this->notify(
+            $this->config('initialise.notify', null),
+            'Project initialised'
+        );
     }
 
     /**
@@ -222,32 +238,46 @@ class Builder
             $this->cloneDir
         );
 
-        Log::debug('Checking for composer support', [
-            'project' => $this->project->id,
-            'project_name' => $this->project->name,
-            'release' => $release->id,
-            'release_number' => $release->number,
-        ]);
-        if (file_exists($this->cloneDir . '/composer.json')) {
-            Log::notice('Composer.json found - running composer', [
+        if (false == $this->config('prepare.composer', true)) {
+            Log::debug('Checking for composer.json', [
                 'project' => $this->project->id,
                 'project_name' => $this->project->name,
                 'release' => $release->id,
                 'release_number' => $release->number,
             ]);
-            $this->execute(
-                $this->composerPath . ' install --no-interaction --no-dev --optimize-autoloader',
-                sprintf('Unable to run composer for new release'),
-                $this->cloneDir
-            );
+            if (file_exists($this->cloneDir . '/composer.json')) {
+                Log::notice('Composer.json found - running composer', [
+                    'project' => $this->project->id,
+                    'project_name' => $this->project->name,
+                    'release' => $release->id,
+                    'release_number' => $release->number,
+                ]);
+                $this->execute(
+                    $this->composerPath . ' install --no-interaction --no-dev --optimize-autoloader',
+                    sprintf('Unable to run composer for new release'),
+                    $this->cloneDir
+                );
+            } else {
+                Log::notice('Composer.json not found - composer disabled', [
+                    'project' => $this->project->id,
+                    'project_name' => $this->project->name,
+                    'release' => $release->id,
+                    'release_number' => $release->number,
+                ]);
+            }
         } else {
-            Log::notice('Composer.json not found - composer disabled', [
+            Log::debug('Composer support disabled by config', [
                 'project' => $this->project->id,
                 'project_name' => $this->project->name,
                 'release' => $release->id,
                 'release_number' => $release->number,
             ]);
         }
+
+        $this->notify(
+            $this->config('prepare.notify', null),
+            'Project preparation completed'
+        );
     }
 
     /**
@@ -365,5 +395,66 @@ class Builder
         ]);
 
         return $process;
+    }
+
+    /**
+     * Execute notifications
+     *
+     * @param array $notifiers
+     * @param string $message
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function notify($notifiers, string $message)
+    {
+        if (is_null($notifiers)) {
+            return;
+        }
+        $defaultNotifiers = $this->config('notify', []);
+        if (is_string($notifiers)) {
+            $notifiers = [$notifiers];
+        }
+        foreach ($notifiers as $notifier) {
+            if (is_string($notifier) && isset($defaultNotifiers[$notifier])) {
+                $notifier = $defaultNotifiers[$notifier];
+            }
+            if (!is_array($notifier)) {
+                $notifier = [
+                    'type' => 'email',
+                    'to'   => $notifier,
+                ];
+            }
+            Log::debug('Notifying', [
+                'notifier' => $notifier,
+                'message' => $message,
+            ]);
+        }
+    }
+
+    /**
+     * Get a config value with a default
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function config($key, $default = null)
+    {
+        if (false === strpos($key, '.')) {
+            if (isset($this->config[$key])) {
+                return $this->config[$key];
+            }
+            return $default;
+        }
+        $subkeys = explode('.', $key);
+        $value   = $this->config;
+        foreach ($subkeys as $subkey) {
+            if (!isset($value[$subkey])) {
+                return $default;
+            }
+            $value = $value[$subkey];
+        }
+
+        return $value;
     }
 }
