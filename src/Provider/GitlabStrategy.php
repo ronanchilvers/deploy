@@ -2,6 +2,7 @@
 
 namespace App\Provider;
 
+use App\Model\Project;
 use App\Provider\StrategyInterface;
 
 /**
@@ -9,7 +10,7 @@ use App\Provider\StrategyInterface;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class GitlabStrategy extends AbstractStrategy implements StrategyInterface
+class GitlabStrategy implements StrategyInterface
 {
     /**
      * Get the deployment config from the repository
@@ -17,7 +18,7 @@ class GitlabStrategy extends AbstractStrategy implements StrategyInterface
      * @return string
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getDeployConfig(): ?string
+    public function getDeployConfig(Project $project): ?string
     {
         return null;
     }
@@ -27,9 +28,9 @@ class GitlabStrategy extends AbstractStrategy implements StrategyInterface
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getCloneUrl(): string
+    public function getCloneUrl(Project $project): string
     {
-        $repository = $this->project()->repository;
+        $repository = $project->repository;
 
         return sprintf(
             "https://gitlab.com/%s.git",

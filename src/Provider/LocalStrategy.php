@@ -2,6 +2,7 @@
 
 namespace App\Provider;
 
+use App\Model\Project;
 use App\Provider\StrategyInterface;
 
 /**
@@ -9,7 +10,7 @@ use App\Provider\StrategyInterface;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class LocalStrategy extends AbstractStrategy implements StrategyInterface
+class LocalStrategy implements StrategyInterface
 {
     /**
      * {@inheritdoc}
@@ -19,11 +20,11 @@ class LocalStrategy extends AbstractStrategy implements StrategyInterface
      * @return string
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getDeployConfig(): ?string
+    public function getDeployConfig(Project $project): ?string
     {
         $configPath = sprintf(
             '%s/%s',
-            $this->project()->repository,
+            $project->repository,
             'deploy.yaml'
         );
         if (file_exists($configPath)) {
@@ -39,9 +40,9 @@ class LocalStrategy extends AbstractStrategy implements StrategyInterface
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getCloneUrl(): string
+    public function getCloneUrl(Project $project): string
     {
-        $repository = $this->project()->repository;
+        $repository = $project->repository;
 
         return $repository;
     }

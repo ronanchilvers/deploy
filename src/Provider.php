@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Provider\StrategyFactory;
 use App\Twig\GlobalsExtension;
 use Illuminate\Database\Capsule\Manager;
 use Monolog\Handler\StreamHandler;
@@ -99,6 +100,16 @@ class Provider implements ServiceProviderInterface
             $capsule->setAsGlobal();
 
             return $capsule;
+        });
+
+        // Provider strategies
+        $container->share(StrategyFactory::class, function ($c) {
+            $factory = new StrategyFactory();
+            $factory->registerStrategy('github', new App\Provider\GithubStrategy());
+            $factory->registerStrategy('gitlab', new App\Provider\GitlabStrategy());
+            $factory->registerStrategy('local', new App\Provider\LocalStrategy());
+
+            return $factory;
         });
     }
 }

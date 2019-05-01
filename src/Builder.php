@@ -294,6 +294,11 @@ class Builder
         // if (!$this->release->save()) {
         //     throw new BuildException('Unable to mark release as complete');
         // }
+
+        $this->notify(
+            $this->config('finalise.notify', null),
+            'Deployment completed'
+        );
     }
 
     /**

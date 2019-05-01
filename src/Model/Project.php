@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Facades\Strategy;
 use App\Model\AbstractModel;
 use App\Traits\HasValidationTrait;
 use Respect\Validation\Validator;
@@ -59,7 +60,7 @@ class Project extends AbstractModel
      */
     public function getDeployConfig(): ?string
     {
-        return $this->strategy()->getDeployConfig();
+        return $this->strategy()->getDeployConfig($this);
     }
 
     /**
@@ -70,7 +71,7 @@ class Project extends AbstractModel
      */
     public function getCloneUrl(): string
     {
-        return $this->strategy()->getCloneUrl();
+        return $this->strategy()->getCloneUrl($this);
     }
 
     /**
@@ -95,15 +96,7 @@ class Project extends AbstractModel
     protected function strategy()
     {
         if (!$this->strategy instanceof StrategyInterface) {
-            $class = "\App\Provider\\" . ucfirst(strtolower($this->provider)) . "Strategy";
-            if (!class_exists($class)) {
-                Log::error('Invalid provider strategy', [
-                    'project' => $this->id,
-                    'provider' => $this->provider,
-                ]);
-                throw new RuntimeException("Invalid provider strategy");
-            }
-            $this->strategy = new $class($this);
+            $this->strategy = Strategy::get($this->provider);
         }
 
         return $this->strategy;
