@@ -385,8 +385,7 @@ class Builder
             $workingDir = $this->baseDir;
         }
         Log::debug('Running command', [
-            'command' => $command,
-            'message' => $message
+            'command' => $command
         ]);
         $process = new Process($command, $workingDir);
         $process->setTimeout(3600);
@@ -395,8 +394,7 @@ class Builder
             throw new BuildException($message);
         }
         Log::debug('Command completed', [
-            'command' => $command,
-            'message' => $message
+            'command' => $command
         ]);
 
         return $process;
