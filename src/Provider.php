@@ -105,9 +105,9 @@ class Provider implements ServiceProviderInterface
         // Provider strategies
         $container->share(StrategyFactory::class, function ($c) {
             $factory = new StrategyFactory();
-            $factory->registerStrategy('github', new App\Provider\GithubStrategy());
-            $factory->registerStrategy('gitlab', new App\Provider\GitlabStrategy());
-            $factory->registerStrategy('local', new App\Provider\LocalStrategy());
+            $factory->registerStrategy('github', new \App\Provider\GithubStrategy());
+            $factory->registerStrategy('gitlab', new \App\Provider\GitlabStrategy());
+            $factory->registerStrategy('local', new \App\Provider\LocalStrategy());
 
             return $factory;
         });
