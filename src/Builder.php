@@ -7,6 +7,7 @@ use App\Facades\Log;
 use App\Facades\Settings;
 use App\Model\Project;
 use App\Model\Release;
+use Ronanchilvers\Utility\Str;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
@@ -17,9 +18,10 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Builder
 {
-    const MODE_DEFAULT       = 0770;
-    const MODE_WRITABLE_FILE = 0660;
-    const MODE_WRITABLE_DIR  = 0770;
+    const MODE_DEFAULT_FILE   = 0640;
+    const MODE_DEFAULT_FOLDER = 0750;
+    const MODE_WRITABLE_FILE  = 0660;
+    const MODE_WRITABLE_DIR   = 0770;
 
     /**
      * @var string
@@ -180,18 +182,14 @@ class Builder
         $this->release = $release;
         Log::debug('Created new release', [
             'project' => $this->project->id,
-            'project_name' => $this->project->name,
             'release' => $release->id,
-            'release_number' => $release->number,
         ]);
 
         // Checkout the codebase
         $this->cloneDir = $this->releaseDir . '/' . $this->release->number;
         Log::info('Cloning into release directory', [
             'project' => $this->project->id,
-            'project_name' => $this->project->name,
             'release' => $this->release->id,
-            'release_number' => $this->release->number,
             'clone_dir' => $this->cloneDir,
         ]);
         $command = $this->getGitCommand(
@@ -223,7 +221,6 @@ class Builder
         Log::debug(sprintf('In %s:%d', __METHOD__, __LINE__));
         Log::debug('Checking out codebase branch', [
             'project' => $this->project->id,
-            'project_name' => $this->project->name,
             'project_branch' => $this->project->branch,
             'release' => $this->release->id,
             'release_number' => $this->release->number,
@@ -238,17 +235,15 @@ class Builder
             $this->cloneDir
         );
 
-        if (false == $this->config('prepare.composer', true)) {
+        if (true == $this->config('prepare.composer', true)) {
             Log::debug('Checking for composer.json', [
                 'project' => $this->project->id,
-                'project_name' => $this->project->name,
                 'release' => $release->id,
                 'release_number' => $release->number,
             ]);
             if (file_exists($this->cloneDir . '/composer.json')) {
                 Log::notice('Composer.json found - running composer', [
                     'project' => $this->project->id,
-                    'project_name' => $this->project->name,
                     'release' => $release->id,
                     'release_number' => $release->number,
                 ]);
@@ -260,7 +255,6 @@ class Builder
             } else {
                 Log::notice('Composer.json not found - composer disabled', [
                     'project' => $this->project->id,
-                    'project_name' => $this->project->name,
                     'release' => $release->id,
                     'release_number' => $release->number,
                 ]);
@@ -268,11 +262,19 @@ class Builder
         } else {
             Log::debug('Composer support disabled by config', [
                 'project' => $this->project->id,
-                'project_name' => $this->project->name,
                 'release' => $release->id,
                 'release_number' => $release->number,
             ]);
         }
+
+        $shared = $this->config('shared', []);
+        $this->prepareShared(
+            $shared,
+            $this->cloneDir
+        );
+
+        // $writable = $this->config('writable', []);
+        // $this->prepareWritables($writable);
 
         $this->notify(
             $this->config('prepare.notify', null),
@@ -321,7 +323,7 @@ class Builder
             $this->releaseDir,
             $this->sharedDir
         ];
-        $mode = Settings::get('build.chmod.default', static::MODE_DEFAULT);
+        $mode = Settings::get('build.chmod.default', static::MODE_DEFAULT_FOLDER);
         foreach ($locations as $location) {
             if (is_dir($location)) {
                 Log::debug('Build directory exists', [
@@ -343,6 +345,204 @@ class Builder
                 );
             }
         }
+    }
+
+    /**
+     * Prepare writable files and folders
+     *
+     * @param array $shared
+     * @param string $workingDir
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function prepareShared(array $shared, $workingDir)
+    {
+        if (!is_array($shared)) {
+            Log::notice('Invalid shared configuration', [
+                'project' => $this->project->id,
+                'shared'  => $shared,
+            ]);
+            throw new BuildException('Invalide shared configuration');
+        }
+        $fileMode = Settings::get('build.chmod.default_file', static::MODE_DEFAULT_FILE);
+        $folderMode = Settings::get('build.chmod.default_folder', static::MODE_DEFAULT_FOLDER);
+
+        foreach (['files', 'folders'] as $type) {
+            $locations = isset($shared[$type]) ? $shared[$type] : [];
+            if (!is_array($locations) || 0 == count($locations)) {
+                Log::debug('No shared locations', [
+                    'project' => $this->project->id,
+                    'type' => $type,
+                ]);
+                continue;
+            }
+            Log::debug('Handling shared locations', [
+                'project' => $this->project->id,
+                'type' => $type,
+                'locations' => $locations,
+            ]);
+
+            foreach ($locations as $location) {
+                $linkLocation = DIRECTORY_SEPARATOR . Str::join(
+                    DIRECTORY_SEPARATOR,
+                    $workingDir,
+                    $location
+                );
+                $sharedLocation = DIRECTORY_SEPARATOR . Str::join(
+                    DIRECTORY_SEPARATOR,
+                    $this->sharedDir,
+                    $location
+                );
+                Log::debug('Expanded location', [
+                    'project' => $this->project->id,
+                    'type' => $type,
+                    'location' => $location,
+                    'link_location' => $linkLocation,
+                    'shared_location' => $sharedLocation,
+                ]);
+            }
+        }
+
+
+
+        // foreach ($shared as $location) {
+        //     $location = trim($location, '/');
+        //     $linkLocation = $workingDir . '/' . $location;
+        //     $sharedLocation = $this->sharedDir . '/' . $location;
+
+        //     // We're dealing with a shared file
+        //     if (is_file($linkLocation)) {
+        //         Log::debug('Managing shared file', [
+        //             'linkLocation' => $linkLocation,
+        //             'sharedLocation' => $sharedLocation,
+        //         ]);
+        //         $sharedFileDir = dirname($sharedLocation);
+        //         if (!is_dir($sharedFileDir) && $sharedFileDir != $this->sharedDir) {
+        //             if (!mkdir($sharedFileDir, $folderMode, true)) {
+        //                 Log::error('Unable to create parent directory for shared file', [
+        //                     'sharedLocation' => $sharedLocation,
+        //                     'sharedFileDir' => $sharedFileDir,
+        //                     'mode' => $folderMode,
+        //                 ]);
+        //                 throw new BuildException('Unable to create parent directory for shared file');
+        //             }
+        //         }
+        //         // Move the file into the shared location if it doesn't exist
+        //         if (!file_exists($sharedLocation)) {
+        //             Log::debug('Moving file to shared location', [
+        //                 'linkLocation' => $linkLocation,
+        //                 'sharedLocation' => $sharedLocation,
+        //             ]);
+        //             if (!rename($linkLocation, $sharedLocation)) {
+        //                 Log::error('Unable to move shared file to shared location',[
+        //                     'linkLocation' => $linkLocation,
+        //                     'sharedLocation' => $sharedLocation,
+        //                 ]);
+        //                 throw new BuildException('Unable to move shared file to shared location');
+        //             }
+        //             Log::debug('Setting file mode for shared file', [
+        //                 'linkLocation' => $linkLocation,
+        //                 'sharedLocation' => $sharedLocation,
+        //                 'mode' => $fileMode,
+        //             ]);
+        //             if (!chmod($sharedLocation, $fileMode)) {
+        //                 Log::error('Unable to set mode for shared file',[
+        //                     'linkLocation' => $linkLocation,
+        //                     'sharedLocation' => $sharedLocation,
+        //                 ]);
+        //                 throw new BuildException('Unable to set mode for shared file');
+        //             }
+        //         }
+        //     }
+
+        //     // We're dealing with a shared directory or a missing file / directory
+        //     // If the location is missing from the checkout, assume we want to create a shared directory
+        //     else if (is_dir($linkLocation) || (!is_file($linkLocation) && !is_dir($linkLocation))) {
+        //         Log::debug('Managing shared folder', [
+        //             'linkLocation' => $linkLocation,
+        //             'sharedLocation' => $sharedLocation,
+        //         ]);
+        //         if (!is_dir($sharedLocation)) {
+        //             if (is_dir($linkLocation)) {
+        //                 $sharedFolderDir = dirname($sharedLocation);
+        //                 if (!is_dir($sharedFolderDir)) {
+        //                     Log::debug('Creating parent folder for shared folder', [
+        //                         'linkLocation' => $linkLocation,
+        //                         'sharedLocation' => $sharedLocation,
+        //                     ]);
+        //                     if (!mkdir($sharedFolderDir, $folderMode, true)) {
+        //                         Log::error('Unable to create parent directory for shared directory', [
+        //                             'sharedLocation' => $sharedLocation,
+        //                             'sharedFolderDir' => $sharedFolderDir,
+        //                             'mode' => $folderMode,
+        //                         ]);
+        //                         throw new BuildException('Unable to create parent directory for shared directory');
+        //                     }
+        //                 }
+        //                 Log::debug('Moving folder to shared location', [
+        //                     'linkLocation' => $linkLocation,
+        //                     'sharedLocation' => $sharedLocation,
+        //                 ]);
+        //                 if (!rename($linkLocation, $sharedLocation)) {
+        //                     Log::error('Unable to move shared folder to shared location',[
+        //                         'linkLocation' => $linkLocation,
+        //                         'sharedLocation' => $sharedLocation,
+        //                     ]);
+        //                     throw new BuildException('Unable to move shared folder to shared location');
+        //                 }
+        //                 Log::debug('Setting mode for shared folder', [
+        //                     'linkLocation' => $linkLocation,
+        //                     'sharedLocation' => $sharedLocation,
+        //                     'mode' => $folderMode,
+        //                 ]);
+        //                 if (!chmod($sharedLocation, $folderMode)) {
+        //                     Log::error('Unable to set mode for shared folder',[
+        //                         'linkLocation' => $linkLocation,
+        //                         'sharedLocation' => $sharedLocation,
+        //                         'mode' => $folderMode,
+        //                     ]);
+        //                     throw new BuildException('Unable to set mode for shared folder');
+        //                 }
+        //             } else if (!mkdir($sharedLocation, $folderMode, true)) {
+        //                 Log::error('Unable to create shared directory', [
+        //                     'sharedLocation' => $sharedLocation,
+        //                     'sharedFileDir' => $sharedFileDir,
+        //                     'mode' => $folderMode,
+        //                 ]);
+        //                 throw new BuildException('Unable to create shared directory');
+        //             }
+        //         }
+        //     }
+
+        //     // We now have a shared folder or file in the right place so we can symlink them in
+        //     if (!is_link($linkLocation)) {
+        //         if (is_file($linkLocation)) {
+        //             Log::debug('Removing link location for shared location', [
+        //                 'linkLocation' => $linkLocation,
+        //                 'sharedLocation' => $sharedLocation,
+        //             ]);
+        //             $remove = is_dir($linkLocation) ? 'rmdir' : 'unlink';
+        //             if (!$remove($linkLocation)) {
+        //                 Log::error('Unable to remove link location for shared location',[
+        //                     'linkLocation' => $linkLocation,
+        //                     'sharedLocation' => $sharedLocation,
+        //                     'method' => $remove,
+        //                 ]);
+        //                 throw new BuildException('Unable to remove link location for shared location');
+        //             }
+        //         }
+        //         Log::debug('Symlinking shared location', [
+        //             'linkLocation' => $linkLocation,
+        //             'sharedLocation' => $sharedLocation,
+        //         ]);
+        //         if (!link($sharedLocation, $linkLocation)) {
+        //             Log::error('Unable to symlink shared location', [
+        //                 'sharedLocation' => $sharedLocation,
+        //                 'linkLocation' => $linkLocation,
+        //             ]);
+        //             throw new BuildException('Unable to symlink shared location');
+        //         }
+        //     }
+        // }
     }
 
     /**

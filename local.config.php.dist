@@ -37,4 +37,15 @@ return [
         'collation'=> 'utf8_unicode_ci',
         'prefix'   => '',
     ],
+
+    // Deployment settings
+    'build' => [
+        'base_dir' => '/Users/ronanchilvers/Personal/build',
+        'chmod' => [
+            'default_file'    => '0750',
+            'default_folder'  => '0640',
+            'writable_file'   => '0660',
+            'writable_folder' => '0770',
+        ]
+    ]
 ];
