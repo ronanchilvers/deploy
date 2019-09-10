@@ -39,11 +39,23 @@ class Releases extends AbstractMigration
                 'default' => 0,
                 'null' => false
             ])
+            ->addColumn('sha', 'string', [
+                'length' => 64,
+                'null' => false
+            ])
+            ->addColumn('author', 'string', [
+                'length' => 256,
+                'null' => false
+            ])
+            ->addColumn('message', 'string', [
+                'length' => 1024,
+                'null' => false
+            ])
             ->addColumn('status', 'string', [
                 'length' => 20,
                 'null' => false
             ])
-            ->addTimestamps()
+            ->addTimestamps('created', 'updated')
             ->addIndex(['project'])
             ->create();
     }

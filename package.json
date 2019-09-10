@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@primer/css": "^12.1.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-clean": "^0.3.2",
@@ -7,7 +8,7 @@
     "gulp-include": "^2.3.1",
     "gulp-notify": "^3.0.0",
     "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^2.0.1",
-    "@primer/css": "^12.1.0"
-  }
+    "gulp-uglify": "^2.0.1"
+  },
+  "dependencies": {}
 }

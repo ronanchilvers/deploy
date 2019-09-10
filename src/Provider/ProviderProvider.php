@@ -2,7 +2,8 @@
 
 namespace App\Provider;
 
-use App\Provider\Gitlab;
+use App\Facades\Settings;
+use App\Provider\Github;
 use Ronanchilvers\Container\Container;
 use Ronanchilvers\Container\ServiceProviderInterface;
 
@@ -21,23 +22,17 @@ class ProviderProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         // Gitlab
-        $container->share(Gitlab::class, function ($c){
-            $provider = new Gitlab([
-                'api_uri' => Settings::get('provider.gitlab.endpoint', 'https://gitlab.com/api/v4/'),
-                'token'   => Settings::get('provider.gitlab.token', false)
-            ]);
+        $container->share(Github::class, function ($c){
+            $token = Settings::get('providers.github.token');
 
-            return $provider;
+            return new Github($token);
+        });
 
-            // $client = \Gitlab\Client::create(
-            //     Settings::get('provider.gitlab.endpoint', 'https://gitlab.com')
-            // );
-            // $client->authenticate(
-            //     Settings::get('provider.gitlab.token'),
-            //     \Gitlab\Client::AUTH_HTTP_TOKEN
-            // );
+        $container->share(Factory::class, function ($c) {
+            $factory = new Factory();
+            $factory->addProvider($c->get(Github::class));
 
-            // return $client;
+            return $factory;
         });
     }
 }

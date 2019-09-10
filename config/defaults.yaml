@@ -1,0 +1,3 @@
+---
+composer:
+  command: install --no-dev --optimize-autoloader

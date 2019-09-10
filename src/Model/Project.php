@@ -4,35 +4,27 @@ namespace App\Model;
 
 use App\Facades\Strategy;
 use App\Model\AbstractModel;
-use App\Traits\HasValidationTrait;
 use Respect\Validation\Validator;
+use Ronanchilvers\Orm\Model;
+use Ronanchilvers\Orm\Traits\HasValidationTrait;
+use Ronanchilvers\Utility\Str;
 
 /**
  * Model representing a project
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class Project extends AbstractModel
+class Project extends Model
 {
+    use HasValidationTrait;
+
     protected $providers = [
         'github' => 'Github.com',
         'gitlab' => 'Gitlab.com',
         'local'  => 'On local disk',
     ];
 
-    protected $fillable = [
-        'name',
-        'provider',
-        'repository',
-        'branch',
-        'notes',
-    ];
-
-    protected $fieldNames = [
-        // 'name' => 'Project Name',
-    ];
-
-    protected $attributes = [
+    protected $data = [
         'branch' => 'master',
     ];
 
@@ -40,6 +32,29 @@ class Project extends AbstractModel
      * @var App\Provider\StrategyInterface
      */
     protected $strategy;
+
+    /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function setupValidation()
+    {
+        $providerKeys = array_keys($this->providers);
+        $this->registerRules([
+            'name'       => Validator::notEmpty(),
+            'provider'   => Validator::notEmpty()->in($providerKeys),
+            'repository' => Validator::notEmpty(),
+        ]);
+    }
+
+    /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function beforeCreate()
+    {
+        if (empty($this->token)) {
+            $this->token = Str::token(64);
+        }
+    }
 
     /**
      * Get the list of valid providers
@@ -72,19 +87,6 @@ class Project extends AbstractModel
     public function getCloneUrl(): string
     {
         return $this->strategy()->getCloneUrl($this);
-    }
-
-    /**
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    protected function getValidators()
-    {
-        $providerKeys = array_keys($this->providers);
-        return [
-            'name'       => Validator::notEmpty(),
-            'provider'   => Validator::notEmpty()->in($providerKeys),
-            'repository' => Validator::notEmpty(),
-        ];
     }
 
     /**

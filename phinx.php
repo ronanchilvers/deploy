@@ -1,12 +1,6 @@
 <?php
 $settings = include(__DIR__ . '/config/settings.php');
 $config   = $settings['database'];
-$suffix   = '';
-if ('sqlite' == $config['driver']) {
-    $name = $config['database'];
-    $suffix = pathinfo($name, PATHINFO_EXTENSION);
-    $name = str_replace('.' . $suffix, '', $name);
-}
 
 return [
 
@@ -31,15 +25,13 @@ return [
 
         // Database definition
         'default' => [
-            'adapter'   => $config['driver'],
-            'host'      => $config['host'],
-            'port'      => $config['port'],
-            'name'      => $name,
-            'suffix'    => $suffix,
-            'user'      => $config['username'],
-            'pass'      => $config['password'],
-            'charset'   => $config['charset'],
-            'collation' => $config['collation'],
+            'name'       => $config['name'],
+            'connection' => new PDO(
+                $config['dsn'],
+                $config['username'],
+                $config['password'],
+                $config['options']
+            ),
         ],
 
     ],

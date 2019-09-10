@@ -4,3 +4,4 @@
 //   - $container
 
 $container->register(new \App\Provider());
+$container->register(new \App\Provider\ProviderProvider());

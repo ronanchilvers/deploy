@@ -1,0 +1,220 @@
+<?php
+
+namespace App\Provider;
+
+use App\Builder;
+use App\Facades\Settings;
+use App\Model\Project;
+use App\Provider\ProviderInterface;
+use PharData;
+use Ronanchilvers\Foundation\Config;
+use RuntimeException;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Github source control provider
+ *
+ * @author Ronan Chilvers <ronan@d3r.com>
+ */
+class Github implements ProviderInterface
+{
+    /**
+     * @var string
+     */
+    protected $token;
+
+    /**
+     * @var string
+     */
+    protected $headUrl     = 'https://api.github.com/repos/{repository}/git/refs/heads/{branch}';
+    protected $commitUrl   = 'https://api.github.com/repos/{repository}/commits/{sha}';
+    protected $downloadUrl = 'https://api.github.com/repos/{repository}/tarball/{sha}';
+    protected $configUrl   = 'https://api.github.com/repos/{repository}/contents/deploy.yaml';
+
+    /**
+     * Class constructor
+     *
+     * @param string $token
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function __construct(string $token)
+    {
+        $this->token = $token;
+    }
+
+    /**
+     * @see App\Provider\ProviderInterface::handles()
+     */
+    public function handles(Project $project)
+    {
+        return 'github' == $project->provider;
+    }
+
+    /**
+     * @see App\Provider\ProviderInterface::getHeadInfo()
+     */
+    public function getHeadInfo(Project $project)
+    {
+        $params = [
+            'repository' => $project->repository,
+            'branch'     => $project->branch,
+        ];
+        $url = $this->formatUrl(
+            $params,
+            $this->headUrl
+        );
+        $curl = $this->getCurlHandle($url);
+        $data = curl_exec($curl);
+        curl_close($curl);
+        if (!$data = json_decode($data, true)) {
+            throw new RuntimeException('Invalid commit data for head');
+        }
+        $params['sha'] = $data['object']['sha'];
+        $url = $this->formatUrl(
+            $params,
+            $this->commitUrl
+        );
+        $curl = $this->getCurlHandle($url);
+        $data = curl_exec($curl);
+        curl_close($curl);
+        if (!$data = json_decode($data, true)) {
+            throw new RuntimeException('Invalid commit data for ' . $params['sha']);
+        }
+
+        return [
+            'sha'    => $data['sha'],
+            'author' => $data['commit']['author']['name'] . ' <' . $data['commit']['author']['email'] . '>',
+            'message'=> $data['commit']['message'],
+        ];
+    }
+
+    /**
+     * @see App\Provider\ProviderInterface::download()
+     */
+    public function download($params, $directory)
+    {
+        $url = $this->formatUrl(
+            $params,
+            $this->downloadUrl
+        );
+
+        // Download the code tarball
+        $filename = tempnam('/tmp', 'deploy-' . $params['sha'] . '-');
+        if (!$handle = fopen($filename, "w")) {
+            throw new RuntimeException('Unable to open temporary file');
+        }
+        $curl = $this->getCurlHandle($url);
+        curl_setopt_array($curl, [
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_FILE           => $handle
+        ]);
+        if (false === curl_exec($curl)) {
+            throw new RuntimeException(curl_errno($curl) . ' - ' . curl_error($curl));
+        }
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        fclose($handle);
+        if($statusCode != 200){
+            throw new RuntimeException('Failed to download codebase - ' . $statusCode);
+        }
+
+        // Make sure the release download directory exists
+        if (!is_dir($directory)) {
+            $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
+            if (!mkdir($directory, $mode, true)) {
+                throw new RuntimeException(
+                    'Unable to create build directory at ' . $directory
+                );
+            }
+        }
+
+        // Decompress the archive into the download directory
+        $command = explode(' ', "/usr/bin/tar --strip-components=1 -xzf {$filename} -C {$directory}");
+        $process = new Process($command);
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        // Remove the downloaded archive
+        if (!unlink($filename)) {
+            throw new RuntimeException('Unable to remove local code archive');
+        }
+
+        return true;
+    }
+
+    /**
+     * @see App\Provider\ProviderInterface::scanConfiguration()
+     */
+    public function scanConfiguration(Project $project)
+    {
+        $url = $this->formatUrl(
+            $project->toArray(),
+            $this->configUrl
+        );
+        $curl = $this->getCurlHandle($url);
+        $data = curl_exec($curl);
+        $info = curl_getinfo($curl);
+        if (404 == $info['http_code']) {
+            Log::debug('Remote configuration file not found', [
+                'project' => $project->toArray(),
+            ]);
+            return;
+        }
+        $data = json_decode($data, true);
+        if (!$data || !isset($data['content'])) {
+            Log::debug('Remote configuration file could not be read', [
+                'project' => $project->toArray(),
+            ]);
+            return;
+        }
+        $yaml = base64_decode($data['content']);
+        $yaml = Yaml::parse($yaml);
+
+        return new Config($yaml);
+    }
+
+    /**
+     * Format a url for a project
+     *
+     * @param App\Model\Project $project
+     * @param string $urlTemplate
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function formatUrl($params, $urlTemplate)
+    {
+        $keys = array_map(function ($value) {
+            return '{'.$value.'}';
+        }, array_keys($params));
+        $values = array_values($params);
+
+        return str_replace($keys, $values, $urlTemplate);
+    }
+
+    /**
+     * Get a curl handle
+     *
+     * @param string $url
+     * @return resource
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function getCurlHandle($url)
+    {
+        $curl = curl_init($url);
+        curl_setopt_array($curl, [
+            CURLOPT_USERAGENT      => 'ronanchilvers/deploy - curl ' . curl_version()['version'],
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_HTTPHEADER     => [
+                "Authorization: token {$this->token}"
+            ],
+        ]);
+
+        return $curl;
+    }
+}

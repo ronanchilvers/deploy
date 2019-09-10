@@ -1,8 +1,15 @@
 <?php
 
+use Symfony\Component\Process\PhpExecutableFinder;
+
 $settings = [
     // Slim3 settings
     'displayErrorDetails' => false,
+
+    // Binaries
+    'binary' => [
+        'php' => '/usr/bin/php',
+    ],
 
     // Logging
     'logger' => [
@@ -22,16 +29,31 @@ $settings = [
 
     // Database connections
     'database' => [
-        'driver'   => 'sqlite',
-        'host'     => '',
-        'port'     => '',
-        'database' => __DIR__ . '/../var/database/app.sq3',
+        'name'     => 'app.sq3',
+        'dsn'      => 'sqlite:' . __DIR__ . '/../var/database/app.sq3',
         'username' => '',
         'password' => '',
-        'charset'  => 'utf8',
-        'collation'=> 'utf8_unicode_ci',
-        'prefix'   => '',
+        'options'  => [],
     ],
+
+    // Deployment settings
+    'build' => [
+        'temp_dir' => sys_get_temp_dir(),
+        'base_dir' => '/Users/ronanchilvers/Personal/build',
+        'chmod' => [
+            'default_file'    => 0640,
+            'default_folder'  => 0750,
+            'writable_file'   => 0660,
+            'writable_folder' => 0770,
+        ]
+    ],
+
+    // Provider settings
+    'providers' => [
+        'github' => [
+            'token' => 'changeme',
+        ],
+    ]
 ];
 
 $localConfig = __DIR__ . '/../local.config.php';
