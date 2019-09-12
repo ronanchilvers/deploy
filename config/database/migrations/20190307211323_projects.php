@@ -12,17 +12,19 @@ class Projects extends AbstractMigration
      */
     public function change()
     {
-        $projects = $this->table('projects');
+        $projects = $this->table('projects', [
+            'id' => 'project_id',
+        ]);
         $projects
-            ->addColumn('name', 'string')
-            ->addColumn('notes', 'text')
-            ->addColumn('token', 'string', [ 'length' => 64, 'null' => false ])
-            ->addColumn('keep_releases', 'integer', [ 'default' => 5 ])
-            ->addColumn('provider', 'string', [ 'length' => 15, 'null' => false ])
-            ->addColumn('repository', 'string', [ 'length' => 1024, 'null' => false ])
-            ->addColumn('branch', 'string', [ 'length' => 1024, 'null' => false ])
-            ->addColumn('last_deployment', 'datetime', [ 'null' => true, 'default' => null ])
-            ->addTimestamps()
+            ->addColumn('project_name', 'string')
+            ->addColumn('project_notes', 'text')
+            ->addColumn('project_token', 'string', [ 'length' => 64, 'null' => false ])
+            ->addColumn('project_keep_releases', 'integer', [ 'default' => 5 ])
+            ->addColumn('project_provider', 'string', [ 'length' => 15, 'null' => false ])
+            ->addColumn('project_repository', 'string', [ 'length' => 1024, 'null' => false ])
+            ->addColumn('project_branch', 'string', [ 'length' => 1024, 'null' => false ])
+            ->addColumn('project_last_deployment', 'datetime', [ 'null' => true, 'default' => null ])
+            ->addTimestamps('project_created', 'project_updated')
             ->create();
     }
 }

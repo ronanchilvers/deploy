@@ -2,10 +2,12 @@
 
 namespace App\Provider;
 
+use App\Model\Project;
 use App\Provider\ProviderInterface;
+use RuntimeException;
 
 /**
- * Factory for version control providers
+ * Provider factory responsible for managing provider instances
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
@@ -14,27 +16,35 @@ class Factory
     /**
      * @var array
      */
-    protected $providers;
+    protected $instances = [];
 
     /**
-     * Register a provider
+     * Add a provider instance
      *
-     * @param string $key
-     * @param App\Provider\ProviderInterface $provider
+     * @param App\Provider\ProviderInterface
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function registerProvider(string $key, ProviderInterface $provider)
+    public function addProvider(ProviderInterface $instance)
     {
-        $this->providers[$key] = $provider;
+        $this->instances[] = $instance;
     }
 
     /**
-     * Factory method to get a provider for a given
+     * Get a suitable instance for a given project
      *
+     * @param App\Model\Project $project
+     * @return App\Provider\ProviderInterface
+     * @throws RuntimeException If a suitable provider is not found
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function name($arg)
+    public function forProject(Project $project)
     {
-        //body
+        foreach ($this->instances as $instance) {
+            if ($instance->handles($project)) {
+                return $instance;
+            }
+        }
+
+        throw new RuntimeException('No suitable instance found for project provider ' . $project->provider);
     }
 }

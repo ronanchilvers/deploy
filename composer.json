@@ -5,16 +5,19 @@
     "require": {
         "defuse/php-encryption": "^2.1",
         "dflydev/fig-cookies": "^1.0",
-        "illuminate/database": "^5.5",
         "monolog/monolog": "^1.23",
-        "robmorgan/phinx": "^0.10.6",
+        "respect/validation": "^1.1",
+        "robmorgan/phinx": "^0.11.0",
         "ronanchilvers/container-bridge-slim": "~1.0",
         "ronanchilvers/foundation": "dev-master",
-        "ronanchilvers/sessions": "dev-master",
+        "ronanchilvers/orm": "^1.0",
+        "ronanchilvers/sessions": "^1.0",
+        "ronanchilvers/utility": "^1.0",
         "slim/slim": "^3.9",
         "slim/twig-view": "^2.3",
         "symfony/console": "^3.4",
-        "respect/validation": "^1.1"
+        "symfony/process": "^3.4",
+        "symfony/yaml": "^3.4"
     },
     "authors": [
         {

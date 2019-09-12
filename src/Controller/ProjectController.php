@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Facades\Router;
 use App\Facades\View;
-use App\MessageCollection;
 use App\Model\Project;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Ronanchilvers\Orm\Orm;
 
 /**
  * Controller for the index
@@ -25,7 +25,7 @@ class ProjectController
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
-        $projects = Project::all();
+        $projects = Orm::finder(Project::class)->all();
 
         return View::render(
             $response,
@@ -48,7 +48,7 @@ class ProjectController
         $project = new Project();
         if ($request->isMethod('POST')) {
             $data = $request->getParsedBody()['project'];
-            $project->fill($data);
+            $project->fromArray($data);
             if ($project->validate() && $project->save()) {
                 return $response->withRedirect(
                     Router::pathFor('project.index')
@@ -77,7 +77,7 @@ class ProjectController
         ResponseInterface $response,
         $args
     ) {
-        $project = Project::find($args['id']);
+        $project = Orm::finder(Project::class)->one($args['id']);
         if (!$project instanceof Project) {
             return $response->withRedirect(
                 Router::pathFor('project.index')
@@ -85,8 +85,8 @@ class ProjectController
         }
         if ($request->isMethod('POST')) {
             $data = $request->getParsedBody()['project'];
-            $project->fill($data);
-            if ($project->validate() && $project->save()) {
+            $project->fromArray($data);
+            if ($project->saveWithValidation()) {
                 return $response->withRedirect(
                     Router::pathFor('project.edit', [
                         'id' => $project->id

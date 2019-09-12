@@ -2,42 +2,62 @@
 
 namespace App\Model;
 
+use App\Facades\Strategy;
 use App\Model\AbstractModel;
-use App\Traits\HasValidationTrait;
 use Respect\Validation\Validator;
+use Ronanchilvers\Orm\Model;
+use Ronanchilvers\Orm\Traits\HasValidationTrait;
+use Ronanchilvers\Utility\Str;
 
 /**
  * Model representing a project
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class Project extends AbstractModel
+class Project extends Model
 {
+    use HasValidationTrait;
+
+    static protected $columnPrefix = 'project';
+
     protected $providers = [
         'github' => 'Github.com',
         'gitlab' => 'Gitlab.com',
+        'local'  => 'On local disk',
     ];
 
-    protected $fillable = [
-        'name',
-        'provider',
-        'repository',
-        'branch',
-        'notes',
-    ];
-
-    protected $fieldNames = [
-        // 'name' => 'Project Name',
-    ];
-
-    protected $attributes = [
-        'branch' => 'master',
+    protected $data = [
+        'project_branch' => 'master',
     ];
 
     /**
      * @var App\Provider\StrategyInterface
      */
     protected $strategy;
+
+    /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function setupValidation()
+    {
+        $providerKeys = array_keys($this->providers);
+        $this->registerRules([
+            'name'       => Validator::notEmpty(),
+            'provider'   => Validator::notEmpty()->in($providerKeys),
+            'repository' => Validator::notEmpty(),
+            'branch'     => Validator::notEmpty(),
+        ]);
+    }
+
+    /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function beforeCreate()
+    {
+        if (empty($this->token)) {
+            $this->token = Str::token(64);
+        }
+    }
 
     /**
      * Get the list of valid providers
@@ -51,27 +71,25 @@ class Project extends AbstractModel
     }
 
     /**
+     * Get the deploy config for this project
+     *
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getDeployConfig(): ?string
+    {
+        return $this->strategy()->getDeployConfig($this);
+    }
+
+    /**
      * Get the Clone URL for this project
      *
      * @return string
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getCloneUrl()
+    public function getCloneUrl(): string
     {
-        return $this->strategy()->getCloneUrl();
-    }
-
-    /**
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    protected function getValidators()
-    {
-        $providerKeys = array_keys($this->providers);
-        return [
-            'name'       => Validator::notEmpty(),
-            'provider'   => Validator::notEmpty()->in($providerKeys),
-            'repository' => Validator::notEmpty(),
-        ];
+        return $this->strategy()->getCloneUrl($this);
     }
 
     /**
@@ -83,15 +101,7 @@ class Project extends AbstractModel
     protected function strategy()
     {
         if (!$this->strategy instanceof StrategyInterface) {
-            $class = "\App\Provider\\" . ucfirst(strtolower($this->provider)) . "Strategy";
-            if (!class_exists($class)) {
-                Log::error('Invalid provider strategy', [
-                    'project' => $this->id,
-                    'provider' => $this->provider,
-                ]);
-                throw new RuntimeException("Invalid provider strategy");
-            }
-            $this->strategy = new $class($this);
+            $this->strategy = Strategy::get($this->provider);
         }
 
         return $this->strategy;

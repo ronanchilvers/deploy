@@ -1,3 +1,7 @@
+https://developer.github.com/v3/repos/contents/#get-contents
+
+https://mattstauffer.com/blog/introducing-envoyer.io/
+
 Project
     - Manifest
     - Deployment
@@ -43,6 +47,11 @@ Stage\ConfigurationInterface
   public set($key, $value)
   public get($key, $default = null)
 
+
+
+Installing composer:
+
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 
 ---

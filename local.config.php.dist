@@ -28,13 +28,27 @@ return [
     // It is highly recommended to configure a database connection for production
     // rather than relying on the default sqlite database
     'database' => [
-        'driver'   => 'mysql',
-        'host'     => 'localhost',
-        'database' => '<production_db_name>',
-        'username' => '<dbuser>',
-        'password' => '<supersecretpassword>',
-        'charset'  => 'utf8',
-        'collation'=> 'utf8_unicode_ci',
-        'prefix'   => '',
+        'name'     => 'app.sq3',
+        'dsn'      => 'sqlite:' . __DIR__ . '/../var/database/app.sq3',
+        'username' => '',
+        'password' => '',
+        'options'  => [],
     ],
+
+    // Deployment settings
+    'build' => [
+        'base_dir' => '/Users/ronanchilvers/Personal/build',
+        'chmod' => [
+            'default_file'    => '0750',
+            'default_folder'  => '0640',
+            'writable_folder' => '0770',
+        ]
+    ],
+
+    // Provider settings
+    'providers' => [
+        'github' => [
+            'token' => 'changeme',
+        ],
+    ]
 ];

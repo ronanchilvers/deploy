@@ -2,11 +2,23 @@
 
 namespace App\Console\Command;
 
+use App\Action\ActivateAction;
+use App\Action\CheckoutAction;
+use App\Action\CleanupAction;
+use App\Action\ComposerAction;
+use App\Action\CreateWorkspaceAction;
+use App\Action\FinaliseAction;
+use App\Action\ScanConfigurationAction;
+use App\Action\SharedAction;
+use App\Action\WritablesAction;
 use App\Builder;
 use App\Builder\BuildException;
+use App\Facades\Provider;
 use App\Facades\Settings;
 use App\Model\Project;
+use App\Model\Release;
 use Exception;
+use Ronanchilvers\Orm\Orm;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -42,32 +54,35 @@ class DeployCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $id = $input->getArgument('id');
-        $project = Project::find($id);
-        if (!$project instanceof Project) {
-            throw new RuntimeException('Invalid project id');
-        }
-
         try {
-            $baseDir = Settings::get('build.base_dir');
-            if (!$baseDir) {
-                throw new Exception('Base build directory not configured');
+            $id            = $input->getArgument('id');
+            $project       = Orm::finder(Project::class)->one($id);
+            if (!$project instanceof Project) {
+                throw new RuntimeException('Invalid project id');
             }
-            $builder = new Builder($baseDir, $project);
+            $release       = Orm::finder(Release::class)->nextForProject($project);
+            $release->save();
+            $configuration = $this->getApplication()->getContainer()->get('configuration');
+            $builder = new Builder(
+                $project,
+                $release,
+                $configuration
+            );
+            $provider = Provider::forProject($project);
+            $builder->addAction(new ScanConfigurationAction($provider));
+            $builder->addAction(new CreateWorkspaceAction);
+            $builder->addAction(new CheckoutAction($provider));
+            $builder->addAction(new ComposerAction);
+            $builder->addAction(new SharedAction);
+            $builder->addAction(new WritablesAction);
+            $builder->addAction(new ActivateAction);
+            $builder->addAction(new FinaliseAction);
+            $builder->addAction(new CleanupAction);
 
-            // Scan the project for a yaml file
-            $builder->scan();
-
-            // Initialise the project
-            $builder->initialise();
-
-            // Prepare the new release
-            $builder->prepare();
-
-            // Finalise the new release
-            $builder->finalise();
-
-        } catch (BuildException $ex) {
+            $builder->run($configuration, function ($data) use ($output) {
+                $output->writeln($data);
+            });
+        } catch (Exception $ex) {
             $output->writeln($ex->getMessage());
             throw $ex;
         }

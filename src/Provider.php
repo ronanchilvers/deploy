@@ -2,19 +2,28 @@
 
 namespace App;
 
+use App\Provider\Factory;
+use App\Provider\Github;
+use App\Provider\StrategyFactory;
 use App\Twig\GlobalsExtension;
-use Illuminate\Database\Capsule\Manager;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Registry;
+use PDO;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Ronanchilvers\Container\Container;
 use Ronanchilvers\Container\ServiceProviderInterface;
+use Ronanchilvers\Foundation\Config;
+use Ronanchilvers\Foundation\Filesystem\Disk;
+use Ronanchilvers\Foundation\Filesystem\DiskRegistry;
 use Ronanchilvers\Sessions\Session;
 use Ronanchilvers\Sessions\Storage\CookieStorage;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * App service provider
@@ -91,14 +100,22 @@ class Provider implements ServiceProviderInterface
             );
         });
 
-        // Eloquent
-        $container->share('eloquent.capsule', function ($c) {
-            $options = $c->get('settings')['database'];
-            $capsule = new Manager();
-            $capsule->addConnection($options);
-            $capsule->setAsGlobal();
+        // Database
+        $container->share(PDO::class, function ($c) {
+            $settings = $c->get('settings')['database'];
+            return new PDO(
+                $settings['dsn'],
+                $settings['username'],
+                $settings['password'],
+                $settings['options']
+            );
+        });
 
-            return $capsule;
+        // Default configuration
+        $container->share('configuration', function ($c) {
+            $data = Yaml::parseFile(__DIR__ . '/../config/defaults.yaml');
+
+            return new Config($data);
         });
     }
 }
