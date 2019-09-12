@@ -23,7 +23,6 @@ class Project extends Model
     protected $providers = [
         'github' => 'Github.com',
         'gitlab' => 'Gitlab.com',
-        'local'  => 'On local disk',
     ];
 
     protected $data = [
@@ -31,9 +30,14 @@ class Project extends Model
     ];
 
     /**
-     * @var App\Provider\StrategyInterface
+     * Boot the model
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected $strategy;
+    protected function boot()
+    {
+        $this->addType('datetime', 'last_released');
+    }
 
     /**
      * @author Ronan Chilvers <ronan@d3r.com>
@@ -68,42 +72,5 @@ class Project extends Model
     public function getProviderOptions()
     {
         return $this->providers;
-    }
-
-    /**
-     * Get the deploy config for this project
-     *
-     * @return string
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function getDeployConfig(): ?string
-    {
-        return $this->strategy()->getDeployConfig($this);
-    }
-
-    /**
-     * Get the Clone URL for this project
-     *
-     * @return string
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function getCloneUrl(): string
-    {
-        return $this->strategy()->getCloneUrl($this);
-    }
-
-    /**
-     * Get the strategy object for this project
-     *
-     * @return App\Provider\StrategyInterface
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    protected function strategy()
-    {
-        if (!$this->strategy instanceof StrategyInterface) {
-            $this->strategy = Strategy::get($this->provider);
-        }
-
-        return $this->strategy;
     }
 }

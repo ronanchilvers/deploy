@@ -1,31 +1,29 @@
 {% extends 'page.html.twig' %}
 
 {% block body %}
-<div class="Subhead">
-    <h2 class="Subhead-heading">Project List</h1>
-</div>
-
 {% if 0 < projects|length %}
-<div class="Box">
-    <div class="Box-header clearfix">
-        <div class="float-left col-4">Name</div>
-        <div class="float-left col-6">Repository</div>
-        <!-- <div class="float-left col-2">Updated</div> -->
-        <div class="float-left col-2"></div>
-    </div>
-    <ul>
-    {% for project in projects %}
-        <li class="Box-row clearfix">
-            <div class="float-left col-4">{{ project.name }}</div>
-            <div class="float-left col-6">{{ project.provider }}:{{ project.repository }}@{{ project.branch }}</div>
-            <!-- <div class="float-left col-2">{{ project.updated_at }}</div> -->
-            <div class="float-left col-2">
-                <a href="{{ path_for('project.edit', { id: project.id }) }}">Edit</a>
-            </div>
-        </li>
-    {% endfor %}
-    </ul>
-</div>
+<table class="table is-fullwidth">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Repository</th>
+            <th>Last Released</th>
+            <th>Last Sha</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+        {% for project in projects %}
+            <td>{{ project.name }}</td>
+            <td>{{ project.provider }}:{{ project.repository }}@{{ project.branch }}</td>
+            <td>{% if project.last_release %}{{ project.last_release|date('Y-m-d @ H:i:s') }}{% else %}Never{% endif %}</td>
+            <td>{% if project.last_sha %}{{ project.last_sha|slice(0,7) }}{% else %}N/A{% endif %}</td>
+            <td><a href="{{ path_for('project.edit', { id: project.id }) }}">Edit</a></td>
+        {% endfor %}
+        </tr>
+    </tbody>
+</table>
 {% else %}
 <div class="blankslate">
   <h3>No projects found</h3>

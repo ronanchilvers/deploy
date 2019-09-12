@@ -3,26 +3,37 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Deploy{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="/css/app.css">
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <div class="container-xl">
-        <div class="pagehead">
-            <h1>Deploy</h1>
-        </div>
-            <div class="col-2 float-left p-2">
-                <nav class="menu" aria-label="Person settings">
+
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/">
+                    Deploy
+                </a>
+
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start">
                 {% for item in main_nav %}
                     {% set selected = is_current_path(item.route) %}
-                    <a class="menu-item{% if selected %} selected{% endif %}" href="{{ path_for(item.route) }}"{% if selected %} aria-current="page"{% endif %}>{{ item.name }}</a>
+                    <a class="navbar-item{% if selected %} is-active{% endif %}" href="{{ path_for(item.route) }}"{% if selected %} aria-current="page"{% endif %}>{{ item.name }}</a>
                 {% endfor %}
-                </nav>
+                </div>
             </div>
-            <div class="col-10 float-left p-2">
-                {% block body %}{% endblock %}
-            </div>
+        </nav>
+
+        <div class="container is-fluid">
+            {% block body %}{% endblock %}
         </div>
         {% block javascripts %}{% endblock %}
     </body>

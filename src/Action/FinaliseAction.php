@@ -5,6 +5,7 @@ namespace App\Action;
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
 use App\Model\Release;
+use Carbon\Carbon;
 use Ronanchilvers\Foundation\Config;
 use RuntimeException;
 
@@ -20,13 +21,17 @@ class FinaliseAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
+        $project = $context->getOrThrow('project', 'Invalid or missing project');
+        $release = $context->getOrThrow('release', 'Invalid or missing project');
         $release = $context->get('release');
-        if (!$release instanceof Release) {
-            throw new RuntimeException('Invalid or missing release');
-        }
         $release->status = 'deployed';
         if (!$release->save()) {
             throw new RuntimeException('Unable to update the release status');
+        }
+        $project->last_release = Carbon::now();
+        $project->last_sha     = $release->sha;
+        if (!$project->save()) {
+            throw new RuntimeException('Unable to update last release date for project');
         }
     }
 }
