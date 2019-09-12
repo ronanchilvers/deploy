@@ -49,19 +49,17 @@ class ProjectController
         if ($request->isMethod('POST')) {
             $data = $request->getParsedBody()['project'];
             $project->fromArray($data);
-            if ($project->validate() && $project->save()) {
+            if ($project->saveWithValidation()) {
                 return $response->withRedirect(
                     Router::pathFor('project.index')
                 );
             }
-            $errors = $project->getErrors();
         }
 
         return View::render(
             $response,
             'project/add.html.twig',
             [
-                'errors'  => $errors,
                 'project' => $project,
             ]
         );
@@ -93,14 +91,12 @@ class ProjectController
                     ])
                 );
             }
-            $errors = $project->getErrors();
         }
 
         return View::render(
             $response,
             'project/edit.html.twig',
             [
-                'errors'  => $errors,
                 'project' => $project
             ]
         );

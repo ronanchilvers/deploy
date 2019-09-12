@@ -1,45 +1,65 @@
 <form method="POST" action="">
 
-    <dl class="form-group {% if errors.has('name') %}errored{% endif %}">
-        <dt><label for="project_name">Name</label></dt>
-        <dd><input class="form-control" type="text" placeholder="My Cool Project" value="{{ project.name }}" id="project_name" name="project[name]"></dd>
-        <dd class="error" id="project_name_error">{{ errors.str('name') }}</dd>
-    </dl>
+    <div class="field {% if project.hasError('name') %}errored{% endif %}">
+        <label class="label" for="project_name">Name</label>
+        <div class="control"><input class="input{% if project.hasError('name') %} is-danger{% endif %}" type="text" placeholder="My Cool Project" value="{{ project.name }}" id="project_name" name="project[name]"></div>
+        <p class="help is-danger" id="project_name_error">{{ project.getError('name')|join(', ') }}</p>
+    </div>
 
-    <dl class="form-group {% if errors.has('provider') %}errored{% endif %}">
-        <dt><label for="project_provider">Provider</label></dt>
-        <dd>
-            <select class="form-control" id="project_provider" name="project[provider]">
-            {% for key,name in project.getProviderOptions() %}
-                <option value="{{ key }}" {% if key == project.provider %}selected="selected"{% endif %}>{{ name }}</option>
-            {% endfor %}
-            </select>
-        </dd>
-        <dd class="error" id="project_provider_error">{{ errors.str('provider') }}</dd>
-    </dl>
+    <div class="field {% if project.hasError('provider') %}errored{% endif %}">
+        <label class="label" for="project_provider">Provider</label>
+        {% if project.loaded %}
+        <p id="project_provider">{{ project.provider }}</p>
+        {% else %}
+        <div class="control">
+            <div class="select{% if project.hasError('provider') %} is-danger{% endif %}">
+                <select id="project_provider" name="project[provider]">
+                {% if not project.loaded %}
+                    <option value="">Select&hellip;</option>
+                {% endif %}
+                {% for key,name in project.getProviderOptions() %}
+                    <option value="{{ key }}" {% if key == project.provider %}selected="selected"{% endif %}>{{ name }}</option>
+                {% endfor %}
+                </select>
+            </div>
 
-    <dl class="form-group {% if errors.has('repository') %}errored{% endif %}">
-        <dt><label for="project_repository">Repository</label></dt>
-        <dd><input class="form-control" type="text" placeholder="vendor/project" value="{{ project.repository }}" id="project_repository" name="project[repository]"></dd>
-        <dd class="error" id="project_repository_error">{{ errors.str('repository') }}</dd>
-    </dl>
+        </div>
+        <p class="help is-danger" id="project_provider_error">{{ project.getError('provider')|join(', ') }}</p>
+        <p class="help"><strong>Please note: </strong>This field can't be changed once your project is added</p>
+        {% endif %}
+    </div>
 
-    <dl class="form-group {% if errors.has('branch') %}errored{% endif %}">
-        <dt><label for="project_branch">Branch</label></dt>
-        <dd><input class="form-control" type="text" placeholder="vendor/project" value="{{ project.branch}}" id="project_branch" name="project[branch]"></dd>
-        <dd class="error" id="project_branch_error">{{ errors.str('branch') }}</dd>
-    </dl>
+    <div class="field {% if project.hasError('repository') %}errored{% endif %}">
+        <label class="label" for="project_repository">Repository</label>
+    {% if project.loaded %}
+        <p id="project_repository">{{ project.repository }}</p>
+    {% else %}
+        <div class="control"><input class="input{% if project.hasError('repository') %} is-danger{% endif %}" type="text" placeholder="vendor/project" value="{{ project.repository }}" id="project_repository" name="project[repository]"></div>
+        <p class="help is-danger" id="project_repository_error">{{ project.getError('repository')|join(', ') }}</p>
+        <p class="help"><strong>Please note: </strong>This field can't be changed once your project is added</p>
+    {% endif %}
+    </div>
 
-    <dl class="form-group">
-        <dt><label for="project_notes">Notes</label></dt>
-        <dd>
-            <textarea class="form-control" id="project_notes" name="project[notes]">{{ project.notes }}</textarea>
-        </dd>
-    </dl>
+    <div class="field {% if project.hasError('branch') %}errored{% endif %}">
+        <label class="label" for="project_branch">Branch</label>
+        <div class="control"><input class="input{% if project.hasError('branch') %} is-danger{% endif %}" type="text" placeholder="vendor/project" value="{{ project.branch}}" id="project_branch" name="project[branch]"></div>
+        <p class="help is-danger" id="project_branch_error">{{ project.getError('branch')|join(', ') }}</p>
+    </div>
 
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Save changes</button>
-        <a class="btn" href="{{ path_for('project.index') }}">Cancel</a>
+    <div class="field">
+        <label class="label" for="project_notes">Notes</label>
+        <div class="control">
+            <textarea class="textarea" id="project_notes" name="project[notes]">{{ project.notes }}</textarea>
+        </div>
+    </div>
+
+    <div class="field is-grouped is-grouped-right">
+        <div class="control">
+            <a class="button" href="{{ path_for('project.index') }}">Cancel</a>
+        </div>
+        <div class="control">
+            <button type="submit" class="button is-primary">Save</button>
+        </div>
     </div>
 
 </form>
