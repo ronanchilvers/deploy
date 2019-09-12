@@ -26,7 +26,7 @@ class CreateWorkspaceAction extends AbstractAction implements ActionInterface
     public function run(Config $configuration, Context $context)
     {
         $baseDir = Settings::get('build.base_dir');
-        $project = $context->get('project');
+        $project = $context->getOrThrow('project', 'Invalid or missing project');
         $key     = $project->id;
         $projectDir = File::join(
             $baseDir,

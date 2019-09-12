@@ -24,13 +24,10 @@ class CleanupAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
-        $releaseBaseDir = $context->getOrThrow(
-            'release_base_dir',
-            'Invalid or missing release dir'
-        );
-        $project  = $context->getOrThrow('project', 'Invalid or missing project');
-        $number   = $configuration->get('cleanup.keep_releases', 5);
-        $releases = Orm::finder(Release::class)->earlierThan(
+        $releaseBaseDir = $context->getOrThrow('release_base_dir', 'Invalid or missing release dir');
+        $project        = $context->getOrThrow('project', 'Invalid or missing project');
+        $number         = $configuration->get('cleanup.keep_releases', 5);
+        $releases       = Orm::finder(Release::class)->earlierThan(
             $project,
             $number
         );

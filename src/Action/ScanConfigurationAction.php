@@ -40,10 +40,7 @@ class ScanConfigurationAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
-        $project = $context->get('project');
-        if (!$project instanceof Project) {
-            throw new RuntimeException('Invalid or missing project');
-        }
+        $project             = $context->getOrThrow('project', 'Invalid or missing project');
         $remoteConfiguration = $this->provider->scanConfiguration(
             $project
         );

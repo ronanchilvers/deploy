@@ -24,12 +24,9 @@ class SharedAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
-        $baseDir = $context->get('project_base_dir');
-        if (is_null($baseDir)) {
-            throw new RuntimeException('Invalid or missing project base directory');
-        }
-        $folderMode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
-        $fileMode = Settings::get('build.chmod.default_file', Builder::MODE_DEFAULT_FILE);
+        $baseDir       = $context->getOrThrow('project_base_dir', 'Invalid or missing project base directory');
+        $folderMode    = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
+        $fileMode      = Settings::get('build.chmod.default_file', Builder::MODE_DEFAULT_FILE);
         $sharedBaseDir = File::join($baseDir, 'shared');
         if (!is_dir($sharedBaseDir)) {
             Log::debug('Creating shared base directory', [
@@ -39,17 +36,12 @@ class SharedAction extends AbstractAction implements ActionInterface
                 throw new RuntimeException('Unable to create shared base directory');
             }
         }
-        $releaseDir = $context->get('release_dir');
-        if (is_null($releaseDir)) {
-            throw new RuntimeException('Invalid or missing release directory');
-        }
-
+        $releaseDir = $context->getOrThrow('release_dir', 'Invalid or missing release directory');
         // Get the shared items from the configuration object
         $shared     = $configuration->get('shared', []);
         if (0 == count($shared)) {
             return;
         }
-
         // Shared folders
         $sharedFolders = [];
         if (
@@ -109,7 +101,6 @@ class SharedAction extends AbstractAction implements ActionInterface
                 $sharedFolders[$sharedDir] = $sharedDir;
             }
         }
-
         // Shared files
         if (
             isset($shared['files']) &&
@@ -216,6 +207,5 @@ class SharedAction extends AbstractAction implements ActionInterface
                 }
             }
         }
-
     }
 }

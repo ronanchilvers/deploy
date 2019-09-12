@@ -40,19 +40,10 @@ class CheckoutAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
-        $releaseBaseDir = $context->get('release_base_dir');
-        if (is_null($releaseBaseDir)) {
-            throw new RuntimeException('Invalid or missing release_dir');
-        }
-        $project = $context->get('project');
-        if (!$project instanceof Project) {
-            throw new RuntimeException('Invalid or missing project');
-        }
-        $release = $context->get('release');
-        if (!$release instanceof Release) {
-            throw new RuntimeException('Invalid or missing release');
-        }
-        $releaseDir = File::join(
+        $releaseBaseDir = $context->getOrThrow('release_base_dir', 'Invalid or missing release_dir');
+        $project        = $context->getOrThrow('project', 'Invalid or missing project');
+        $release        = $context->getOrThrow('release', 'Invalid or missing release');
+        $releaseDir     = File::join(
             $releaseBaseDir,
             $release->number
         );

@@ -23,17 +23,12 @@ class WritablesAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
-        $releaseDir = $context->get('release_dir');
-        if (is_null($releaseDir)) {
-            throw new RuntimeException('Invalid or missing release directory');
-        }
+        $releaseDir   = $context->getOrThrow('release_dir', 'Invalid or missing release directory');
         $writableMode = Settings::get('build.chmod.writable_folder', Builder::MODE_WRITABLE_DIR);
-
-        $writables = $configuration->get('writables', []);
+        $writables    = $configuration->get('writables', []);
         if (0 == count($writables)) {
             return;
         }
-
         foreach ($writables as $writable) {
             $dir = realpath(File::join($releaseDir, $writable));
             Log::debug("Working on writable", [

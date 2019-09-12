@@ -23,7 +23,6 @@ class FinaliseAction extends AbstractAction implements ActionInterface
     {
         $project = $context->getOrThrow('project', 'Invalid or missing project');
         $release = $context->getOrThrow('release', 'Invalid or missing project');
-        $release = $context->get('release');
         $release->status = 'deployed';
         if (!$release->save()) {
             throw new RuntimeException('Unable to update the release status');

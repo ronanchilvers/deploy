@@ -22,11 +22,8 @@ class ActivateAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
-        $projectDir = $context->get('project_base_dir');
-        $releaseDir = $context->get('release_dir');
-        if (is_null($projectDir) || is_null($releaseDir)) {
-            throw new RuntimeException('Missing or invalid project or release directory');
-        }
+        $projectDir = $context->getOrThrow('project_base_dir', 'Missing or invalid project base directory');
+        $releaseDir = $context->getOrThrow('release_dir', 'Missing or invalid release directory');
         $linkFilename = File::join($projectDir, 'current');
         Log::debug('Preparing to symlink new release', [
             'release_dir' => $releaseDir,

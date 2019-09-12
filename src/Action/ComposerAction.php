@@ -24,10 +24,7 @@ class ComposerAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
-        $releaseDir = $context->get('release_dir');
-        if (is_null($releaseDir)) {
-            throw new RuntimeException('Invalid or missing release directory');
-        }
+        $releaseDir   = $context->getOrThrow('release_dir', 'Invalid or missing release directory');
         $composerJson = File::join($releaseDir, 'composer.json');
         if (!is_readable($composerJson)) {
             return;
