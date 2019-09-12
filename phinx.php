@@ -10,10 +10,10 @@ return [
     // File paths
     'paths' => [
         'migrations' => [
-            __DIR__ . '/config/database/migrations',
+            __DIR__ . '/resources/database/migrations',
         ],
         'seeds' => [
-            __DIR__ . '/config/database/seeds',
+            __DIR__ . '/resources/database/seeds',
         ],
     ],
 

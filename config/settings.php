@@ -18,7 +18,7 @@ $settings = [
 
     // Twig
     'twig' => [
-        'templates' => __DIR__ . '/../templates',
+        'templates' => __DIR__ . '/../resources/templates',
         'cache' => __DIR__ . '/../var/twig',
     ],
 
