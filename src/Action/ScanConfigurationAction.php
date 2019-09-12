@@ -48,6 +48,9 @@ class ScanConfigurationAction extends AbstractAction implements ActionInterface
         $remoteConfiguration = $provider->scanConfiguration(
             $project
         );
+        if (is_null($remoteConfiguration)) {
+            return;
+        }
         Log::debug('Merging remote configuration', [
             'current' => $configuration->getAll(),
             'remote'  => $remoteConfiguration->getAll(),

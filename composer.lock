@@ -1284,12 +1284,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/foundation.git",
-                "reference": "50988bb71ff25538ddf3935b4a33b7dea490ec1e"
+                "reference": "106191dfafef4d33af17817866bc7684cdacfa37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/foundation/zipball/50988bb71ff25538ddf3935b4a33b7dea490ec1e",
-                "reference": "50988bb71ff25538ddf3935b4a33b7dea490ec1e",
+                "url": "https://api.github.com/repos/ronanchilvers/foundation/zipball/106191dfafef4d33af17817866bc7684cdacfa37",
+                "reference": "106191dfafef4d33af17817866bc7684cdacfa37",
                 "shasum": ""
             },
             "require": {
@@ -1334,23 +1334,23 @@
             ],
             "description": "Foundation classes for use in php projects",
             "support": {
-                "source": "https://github.com/ronanchilvers/foundation/tree/0.3",
+                "source": "https://github.com/ronanchilvers/foundation/tree/0.3.1",
                 "issues": "https://github.com/ronanchilvers/foundation/issues"
             },
-            "time": "2019-09-10T21:05:20+00:00"
+            "time": "2019-09-11T21:35:48+00:00"
         },
         {
             "name": "ronanchilvers/orm",
-            "version": "1.0",
+            "version": "1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/orm.git",
-                "reference": "40c844cecd960ca6330ca8698cc0e20d8fd32725"
+                "reference": "658f04fc728c14a052ddc0d945dafcf8b4289be1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/orm/zipball/40c844cecd960ca6330ca8698cc0e20d8fd32725",
-                "reference": "40c844cecd960ca6330ca8698cc0e20d8fd32725",
+                "url": "https://api.github.com/repos/ronanchilvers/orm/zipball/658f04fc728c14a052ddc0d945dafcf8b4289be1",
+                "reference": "658f04fc728c14a052ddc0d945dafcf8b4289be1",
                 "shasum": ""
             },
             "require": {
@@ -1381,7 +1381,7 @@
                 }
             ],
             "description": "Simple database ORM implementation",
-            "time": "2019-09-05T12:21:10+00:00"
+            "time": "2019-09-11T20:49:41+00:00"
         },
         {
             "name": "ronanchilvers/sessions",
@@ -1435,16 +1435,16 @@
         },
         {
             "name": "ronanchilvers/utility",
-            "version": "1.5",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/utility.git",
-                "reference": "c260181b827be13659e54148516bd1f1a9c63280"
+                "reference": "704528a6eb045673ba2f9ee6d9199056215dae95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/utility/zipball/c260181b827be13659e54148516bd1f1a9c63280",
-                "reference": "c260181b827be13659e54148516bd1f1a9c63280",
+                "url": "https://api.github.com/repos/ronanchilvers/utility/zipball/704528a6eb045673ba2f9ee6d9199056215dae95",
+                "reference": "704528a6eb045673ba2f9ee6d9199056215dae95",
                 "shasum": ""
             },
             "require": {
@@ -1470,7 +1470,7 @@
                 }
             ],
             "description": "Handy utility classes for PHP",
-            "time": "2019-09-10T21:29:36+00:00"
+            "time": "2019-09-11T21:34:12+00:00"
         },
         {
             "name": "slim/slim",

@@ -43,7 +43,6 @@ $settings = [
         'chmod' => [
             'default_file'    => 0640,
             'default_folder'  => 0750,
-            'writable_file'   => 0660,
             'writable_folder' => 0770,
         ]
     ],

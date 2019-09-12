@@ -32,31 +32,33 @@ class Releases extends AbstractMigration
      */
     public function change()
     {
-        $projects = $this->table('releases');
+        $projects = $this->table('releases', [
+            'id' => 'release_id',
+        ]);
         $projects
-            ->addColumn('project', 'integer')
-            ->addColumn('number', 'integer', [
+            ->addColumn('release_project', 'integer')
+            ->addColumn('release_number', 'integer', [
                 'default' => 0,
                 'null' => false
             ])
-            ->addColumn('sha', 'string', [
+            ->addColumn('release_sha', 'string', [
                 'length' => 64,
                 'null' => false
             ])
-            ->addColumn('author', 'string', [
+            ->addColumn('release_author', 'string', [
                 'length' => 256,
                 'null' => false
             ])
-            ->addColumn('message', 'string', [
+            ->addColumn('release_message', 'string', [
                 'length' => 1024,
                 'null' => false
             ])
-            ->addColumn('status', 'string', [
+            ->addColumn('release_status', 'string', [
                 'length' => 20,
                 'null' => false
             ])
-            ->addTimestamps('created', 'updated')
-            ->addIndex(['project'])
+            ->addTimestamps('release_created', 'release_updated')
+            ->addIndex(['release_project'])
             ->create();
     }
 }

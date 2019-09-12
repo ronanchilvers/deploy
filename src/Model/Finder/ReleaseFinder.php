@@ -5,6 +5,7 @@ namespace App\Model\Finder;
 use App\Model\Project;
 use App\Model\Release;
 use Ronanchilvers\Orm\Finder;
+use ClanCats\Hydrahon\Query\Expression;
 
 /**
  * Finder for release models
@@ -25,8 +26,8 @@ class ReleaseFinder extends Finder
     public function nextForProject(Project $project)
     {
         $existing = $this->select()
-            ->where(Project::prefix('project'), $project->id)
-            ->orderBy(Project::prefix('number'), 'desc')
+            ->where(Release::prefix('project'), $project->id)
+            ->orderBy(Release::prefix('number'), 'desc')
             ->one();
         if ($existing instanceof Release) {
             $number = $existing->number;
@@ -39,5 +40,32 @@ class ReleaseFinder extends Finder
         $release->number  = ++$number;
 
         return $release;
+    }
+
+    /**
+     * Get an array of releases with a number lower than a specified one
+     *
+     * @param App\Model\Project $project
+     * @param int $number
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function earlierThan(Project $project, $number)
+    {
+        $sql = "SELECT *
+                FROM releases
+                WHERE release_project = 1 AND
+                      release_number <= (
+                          SELECT MAX(release_number)
+                          FROM releases
+                          WHERE release_project = :project
+                      ) - :number";
+
+        return $this->query(
+            $sql,
+            [
+                'project' => $project->id,
+                'number'  => $number
+            ]
+        );
     }
 }

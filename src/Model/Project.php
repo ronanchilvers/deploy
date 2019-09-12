@@ -18,6 +18,8 @@ class Project extends Model
 {
     use HasValidationTrait;
 
+    static protected $columnPrefix = 'project';
+
     protected $providers = [
         'github' => 'Github.com',
         'gitlab' => 'Gitlab.com',
@@ -25,7 +27,7 @@ class Project extends Model
     ];
 
     protected $data = [
-        'branch' => 'master',
+        'project_branch' => 'master',
     ];
 
     /**
@@ -43,6 +45,7 @@ class Project extends Model
             'name'       => Validator::notEmpty(),
             'provider'   => Validator::notEmpty()->in($providerKeys),
             'repository' => Validator::notEmpty(),
+            'branch'     => Validator::notEmpty(),
         ]);
     }
 

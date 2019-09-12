@@ -23,7 +23,7 @@ class Builder
     const STAGE_FINALISE     = 'finalise';
 
     const MODE_DEFAULT       = 0770;
-    const MODE_WRITABLE_FILE = 0660;
+    const MODE_DEFAULT_FILE  = 0640;
     const MODE_WRITABLE_DIR  = 0770;
 
     /**

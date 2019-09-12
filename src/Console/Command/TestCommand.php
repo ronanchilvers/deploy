@@ -4,6 +4,7 @@ namespace App\Console\Command;
 
 use App\Action\ActivateAction;
 use App\Action\CheckoutAction;
+use App\Action\CleanupAction;
 use App\Action\ComposerAction;
 use App\Action\CreateWorkspaceAction;
 use App\Action\FinaliseAction;
@@ -67,6 +68,7 @@ class TestCommand extends Command
         $builder->addAction(new WritablesAction);
         $builder->addAction(new ActivateAction);
         $builder->addAction(new FinaliseAction);
+        $builder->addAction(new CleanupAction);
 
         $builder->run($configuration, function ($data) use ($output) {
             $output->writeln($data);

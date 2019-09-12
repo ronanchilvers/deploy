@@ -18,10 +18,11 @@ class Release extends Model
 {
     use HasValidationTrait;
 
-    static protected $finder = ReleaseFinder::class;
+    static protected $finder       = ReleaseFinder::class;
+    static protected $columnPrefix = 'release';
 
     protected $data = [
-        'status' => 'new'
+        'release_status' => 'new'
     ];
 
     /**

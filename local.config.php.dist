@@ -41,7 +41,6 @@ return [
         'chmod' => [
             'default_file'    => '0750',
             'default_folder'  => '0640',
-            'writable_file'   => '0660',
             'writable_folder' => '0770',
         ]
     ],
