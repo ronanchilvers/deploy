@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Facades\Router;
 use App\Facades\View;
-use App\MessageCollection;
 use App\Model\Project;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

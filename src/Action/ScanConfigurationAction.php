@@ -8,7 +8,7 @@ use App\Action\Context;
 use App\Facades\Log;
 use App\Model\Project;
 use App\Model\Release;
-use App\Provider\Factory;
+use App\Provider\ProviderInterface;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\Str;
 use RuntimeException;
@@ -21,18 +21,18 @@ use RuntimeException;
 class ScanConfigurationAction extends AbstractAction implements ActionInterface
 {
     /**
-     * @var App\Provider\Factory
+     * @var App\Provider\ProviderInterface
      */
-    protected $factory;
+    protected $provider;
 
     /**
      * Class constructor
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function __construct(Factory $factory)
+    public function __construct(ProviderInterface $provider)
     {
-        $this->factory = $factory;
+        $this->provider = $provider;
     }
 
     /**
@@ -44,8 +44,7 @@ class ScanConfigurationAction extends AbstractAction implements ActionInterface
         if (!$project instanceof Project) {
             throw new RuntimeException('Invalid or missing project');
         }
-        $provider            = $this->factory->forProject($project);
-        $remoteConfiguration = $provider->scanConfiguration(
+        $remoteConfiguration = $this->provider->scanConfiguration(
             $project
         );
         if (is_null($remoteConfiguration)) {

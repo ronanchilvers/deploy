@@ -8,6 +8,7 @@ use App\Facades\Log;
 use App\Model\Project;
 use App\Model\Release;
 use App\Provider\Factory;
+use App\Provider\ProviderInterface;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\File;
 use RuntimeException;
@@ -20,18 +21,18 @@ use RuntimeException;
 class CheckoutAction extends AbstractAction implements ActionInterface
 {
     /**
-     * @var App\Provider\Factory
+     * @var App\Provider\ProviderInterface
      */
-    protected $factory;
+    protected $provider;
 
     /**
      * Class constructor
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function __construct(Factory $factory)
+    public function __construct(ProviderInterface $provider)
     {
-        $this->factory = $factory;
+        $this->provider = $provider;
     }
 
     /**
@@ -59,9 +60,7 @@ class CheckoutAction extends AbstractAction implements ActionInterface
             'release_dir',
             $releaseDir
         );
-
-        $provider = $this->factory->forProject($project);
-        $head = $provider->getHeadInfo(
+        $head = $this->provider->getHeadInfo(
             $project
         );
         Log::debug('Updating release commit information', $head);
@@ -76,7 +75,7 @@ class CheckoutAction extends AbstractAction implements ActionInterface
             'sha'        => $release->sha,
         ];
         Log::debug('Downloading codebase', $params);
-        $provider->download(
+        $this->provider->download(
             $params,
             $releaseDir
         );
