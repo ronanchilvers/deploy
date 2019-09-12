@@ -1,14 +1,18 @@
 {
   "devDependencies": {
-    "@primer/css": "^12.1.0",
-    "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^3.1.1",
-    "gulp-clean": "^0.3.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-include": "^2.3.1",
-    "gulp-notify": "^3.0.0",
-    "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^2.0.1"
+    "bulma": "^0.7.5",
+    "bulma-extensions": "^6.2.7",
+    "gulp": "^4.0",
+    "gulp-autoprefixer": "^6.0",
+    "gulp-clean-css": "^3.9.0",
+    "gulp-hub": "^4.0.0",
+    "gulp-include": "^2.0",
+    "gulp-notify": "^3.0",
+    "gulp-sass": "^4.0",
+    "gulp-uglify": "^3.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "browserslist": [
+    "defaults"
+  ]
 }

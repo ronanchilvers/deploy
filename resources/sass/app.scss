@@ -3,4 +3,5 @@
 @import "settings";
 
 // Vendored packages
-@import "@primer/css/index.scss";
+@import "bulma/bulma.sass";
+@import "bulma-extensions/bulma-switch/src/sass/index.sass";
