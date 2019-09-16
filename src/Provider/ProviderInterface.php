@@ -21,6 +21,35 @@ interface ProviderInterface
     public function handles(Project $project);
 
     /**
+     * Get a repository link for a given repository
+     *
+     * @param string $repository
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getRepositoryLink(string $repository);
+
+    /**
+     * Get a link to a repository branch
+     *
+     * @param string $repository
+     * @param string $branch
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getBranchLink(string $repository, string $branch);
+
+    /**
+     * Get a link for a given repository and sha
+     *
+     * @param string $repository
+     * @param string $sha
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getShaLink(string $repository, string $sha);
+
+    /**
      * Get the HEAD commit data for a given project, returned as an array
      *
      * @param App\Model\Project $project

@@ -15,6 +15,33 @@ use ClanCats\Hydrahon\Query\Expression;
 class ReleaseFinder extends Finder
 {
     /**
+     * Get the releases for a project
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function forProject(Project $project)
+    {
+        return $this->select()
+            ->where(Release::prefix('project'), $project->id)
+            ->orderBy(Release::prefix('number'), 'desc')
+            ->execute();
+    }
+
+    /**
+     * Get the latest release
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function lastForProject()
+    {
+        return $this->select()
+            ->where(Release::prefix('project'), $project->id)
+            ->orderBy(Release::prefix('number'), 'desc')
+            ->one();
+    }
+
+    /**
      * Get the next release for a project
      *
      * This method returns a new unsaved release with the correct release number.
@@ -36,7 +63,6 @@ class ReleaseFinder extends Finder
         }
         $release          = new Release;
         $release->project = $project->id;
-        $release->status  = 'new';
         $release->number  = ++$number;
 
         return $release;

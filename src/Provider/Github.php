@@ -9,6 +9,7 @@ use App\Model\Project;
 use App\Provider\ProviderInterface;
 use PharData;
 use Ronanchilvers\Foundation\Config;
+use Ronanchilvers\Utility\Str;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -30,9 +31,36 @@ class Github implements ProviderInterface
      * @var string
      */
     protected $headUrl     = 'https://api.github.com/repos/{repository}/git/refs/heads/{branch}';
+
+    /**
+     * @var string
+     */
     protected $commitUrl   = 'https://api.github.com/repos/{repository}/commits/{sha}';
+
+    /**
+     * @var string
+     */
     protected $downloadUrl = 'https://api.github.com/repos/{repository}/tarball/{sha}';
+
+    /**
+     * @var string
+     */
     protected $configUrl   = 'https://api.github.com/repos/{repository}/contents/deploy.yaml';
+
+    /**
+     * @var string
+     */
+    protected $repoUrl     = 'https://github.com/{repository}';
+
+    /**
+     * @var string
+     */
+    protected $branchUrl   = 'https://github.com/{repository}/tree/{branch}';
+
+    /**
+     * @var string
+     */
+    protected $shaUrl      = 'https://github.com/{repository}/commit/{sha}';
 
     /**
      * Class constructor
@@ -51,6 +79,67 @@ class Github implements ProviderInterface
     public function handles(Project $project)
     {
         return 'github' == $project->provider;
+    }
+
+    /**
+     * Get a repository link for a given repository
+     *
+     * @param string $repository
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getRepositoryLink(string $repository)
+    {
+        $params = [
+            'repository' => $repository,
+        ];
+
+        return Str::moustaches(
+            $this->repoUrl,
+            $params
+        );
+    }
+
+    /**
+     * Get a link to a repository branch
+     *
+     * @param string $repository
+     * @param string $branch
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getBranchLink(string $repository, string $branch)
+    {
+        $params = [
+            'repository' => $repository,
+            'branch'     => $branch,
+        ];
+
+        return Str::moustaches(
+            $this->branchUrl,
+            $params
+        );
+    }
+
+    /**
+     * Get a link for a given repository and sha
+     *
+     * @param string $repository
+     * @param string $sha
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getShaLink(string $repository, string $sha)
+    {
+        $params = [
+            'repository' => $repository,
+            'sha'        => $sha,
+        ];
+
+        return Str::moustaches(
+            $this->shaUrl,
+            $params
+        );
     }
 
     /**
@@ -86,7 +175,7 @@ class Github implements ProviderInterface
 
         return [
             'sha'    => $data['sha'],
-            'author' => $data['commit']['author']['name'] . ' <' . $data['commit']['author']['email'] . '>',
+            'author' => $data['commit']['author']['email'],
             'message'=> $data['commit']['message'],
         ];
     }

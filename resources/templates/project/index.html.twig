@@ -2,32 +2,55 @@
 
 {% block body %}
 {% if 0 < projects|length %}
-<table class="table is-fullwidth">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Repository</th>
-            <th>Last Released</th>
-            <th>Last Sha</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-        {% for project in projects %}
-            <td>{{ project.name }}</td>
-            <td>{{ project.provider }}:{{ project.repository }}@{{ project.branch }}</td>
-            <td>{% if project.last_release %}{{ project.last_release|date('Y-m-d @ H:i:s') }}{% else %}Never{% endif %}</td>
-            <td>{% if project.last_sha %}{{ project.last_sha|slice(0,7) }}{% else %}N/A{% endif %}</td>
-            <td><a href="{{ path_for('project.edit', { id: project.id }) }}">Edit</a></td>
-        {% endfor %}
-        </tr>
-    </tbody>
-</table>
+<section class="section">
+    <div class="panel">
+        <div class="panel-block">
+            <div class="table-container">
+                <table class="table is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Repository</th>
+                            <th>Last Release</th>
+                            <!-- <th>Last Sha</th> -->
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        {% for project in projects %}
+                            <td>{{ project.name }}</td>
+                            <td>{{ repo_link(project) }} {{ branch_link(project) }}</td>
+                            <td>
+                            {% if project.last_release %}
+                                {{ sha_link(project, project.last_sha) }} deployed {{ project.last_release|human_date }}
+                            {% else %}
+                                Never
+                            {% endif %}
+                            </td>
+                            <!-- <td>{% if project.last_sha %}{{ sha_link(project, project.last_sha) }}{% else %}N/A{% endif %}</td> -->
+                            <td><a class="button is-small is-link" href="{{ path_for('project.view', { id: project.id }) }}">View</a></td>
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
 {% else %}
-<div class="blankslate">
-  <h3>No projects found</h3>
-  <p><a href="{{ path_for('project.add') }}">Click here to add one</a></p>
-</div>
+<section class="hero is-light has-text-centered">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        No projects?
+      </h1>
+      <h2 class="subtitle">
+        You don't have any projects yet - create one and then you can start deploying!
+      </h2>
+      <p><a class="button is-primary" href="{{ path_for('project.add') }}">Add a new project</a></p>
+    </div>
+  </div>
+</section>
 {% endif %}
 {% endblock %}

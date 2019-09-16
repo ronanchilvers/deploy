@@ -36,6 +36,14 @@ $settings = [
         'options'  => [],
     ],
 
+    // Queue config
+    'queue' => [
+        'host'          => '127.0.0.1',
+        'port'          => 11300,
+        'default.queue' => 'deploy',
+        'timeout'       => 2,
+    ],
+
     // Deployment settings
     'build' => [
         'temp_dir' => sys_get_temp_dir(),

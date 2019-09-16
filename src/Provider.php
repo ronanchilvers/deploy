@@ -5,6 +5,7 @@ namespace App;
 use App\Provider\Factory;
 use App\Provider\Github;
 use App\Provider\StrategyFactory;
+use App\Twig\ProjectExtension;
 use App\Twig\GlobalsExtension;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -79,6 +80,9 @@ class Provider implements ServiceProviderInterface
             $view->addExtension(
                 new GlobalsExtension()
             );
+            $view->addExtension(
+                new ProjectExtension($c->get(Factory::class))
+            );
 
             return $view;
         });
@@ -112,10 +116,10 @@ class Provider implements ServiceProviderInterface
         });
 
         // Default configuration
-        $container->share('configuration', function ($c) {
-            $data = Yaml::parseFile(__DIR__ . '/../config/defaults.yaml');
+        // $container->share('configuration', function ($c) {
+        //     $data = Yaml::parseFile(__DIR__ . '/../config/defaults.yaml');
 
-            return new Config($data);
-        });
+        //     return new Config($data);
+        // });
     }
 }

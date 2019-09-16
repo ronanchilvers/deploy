@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Command;
+namespace App\Queue;
 
 use App\Action\ActivateAction;
 use App\Action\CheckoutAction;
@@ -12,60 +12,59 @@ use App\Action\ScanConfigurationAction;
 use App\Action\SharedAction;
 use App\Action\WritablesAction;
 use App\Builder;
-use App\Builder\BuildException;
+use App\Facades\Log;
 use App\Facades\Provider;
-use App\Facades\Settings;
 use App\Model\Project;
 use App\Model\Release;
 use Exception;
+use Ronanchilvers\Foundation\Config;
+use Ronanchilvers\Foundation\Queue\Job\Job;
 use Ronanchilvers\Orm\Orm;
 use RuntimeException;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
- * Perform a deployment for a site
+ * Deploy a project
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class DeployCommand extends Command
+class DeployJob extends Job
 {
     /**
+     * @var string
+     */
+    protected $queue = 'deploy';
+
+    /**
+     * @var App\Model\Release
+     */
+    protected $release;
+
+    /**
+     * Class constructor
+     *
+     * @param App\Model\Release $project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function configure()
+    public function __construct(Release $release)
     {
-        $this
-            ->setName('project:deploy')
-            ->setDescription('Deploy a project')
-            ->addArgument(
-                'id',
-                InputArgument::REQUIRED,
-                'The id of the project to deploy'
-            )
-        ;
+        $this->release = $release;
     }
 
     /**
+     * {@inheritdoc}
+     *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    public function execute()
     {
         try {
-            $id            = $input->getArgument('id');
-            $project       = Orm::finder(Project::class)->one($id);
-            if (!$project instanceof Project) {
-                throw new RuntimeException('Invalid project id');
-            }
-            $release       = Orm::finder(Release::class)->nextForProject($project);
-            $release->save();
-            $configuration = $this->getApplication()->getContainer()->get('configuration');
-            $builder = new Builder(
+            $project       = $this->release->project;
+            $data          = Yaml::parseFile(__DIR__ . '/../../config/defaults.yaml');
+            $configuration = new Config($data);
+            $builder       = new Builder(
                 $project,
-                $release,
+                $this->release,
                 $configuration
             );
             $provider = Provider::forProject($project);
@@ -79,18 +78,24 @@ class DeployCommand extends Command
             $builder->addAction(new FinaliseAction);
             $builder->addAction(new CleanupAction);
 
-            if (!$release->start()) {
+            if (!$this->release->start()) {
                 throw new RuntimeException('Unable to mark the release as started');
             }
-            $builder->run($configuration, function ($data) use ($output) {
-                $output->writeln($data);
+            $builder->run($configuration, function ($data) use ($project) {
+                Log::debug($data, [
+                    'project' => $project->toArray(),
+                ]);
             });
-            if (!$release->finish()) {
+            if (!$this->release->finish()) {
                 throw new RuntimeException('Unable to mark the release as finished');
             }
         } catch (Exception $ex) {
-            $output->writeln($ex->getMessage());
-            if (!$release->fail()) {
+            Log::critical($ex->getMessage(), [
+                'project'   => $project->toArray(),
+                'release'   => $release->toArray(),
+                'exception' => $ex,
+            ]);
+            if (!$this->release->fail()) {
                 throw new RuntimeException('Unable to mark the release as failed');
             }
             throw $ex;

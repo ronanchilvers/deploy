@@ -17,7 +17,8 @@
         "slim/twig-view": "^2.3",
         "symfony/console": "^3.4",
         "symfony/process": "^3.4",
-        "symfony/yaml": "^3.4"
+        "symfony/yaml": "^3.4",
+        "pda/pheanstalk": "^4.0"
     },
     "authors": [
         {

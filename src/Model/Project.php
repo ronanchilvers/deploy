@@ -36,7 +36,7 @@ class Project extends Model
      */
     protected function boot()
     {
-        $this->addType('datetime', 'last_released');
+        $this->addType('datetime', 'last_release');
     }
 
     /**

@@ -11,7 +11,9 @@
     "gulp-sass": "^4.0",
     "gulp-uglify": "^3.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "jquery": "^3.4.1"
+  },
   "browserslist": [
     "defaults"
   ]

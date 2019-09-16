@@ -4,4 +4,15 @@
 
 // Vendored packages
 @import "bulma/bulma.sass";
-@import "bulma-extensions/bulma-switch/src/sass/index.sass";
+@import "bulma-extensions/bulma-tooltip/src/sass/index.sass";
+
+// Elements
+@import "elements/html";
+@import "elements/body";
+
+// Trumps
+@import "trumps/main-wrapper";
+@import "trumps/buttons";
+@import "trumps/table";
+@import "trumps/panel";
+@import "trumps/tooltip";

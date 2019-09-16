@@ -57,6 +57,18 @@ class Releases extends AbstractMigration
                 'length' => 20,
                 'null' => false
             ])
+            ->addColumn('release_started', 'datetime', [
+                'null' => true,
+                'default' => null
+            ])
+            ->addColumn('release_finished', 'datetime', [
+                'null' => true,
+                'default' => null
+            ])
+            ->addColumn('release_failed', 'datetime', [
+                'null' => true,
+                'default' => null
+            ])
             ->addTimestamps('release_created', 'release_updated')
             ->addIndex(['release_project'])
             ->create();

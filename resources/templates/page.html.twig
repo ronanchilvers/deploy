@@ -4,25 +4,24 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Deploy{% endblock %}</title>
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
         <link rel="stylesheet" type="text/css" href="/css/app.css">
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-
         <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a class="navbar-item" href="/">
                     Deploy
                 </a>
 
-                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbar_menu">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                 </a>
             </div>
-
-            <div id="navbarBasicExample" class="navbar-menu">
+            <div id="navbar_menu" class="navbar-menu">
                 <div class="navbar-start">
                 {% for item in main_nav %}
                     {% set selected = is_current_path(item.route) %}
@@ -31,10 +30,11 @@
                 </div>
             </div>
         </nav>
-
-        <div class="container is-fluid">
+        <div id="main-wrapper" class="container is-fluid">
             {% block body %}{% endblock %}
         </div>
+        <script type="text/javascript" src="/js/vendor.js"></script>
+        <script type="text/javascript" src="/js/app.js"></script>
         {% block javascripts %}{% endblock %}
     </body>
 </html>
