@@ -1,4 +1,4 @@
-## deploy
+# deploy
 
 A work in progress, single server deployment tool
 
@@ -13,6 +13,8 @@ A work in progress, single server deployment tool
 * Notifications
 
 ## deploy.yaml (working example)
+
+```yaml
 ---
 initialise:
   notify:
@@ -44,6 +46,7 @@ finalise:
     to: ronan@d3r.com
   clear_opcache:
     socket: /var/run/php70.sock
+```
 
 ## Useful things
 
