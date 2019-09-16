@@ -1,8 +1,8 @@
 # deploy
 
-A work in progress, single server deployment tool
+A work in progress, single server deployment tool.
 
-## ToDo
+## Things to do
 
 * User accounts
 * Hooks
