@@ -11,6 +11,8 @@ A work in progress, single server deployment tool.
 * Unit tests!
 * Environment variable support?
 * Notifications
+* Ability to keep specific releases
+* Ability to deploy a specific branch
 
 ## deploy.yaml (working example)
 

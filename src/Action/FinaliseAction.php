@@ -30,6 +30,7 @@ class FinaliseAction extends AbstractAction implements ActionInterface
         $project->last_number  = $release->number;
         $project->last_release = Carbon::now();
         $project->last_sha     = $release->sha;
+        $project->last_author  = $release->author;
         if (!$project->save()) {
             throw new RuntimeException('Unable to update last release date for project');
         }

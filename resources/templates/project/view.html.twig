@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="column is-narrow">
-            <a class="button is-primary is-block-mobile is-once"
+            <a class="button is-link is-block-mobile is-once"
                href="{{ path_for('project.deploy', { key: project.key }) }}">Deploy Now</a>
         </div>
     </div>
@@ -32,16 +32,23 @@
             <p class="heading">Last Deployment</p>
             <p>{% if project.last_release %}{{ project.last_release|human_date }}{% else %}Not yet deployed{% endif %}</p>
         </div>
+        <div class="column is-3">
+            <p class="heading">Last Author</p>
+            <p>
+                <!-- <span class="icon is-inline-block is-size-7"><i class="fas fa-user"></i></span> -->
+                {% if project.last_sha %}{{ project.last_author }}{% else %}Not yet deployed{% endif %}
+            </p>
+        </div>
         <div class="column is-ss">
             <p class="heading">Last SHA</p>
             <p>
-                <span class="icon is-inline-block is-size-7"><i class="fas fa-hashtag"></i></span>
+                <!-- <span class="icon is-inline-block is-size-7"><i class="fas fa-hashtag"></i></span> -->
                 {% if project.last_sha %}{{ sha_link(project, project.last_sha) }}{% else %}Not yet deployed{% endif %}
             </p>
         </div>
         <div class="column is-narrow">
             <a class="button is-block-mobile"
-               href="{{ path_for('project.edit', { key: project.key }) }}">Edit</a>
+               href="{{ path_for('project.edit', { key: project.key }) }}">Edit Project</a>
         </div>
     </div>
 </section>
@@ -59,7 +66,7 @@
 <section class="section">
     <div class="box is-border-left-{{ selected_release.status }}">
     {% if selected_release.deployed %}
-        <a class="button is-block-mobile is-pulled-right">
+        <a class="button is-once is-block-mobile is-pulled-right">
             <span class="icon"><i class="fas fa-redo-alt"></i></span>
             <span>Re-Deploy</span>
         </a>
