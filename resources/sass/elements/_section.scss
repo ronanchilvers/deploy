@@ -1,0 +1,8 @@
+.section {
+    padding: 1rem 1.5rem;
+
+    & + .section,
+    & + .level {
+        padding-top: 0;
+    }
+}

@@ -9,6 +9,13 @@
 // Elements
 @import "elements/html";
 @import "elements/body";
+@import "elements/form";
+@import "elements/section";
+@import "elements/ul";
+@import "elements/border";
+
+// Components
+@import "components/project";
 
 // Trumps
 @import "trumps/main-wrapper";
@@ -16,3 +23,5 @@
 @import "trumps/table";
 @import "trumps/panel";
 @import "trumps/tooltip";
+@import "trumps/icon";
+@import "trumps/status";

@@ -1,129 +1,126 @@
 {% extends 'page.html.twig' %}
 
 {% block body %}
-<section class="section">
+<header class="project-heading">
     <div class="columns">
         <div class="column">
-            <div class="panel">
-                <h3 class="panel-heading">
-                    Project Details
-                    <a class="button is-small is-primary is-pulled-right"
-                       href="{{ path_for('project.edit', { id: project.id }) }}">Edit</a>
-                </h3>
-                <div class="panel-block">
-                    <table class="table is-fullwidth">
-                        <tbody>
-                            <tr>
-                                <th>Repository</th>
-                                <td class="has-text-right">{{ repo_link(project) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Branch</th>
-                                <td class="has-text-right"><span class="t1ag is-primary">{{ branch_link(project) }}</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="columns is-mobile">
+                <div class="column is-narrow">
+                    <span class="icon is-inline-block is-size-3"><i class="fab fa-{{ project.provider }}"></i></span>
                 </div>
-                <div class="panel-block">
-                    <a class="button is-primary is-fullwidth"
-                       href="{{ path_for('project.deploy', { id: project.id }) }}"
-                       >Deploy Now</a>
+                <div class="column">
+                    <h1 class="is-size-3">{{ project.repository }}</h1>
                 </div>
             </div>
         </div>
-        <div class="column">
-            <div class="panel">
-                <h3 class="panel-heading">Latest Deployment</h3>
-                <div class="panel-block">
-                {% if last_release %}
-                    <table class="table is-fullwidth">
-                        <tbody>
-                            <tr>
-                                <th>Started</th>
-                                <td class="has-text-right"><span class="tooltip" data-tooltip="{{ last_release.started }}">{{ last_release.started|human_date }}</span></td>
-                            </tr>
-                            <tr>
-                                <th>Author</th>
-                                <td class="has-text-right">{{ last_release.author }}</td>
-                            </tr>
-                            <tr>
-                                <th>Message</th>
-                                <td class="has-text-right"><code>{{ last_release.message }}</code></td>
-                            </tr>
-                            <tr>
-                                <th>SHA</th>
-                                <td class="has-text-right">{{ sha_link(project, last_release.sha) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Duration</th>
-                                <td class="has-text-right">
-                                    <span class="tooltip" data-tooltip="Started {{ last_release.started }} and finished {{ last_release.finished }}">{{ last_release.duration }} seconds</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                {% else %}
-                    <p>{{ project.name }} has never been deployed</p>
-                {% endif %}
-                </div>
-            </div>
+        <div class="column is-narrow">
+            <a class="button is-primary is-block-mobile is-once"
+               href="{{ path_for('project.deploy', { key: project.key }) }}">Deploy Now</a>
         </div>
     </div>
+</header>
+<section class="section">
     <div class="columns">
-        <div class="column">
-            <div class="panel">
-                <h3 class="panel-heading">Deployments for {{ project.name }}</h3>
-                <div class="panel-block">
-                {% if releases|length > 0 %}
-                    <div class="table-container">
-                        <table class="table is-striped is-fullwidth">
-                            <thead>
-                                <tr>
-                                    <th>When</th>
-                                    <th>Author</th>
-                                    <th>SHA</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for release in releases %}
-                                <tr>
-                                    <td>
-                                    {% if release.pending %}
-                                        Not started yet
-                                    {% else %}
-                                        Started <span class="tooltip" data-tooltip="{{ release.started }}">{{ release.started|human_date }}</span>
-                                        {% if release.deployed %}
-                                        and took <span class="tooltip" data-tooltip="{{ release.finished }}">{{ release.duration }} seconds</span>
-                                        {% elseif release.deploying %}
-                                        {% elseif release.failed %}
-                                        {% endif %}
-                                    {% endif %}
-                                    </td>
-                                    <td>{{ release.author }}</td>
-                                    <td>{{ sha_link(project, release.sha) }}</td>
-                                    <td>
-                                        <div class="field has-addons">
-                                            <div class="control">
-                                                <a class="button is-small is-prismary"><span class="icon tooltip is-tooltip-left" data-tooltip="Re-deploy commit {{ release.sha }}"><i class="fas fa-redo-alt"></i></span></a>
-                                            </div>
-                                            <div class="control">
-                                                <a class="button is-small is-prsimary"
-                                                   href="{{ path_for('release.view', { project: project.id, release: release.id }) }}"><span class="icon"><i class="fas fa-angle-right"></i></span></a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% else %}
-                    <p>{{ project.name }} has not been released yet</p>
-                {% endif %}
-                </div>
+        <div class="column is-3">
+            <p class="heading">Default Branch</p>
+            <p>
+                <span class="icon is-inline-block is-size-7"><i class="fas fa-code-branch"></i></span>
+                <span class="is-inline-block">{{ branch_link(project) }}</span>
+            </p>
+        </div>
+        <div class="column is-3">
+            <p class="heading">Last Deployment</p>
+            <p>{% if project.last_release %}{{ project.last_release|human_date }}{% else %}Not yet deployed{% endif %}</p>
+        </div>
+        <div class="column is-ss">
+            <p class="heading">Last SHA</p>
+            <p>
+                <span class="icon is-inline-block is-size-7"><i class="fas fa-hashtag"></i></span>
+                {% if project.last_sha %}{{ sha_link(project, project.last_sha) }}{% else %}Not yet deployed{% endif %}
+            </p>
+        </div>
+        <div class="column is-narrow">
+            <a class="button is-block-mobile"
+               href="{{ path_for('project.edit', { key: project.key }) }}">Edit</a>
+        </div>
+    </div>
+</section>
+
+{% if 0 < releases|length %}
+<div class="tabs">
+    <ul>
+    {% for release in releases %}
+        <li{% if selected_release.number == release.number %} class="is-active"{% endif %}>
+            <a href="{{ path_for('project.view', { key: project.key }, { release: release.number } ) }}">#{{ release.number }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+<section class="section">
+    <div class="box is-border-left-{{ selected_release.status }}">
+    {% if selected_release.deployed %}
+        <a class="button is-block-mobile is-pulled-right">
+            <span class="icon"><i class="fas fa-redo-alt"></i></span>
+            <span>Re-Deploy</span>
+        </a>
+    {% endif %}
+        <div class="columns">
+            <div class="column is-half">
+                <ul class="content-list">
+                    <li>
+                        <span class="icon is-inline-block"><i class="fas fa-user"></i></span>
+                        <span class="is-inline-block">{{ selected_release.author }}</span>
+                    </li>
+                    <li>
+                        <span class="icon is-inline-block"><i class="fas fa-hashtag"></i></span>
+                        <span class="is-inline-block">{{ sha_link(project, selected_release.sha) }}</span>
+                    </li>
+                    <li>
+                        <span class="icon is-inline-block"><i class="fas fa-align-left"></i></span>
+                        <code class="is-inline-block">{{ selected_release.message }}</code>
+                    </li>
+                </ul>
+            </div>
+            <div class="column is-narrow">
+                <ul class="content-list">
+                    <li class="is-{{ selected_release.status }}">
+                        {% if selected_release.deployed %}
+                        {% set icon="far fa-thumbs-up" %}
+                        {% elseif selected_release.failed %}
+                        {% set icon="far fa-thumbs-down" %}
+                        {% else %}
+                        {% set icon="fas fa-spinner" %}
+                        {% endif %}
+                        <span class="icon is-inline-block"><i class="{{ icon }}"></i></span>
+                        <span class="is-inline-block">{{ selected_release.status|title }}</span>
+                    </li>
+                    <li>
+                        <span class="icon is-inline-block"><i class="fas fa-stopwatch"></i></span>
+                        <span class="is-inline-block">{{ selected_release.duration }} seconds</span>
+                    </li>
+                    <li>
+                        <span class="icon is-inline-block"><i class="far fa-calendar-alt"></i></span>
+                        <span class="is-inline-block tooltip" data-tooltip="{{ selected_release.finished }}">{{ selected_release.finished|human_date }}</span>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 </section>
+
+{% elseif last_release.pending %}
+{% else %}
+<section class="hero is-light has-text-centered">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        No deployments yet
+      </h1>
+      <h2 class="subtitle">
+        Click the 'Deploy Now' button above to kick off your first deployment!
+      </h2>
+    </div>
+  </div>
+</section>
+{% endif %}
 {% endblock %}

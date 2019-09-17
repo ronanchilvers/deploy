@@ -1,0 +1,11 @@
+.project {
+
+    &-heading {
+        padding: 1rem 1.5rem;
+    }
+
+    &-heading + section.section {
+        padding-top: 0;
+    }
+
+}

@@ -13,11 +13,11 @@ $app->get('/', ProjectController::class . ':index')
     ->setName('project.index');
 $app->map(['GET', 'POST'], '/add', ProjectController::class . ':add')
     ->setName('project.add');
-$app->map(['GET', 'POST'], '/edit/{id}', ProjectController::class . ':edit')
+$app->map(['GET', 'POST'], '/edit/{key}', ProjectController::class . ':edit')
     ->setName('project.edit');
-$app->map(['GET', 'POST'], '/view/{id}', ProjectController::class . ':view')
+$app->map(['GET', 'POST'], '/view/{key}', ProjectController::class . ':view')
     ->setName('project.view');
-$app->map(['GET', 'POST'], '/deploy/{id}', ProjectController::class . ':deploy')
+$app->map(['GET', 'POST'], '/deploy/{key}', ProjectController::class . ':deploy')
     ->setName('project.deploy');
 
 $app->map(['GET', 'POST'], '/view/{project}/{release}', ReleaseController::class . ':view')

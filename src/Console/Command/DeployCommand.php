@@ -18,6 +18,7 @@ use App\Facades\Settings;
 use App\Model\Project;
 use App\Model\Release;
 use Exception;
+use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Orm\Orm;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
@@ -25,6 +26,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Perform a deployment for a site
@@ -62,8 +64,9 @@ class DeployCommand extends Command
             }
             $release       = Orm::finder(Release::class)->nextForProject($project);
             $release->save();
-            $configuration = $this->getApplication()->getContainer()->get('configuration');
-            $builder = new Builder(
+            $data          = Yaml::parseFile(__DIR__ . '/../../../config/defaults.yaml');
+            $configuration = new Config($data);
+            $builder       = new Builder(
                 $project,
                 $release,
                 $configuration

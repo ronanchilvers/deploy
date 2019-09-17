@@ -27,18 +27,17 @@ class ProjectExtension extends AbstractExtension
     /**
      * @var string
      */
-    protected $repoLinkHtml = '<a class="button is-text" href="{url}" target="_blank"><span class="icon"><i class="fab fa-{provider}"></i></span><span>{repository}</span></a>';
-    // protected $repoLinkHtml = '<a class="button is-text" href="{url}" target="_blank"><span>{repository}</span></a>';
+    protected $repoLinkHtml = '<span class="icon"><i class="fab fa-{provider}"></i></span><a class="button is-text" href="{user_url}" target="_blank"><span>{user}</span></a>/<a class="button is-text" href="{repo_url}" target="_blank">{repo}</a>';
 
     /**
      * @var string
      */
-    protected $branchLinkHtml = '<a class="button is-text" href="{url}" target="_blank"><span class="icon"><i class="fas fa-code-branch"></i></span><span>{branch}</span></a>';
+    protected $branchLinkHtml = '<a class="button is-text" href="{url}" target="_blank">{branch}</a>';
 
     /**
      * @var string
      */
-    protected $shaLinkHtml = '<a class="button is-text" href="{url}" target="_blank"><span class="icon"><i class="fas fa-hashtag"></i></span><span>{sha}</span></a>';
+    protected $shaLinkHtml = '<a class="button is-text" href="{url}" target="_blank">{sha}</a>';
 
     /**
      * Class constructor
@@ -92,10 +91,14 @@ class ProjectExtension extends AbstractExtension
      * @return string
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function repositoryLink(Project $project = null)
+    public function repositoryLink(Project $project = null, $userOnly = false)
     {
         $provider = $this->factory->forProject(
             $project
+        );
+        $bits = explode('/', $project->repository);
+        $userUrl = $provider->getRepositoryLink(
+            $bits[0]
         );
         $url = $provider->getRepositoryLink(
             $project->repository
@@ -104,8 +107,10 @@ class ProjectExtension extends AbstractExtension
             $this->repoLinkHtml,
             [
                 'provider'   => $project->provider,
-                'repository' => $project->repository,
-                'url'        => $url
+                'user_url'   => $userUrl,
+                'user'       => $bits[0],
+                'repo_url'   => $url,
+                'repo'       => $bits[1],
             ]
         );
 
@@ -187,7 +192,7 @@ class ProjectExtension extends AbstractExtension
             return $carbon->format('Y-m-d H:i:s');
         }
         // More than 30 minutes ago
-        if (30 < $carbon->diffInMinutes()) {
+        if (1440 < $carbon->diffInMinutes()) {
             return $carbon->format('H:i:s');
         }
 

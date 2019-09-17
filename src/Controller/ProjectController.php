@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Facades\Log;
+use App\Facades\Provider;
 use App\Facades\Router;
 use App\Facades\View;
 use App\Model\Project;
@@ -55,20 +57,28 @@ class ProjectController
             );
         }
 
-        $finder = Orm::finder(Release::class);
+        $finder   = Orm::finder(Release::class);
         $releases = $finder->forProject($project);
-        $lastRelease = false;
-        if (0 < count($releases)) {
-            $lastRelease = $releases[0];
+
+        $selected_number = $request->getQueryParam(
+            'release',
+            (0 < count($releases)) ? $releases[0]->number : false
+        );
+        $selectedRelease = (0 < count($releases)) ? $releases[0] : false ;
+        foreach ($releases as $release) {
+            if ($release->number == $selected_number) {
+                $selectedRelease = $release;
+                break;
+            }
         }
 
         return View::render(
             $response,
             'project/view.html.twig',
             [
-                'project'  => $project,
-                'releases' => $releases,
-                'last_release' => $lastRelease,
+                'project'          => $project,
+                'releases'         => $releases,
+                'selected_release' => $selectedRelease,
             ]
         );
     }
@@ -123,7 +133,7 @@ class ProjectController
             if ($project->saveWithValidation()) {
                 return $response->withRedirect(
                     Router::pathFor('project.edit', [
-                        'id' => $project->id
+                        'key' => $project->key
                     ])
                 );
             }
@@ -153,17 +163,35 @@ class ProjectController
                 Router::pathFor('project.index')
             );
         }
+        $provider = Provider::forProject(
+            $project
+        );
+        $head = $provider->getHeadInfo(
+            $project
+        );
         $release = Orm::finder(Release::class)->nextForProject(
             $project
         );
-        $release->save();
+        Log::debug('Updating release commit information', $head);
+        $release->sha     = $head['sha'];
+        $release->author  = $head['author'];
+        $release->message = $head['message'];
+        if (!$release->save()) {
+            // @todo Show error to user
+            return $response->withRedirect(
+                Router::pathFor('project.view', [
+                    'key' => $project->key
+                ])
+            );
+        }
         Queue::dispatch(
             new DeployJob($release)
         );
 
+        // @todo Show confirmation to user
         return $response->withRedirect(
             Router::pathFor('project.view', [
-                'id' => $project->id
+                'key' => $project->key
             ])
         );
     }
@@ -177,7 +205,7 @@ class ProjectController
      */
     protected function projectFromArgs($args)
     {
-        $project = Orm::finder(Project::class)->one($args['id']);
+        $project = Orm::finder(Project::class)->forKey($args['key']);
         if ($project instanceof Project) {
             return $project;
         }

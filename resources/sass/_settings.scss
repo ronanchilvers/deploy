@@ -1,1 +1,14 @@
 // Custom settings
+
+// Bulma overrides
+$radius-small: 2px;
+$radius: 2px;
+$radius-large: 2px;
+
+// Project / release settings
+$status_colors: (
+    'pending': rgba(100,100,100,1),
+    'deploying': rgba(0,0,255,1),
+    'deployed': rgba(0,175,0,1),
+    'failed': rgba(255,0,0,1),
+);

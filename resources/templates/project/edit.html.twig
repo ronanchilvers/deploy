@@ -2,6 +2,13 @@
 
 {% block body %}
 <section class="section">
-    {% include 'project/form.html.twig' %}
+    <div class="panel">
+        <h3 class="panel-heading">
+            Edit project {{ project.repository }}
+        </h3>
+        <div class="panel-block">
+            {% include 'project/form.html.twig' %}
+        </div>
+    </div>
 </section>
 {% endblock %}

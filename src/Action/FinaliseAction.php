@@ -27,6 +27,7 @@ class FinaliseAction extends AbstractAction implements ActionInterface
         if (!$release->save()) {
             throw new RuntimeException('Unable to update the release status');
         }
+        $project->last_number  = $release->number;
         $project->last_release = Carbon::now();
         $project->last_sha     = $release->sha;
         if (!$project->save()) {

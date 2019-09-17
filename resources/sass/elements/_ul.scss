@@ -1,0 +1,10 @@
+ul.content-list {
+    list-style-type: none;
+    li {
+        color: $black;
+        margin-bottom: 0.5rem;
+    }
+    li .name {
+        color: $grey;
+    }
+}

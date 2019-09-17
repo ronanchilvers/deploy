@@ -51,16 +51,16 @@ class CheckoutAction extends AbstractAction implements ActionInterface
             'release_dir',
             $releaseDir
         );
-        $head = $this->provider->getHeadInfo(
-            $project
-        );
-        Log::debug('Updating release commit information', $head);
-        $release->sha     = $head['sha'];
-        $release->author  = $head['author'];
-        $release->message = $head['message'];
-        if (!$release->save()) {
-            throw new RuntimeException('Unable to update release with commit information');
-        }
+        // $head = $this->provider->getHeadInfo(
+        //     $project
+        // );
+        // Log::debug('Updating release commit information', $head);
+        // $release->sha     = $head['sha'];
+        // $release->author  = $head['author'];
+        // $release->message = $head['message'];
+        // if (!$release->save()) {
+        //     throw new RuntimeException('Unable to update release with commit information');
+        // }
         $params = [
             'repository' => $project->repository,
             'sha'        => $release->sha,

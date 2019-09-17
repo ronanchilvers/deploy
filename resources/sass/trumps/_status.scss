@@ -1,0 +1,5 @@
+@each $status,$color in $status_colors {
+    .is-#{$status} {
+        color: $color !important;
+    }
+}

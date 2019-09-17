@@ -1,10 +1,4 @@
-<form method="POST" action="" class="box">
-    <div class="field {% if project.hasError('name') %}errored{% endif %}">
-        <label class="label" for="project_name">Name</label>
-        <div class="control"><input class="input{% if project.hasError('name') %} is-danger{% endif %}" type="text" placeholder="My Cool Project" value="{{ project.name }}" id="project_name" name="project[name]"></div>
-        <p class="help is-danger" id="project_name_error">{{ project.getError('name')|join(', ') }}</p>
-    </div>
-
+<form method="POST" action="">
     <div class="field {% if project.hasError('provider') %}errored{% endif %}">
         <label class="label" for="project_provider">Provider</label>
         {% if project.loaded %}
@@ -54,10 +48,10 @@
 
     <div class="field is-grouped is-grouped-right">
         <div class="control">
-            <a class="button" href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { id: project.id }) }}{% endif %}">Cancel</a>
+            <a class="button" href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { key: project.key }) }}{% endif %}">Cancel</a>
         </div>
         <div class="control">
-            <button type="submit" class="button is-primary">Save</button>
+            <button type="submit" class="button is-primary is-once">Save</button>
         </div>
     </div>
 </form>
