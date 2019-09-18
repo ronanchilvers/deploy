@@ -36,7 +36,7 @@ class SharedAction extends AbstractAction implements ActionInterface
                 throw new RuntimeException('Unable to create shared base directory');
             }
         }
-        $releaseDir = $context->getOrThrow('release_dir', 'Invalid or missing release directory');
+        $deploymentDir = $context->getOrThrow('deployment_dir', 'Invalid or missing deployment directory');
         // Get the shared items from the configuration object
         $shared     = $configuration->get('shared', []);
         if (0 == count($shared)) {
@@ -51,50 +51,50 @@ class SharedAction extends AbstractAction implements ActionInterface
         ) {
             foreach ($shared['folders'] as $folder) {
                 $sharedDir      = File::join($sharedBaseDir, $folder);
-                $thisReleaseDir = File::join($releaseDir, $folder);
+                $thisdeploymentDir = File::join($deploymentDir, $folder);
 
                 // Create the shared directory if needed
                 if (!is_dir($sharedDir)) {
-                    if (is_dir($thisReleaseDir)) {
-                        if (!File::cp($thisReleaseDir, $sharedDir)) {
-                            Log::debug('Unable to copy shared folder from release', [
+                    if (is_dir($thisdeploymentDir)) {
+                        if (!File::cp($thisdeploymentDir, $sharedDir)) {
+                            Log::debug('Unable to copy shared folder from deployment', [
                                 'shared_dir'  => $sharedDir,
-                                'release_dir' => $thisReleaseDir,
+                                'deployment_dir' => $thisdeploymentDir,
                             ]);
-                            throw new RuntimeException('Unable to move shared folder from release to shared');
+                            throw new RuntimeException('Unable to move shared folder from deployment to shared');
                         }
                     } elseif (!mkdir($sharedDir, $folderMode, true)) {
                         Log::debug('Unable to create shared folder', [
                             'shared_dir'  => $sharedDir,
-                            'release_dir' => $thisReleaseDir,
+                            'deployment_dir' => $thisdeploymentDir,
                         ]);
                         throw new RuntimeException('Unable to create shared folders');
                     }
                 }
 
-                // Remove the shared folder from the release if it exists
-                if (!File::rm($thisReleaseDir)) {
-                    Log::debug('Unable to remove shared folder from release', [
+                // Remove the shared folder from the deployment if it exists
+                if (!File::rm($thisdeploymentDir)) {
+                    Log::debug('Unable to remove shared folder from deployment', [
                         'shared_dir'  => $sharedDir,
-                        'release_dir' => $thisReleaseDir,
+                        'deployment_dir' => $thisdeploymentDir,
                     ]);
-                    throw new RuntimeException('Unable to remove shared folder from release');
+                    throw new RuntimeException('Unable to remove shared folder from deployment');
                 }
 
-                // Link the shared location into the release
-                $parentDir = dirname($thisReleaseDir);
+                // Link the shared location into the deployment
+                $parentDir = dirname($thisdeploymentDir);
                 if (!is_dir($parentDir) && !mkdir($parentDir, $folderMode, true)) {
                     Log::debug('Unable to create parent directory for symlinking', [
                         'parent_dir'  => $parentDir,
                         'shared_dir'  => $sharedDir,
-                        'release_dir' => $thisReleaseDir,
+                        'deployment_dir' => $thisdeploymentDir,
                     ]);
                     throw new RuntimeException('Unable to create parent directory for symlinking');
                 }
-                if (!symlink($sharedDir, $thisReleaseDir)) {
+                if (!symlink($sharedDir, $thisdeploymentDir)) {
                     Log::debug('Unable to symlink shared folder', [
                         'shared_dir'  => $sharedDir,
-                        'release_dir' => $thisReleaseDir,
+                        'deployment_dir' => $thisdeploymentDir,
                     ]);
                     throw new RuntimeException('Unable to symlink shared folder');
                 }
@@ -110,8 +110,8 @@ class SharedAction extends AbstractAction implements ActionInterface
             foreach ($shared['files'] as $filename) {
                 $sharedFilename  = File::join($sharedBaseDir, $filename);
                 $sharedDir       = dirname($sharedFilename);
-                $thisReleaseFile = File::join($releaseDir, $filename);
-                $thisReleaseDir  = dirname($thisReleaseFile);
+                $thisdeploymentFile = File::join($deploymentDir, $filename);
+                $thisdeploymentDir  = dirname($thisdeploymentFile);
 
                 // Check that we're not sharing the parent directory already
                 if (isset($sharedFolders[$sharedDir])) {
@@ -132,44 +132,44 @@ class SharedAction extends AbstractAction implements ActionInterface
                         throw new RuntimeException('Unable to create parent folder for shared file');
                     }
                 }
-                // Copy over the file from the release if it exists
-                if (file_exists($thisReleaseFile)) {
-                    Log::debug('Shared file exists in release', [
+                // Copy over the file from the deployment if it exists
+                if (file_exists($thisdeploymentFile)) {
+                    Log::debug('Shared file exists in deployment', [
                         'shared_file'  => $sharedFilename,
-                        'release_file' => $thisReleaseFile,
+                        'deployment_file' => $thisdeploymentFile,
                     ]);
-                    if (!file_exists($sharedFilename) && !File::cp($thisReleaseFile, $sharedFilename)) {
-                        Log::debug('Unable to copy shared file from release', [
+                    if (!file_exists($sharedFilename) && !File::cp($thisdeploymentFile, $sharedFilename)) {
+                        Log::debug('Unable to copy shared file from deployment', [
                             'shared_dir'   => $sharedDir,
                             'shared_file'  => $sharedFilename,
-                            'release_file' => $thisReleaseFile,
+                            'deployment_file' => $thisdeploymentFile,
                         ]);
-                        throw new RuntimeException('Unable to copy shared file from release');
+                        throw new RuntimeException('Unable to copy shared file from deployment');
                     }
-                    Log::debug('Removing shared file from release', [
+                    Log::debug('Removing shared file from deployment', [
                         'shared_file'  => $sharedFilename,
-                        'release_file' => $thisReleaseFile,
+                        'deployment_file' => $thisdeploymentFile,
                     ]);
-                    if (!File::rm($thisReleaseFile)) {
-                        Log::debug('Unable to remove shared file from release', [
+                    if (!File::rm($thisdeploymentFile)) {
+                        Log::debug('Unable to remove shared file from deployment', [
                             'shared_dir'   => $sharedDir,
                             'shared_file'  => $sharedFilename,
-                            'release_file' => $thisReleaseFile,
+                            'deployment_file' => $thisdeploymentFile,
                         ]);
-                        throw new RuntimeException('Unable to remove shared file from release');
+                        throw new RuntimeException('Unable to remove shared file from deployment');
                     }
                 }
 
                 // Make sure the parent directory exists for the shared file
-                if (!is_dir($thisReleaseDir)) {
-                    if (!mkdir($thisReleaseDir, $folderMode, true)) {
-                        Log::debug('Unable to create parent directory for shared file in release', [
+                if (!is_dir($thisdeploymentDir)) {
+                    if (!mkdir($thisdeploymentDir, $folderMode, true)) {
+                        Log::debug('Unable to create parent directory for shared file in deployment', [
                             'shared_dir'   => $sharedDir,
                             'shared_file'  => $sharedFilename,
-                            'release_file' => $thisReleaseFile,
-                            'release_dir'  => $thisReleaseDir,
+                            'deployment_file' => $thisdeploymentFile,
+                            'deployment_dir'  => $thisdeploymentDir,
                         ]);
-                        throw new RuntimeException('Unable to create parent directory for shared file in release');
+                        throw new RuntimeException('Unable to create parent directory for shared file in deployment');
                     }
                 }
 
@@ -179,8 +179,8 @@ class SharedAction extends AbstractAction implements ActionInterface
                         Log::debug('Unable to touch shared file', [
                             'shared_dir'   => $sharedDir,
                             'shared_file'  => $sharedFilename,
-                            'release_file' => $thisReleaseFile,
-                            'release_dir'  => $thisReleaseDir,
+                            'deployment_file' => $thisdeploymentFile,
+                            'deployment_dir'  => $thisdeploymentDir,
                         ]);
                         throw new RuntimeException('Unable to touch shared file');
                     }
@@ -188,20 +188,20 @@ class SharedAction extends AbstractAction implements ActionInterface
                         Log::debug('Unable to chmod shared file', [
                             'shared_dir'   => $sharedDir,
                             'shared_file'  => $sharedFilename,
-                            'release_file' => $thisReleaseFile,
-                            'release_dir'  => $thisReleaseDir,
+                            'deployment_file' => $thisdeploymentFile,
+                            'deployment_dir'  => $thisdeploymentDir,
                         ]);
                         throw new RuntimeException('Unable to chmod shared file');
                     }
                 }
 
                 // Symlink the shared file into place
-                if (!symlink($sharedFilename, $thisReleaseFile)) {
+                if (!symlink($sharedFilename, $thisdeploymentFile)) {
                     Log::debug('Unable to symlink shared file', [
                         'shared_dir'   => $sharedDir,
                         'shared_file'  => $sharedFilename,
-                        'release_file' => $thisReleaseFile,
-                        'release_dir'  => $thisReleaseDir,
+                        'deployment_file' => $thisdeploymentFile,
+                        'deployment_dir'  => $thisdeploymentDir,
                     ]);
                     throw new RuntimeException('Unable to symlink shared file');
                 }

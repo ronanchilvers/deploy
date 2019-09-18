@@ -5,7 +5,6 @@
 //   - $app
 
 use App\Controller\ProjectController;
-use App\Controller\ReleaseController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -19,6 +18,3 @@ $app->map(['GET', 'POST'], '/view/{key}', ProjectController::class . ':view')
     ->setName('project.view');
 $app->map(['GET', 'POST'], '/deploy/{key}', ProjectController::class . ':deploy')
     ->setName('project.deploy');
-
-$app->map(['GET', 'POST'], '/view/{project}/{release}', ReleaseController::class . ':view')
-    ->setName('release.view');

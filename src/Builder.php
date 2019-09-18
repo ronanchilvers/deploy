@@ -6,13 +6,13 @@ use App\Action\ActionInterface;
 use App\Action\Context;
 use App\Facades\Log;
 use App\Model\Project;
-use App\Model\Release;
+use App\Model\Deployment;
 use Closure;
 use Ronanchilvers\Foundation\Config;
 use SplQueue;
 
 /**
- * The builder is responsible for building a new release from a given repository
+ * The builder is responsible for building a new deployment from a given repository
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
@@ -32,9 +32,9 @@ class Builder
     protected $project;
 
     /**
-     * @var App\Model\Release
+     * @var App\Model\Deployment
      */
-    protected $release;
+    protected $deployment;
 
     /**
      * @var array<Action>
@@ -45,18 +45,18 @@ class Builder
      * Class constructor
      *
      * @param App\Model\Project $project
-     * @param App\Model\Release $release
+     * @param App\Model\Deployment $deployment
      * @param Ronanchilvers\Foundation\Config $configuration
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function __construct(
         Project $project,
-        Release $release,
+        Deployment $deployment,
         Config $configuration
     ) {
-        $this->project       = $project;
-        $this->release       = $release;
-        $this->actions       = new SplQueue;
+        $this->project    = $project;
+        $this->deployment = $deployment;
+        $this->actions    = new SplQueue;
         $this->actions->setIteratorMode(SplQueue::IT_MODE_DELETE);
     }
 
@@ -86,7 +86,7 @@ class Builder
 
         $context = new Context();
         $context->set('project', $this->project);
-        $context->set('release', $this->release);
+        $context->set('deployment', $this->deployment);
 
         foreach ($this->actions as $action) {
             $closure('Running action: ' . $action->getName());

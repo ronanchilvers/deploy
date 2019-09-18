@@ -8,7 +8,6 @@ use App\Facades\Log;
 use App\Facades\Settings;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\File;
-use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -24,8 +23,8 @@ class ComposerAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
-        $releaseDir   = $context->getOrThrow('release_dir', 'Invalid or missing release directory');
-        $composerJson = File::join($releaseDir, 'composer.json');
+        $deploymentDir = $context->getOrThrow('deployment_dir', 'Invalid or missing deployment directory');
+        $composerJson  = File::join($deploymentDir, 'composer.json');
         if (!is_readable($composerJson)) {
             return;
         }
@@ -39,7 +38,7 @@ class ComposerAction extends AbstractAction implements ActionInterface
         Log::debug('Executing composer', [
             'command' => $command,
         ]);
-        $process      = new Process(explode(' ', $command), $releaseDir);
+        $process      = new Process(explode(' ', $command), $deploymentDir);
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);

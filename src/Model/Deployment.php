@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use App\Model\AbstractModel;
-use App\Model\Finder\ReleaseFinder;
+use App\Model\Finder\DeploymentFinder;
 use App\Model\Project;
 use App\Provider\Gitlab;
 use Carbon\Carbon;
@@ -12,19 +12,19 @@ use Ronanchilvers\Orm\Model;
 use Ronanchilvers\Orm\Traits\HasValidationTrait;
 
 /**
- * Model representing a project release
+ * Model representing a project deployment
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class Release extends Model
+class Deployment extends Model
 {
     use HasValidationTrait;
 
-    static protected $finder       = ReleaseFinder::class;
-    static protected $columnPrefix = 'release';
+    static protected $finder       = DeploymentFinder::class;
+    static protected $columnPrefix = 'deployment';
 
     protected $data = [
-        'release_status' => 'pending'
+        'deployment_status' => 'pending'
     ];
 
     /**
@@ -65,7 +65,7 @@ class Release extends Model
     }
 
     /**
-     * Start the release
+     * Start the deployment
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
@@ -78,7 +78,7 @@ class Release extends Model
     }
 
     /**
-     * Finish the release
+     * Finish the deployment
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
@@ -91,7 +91,7 @@ class Release extends Model
     }
 
     /**
-     * Mark the release as failed
+     * Mark the deployment as failed
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
@@ -104,7 +104,7 @@ class Release extends Model
     }
 
     /**
-     * Is the release deployed?
+     * Is the deployment deployed?
      *
      * @return boolean
      * @author Ronan Chilvers <ronan@d3r.com>
@@ -115,7 +115,7 @@ class Release extends Model
     }
 
     /**
-     * Is the release deploying?
+     * Is the deployment deploying?
      *
      * @return boolean
      * @author Ronan Chilvers <ronan@d3r.com>
@@ -126,7 +126,7 @@ class Release extends Model
     }
 
     /**
-     * Is the release pending?
+     * Is the deployment pending?
      *
      * @return boolean
      * @author Ronan Chilvers <ronan@d3r.com>
@@ -137,7 +137,7 @@ class Release extends Model
     }
 
     /**
-     * Is the release failed?
+     * Is the deployment failed?
      *
      * @return boolean
      * @author Ronan Chilvers <ronan@d3r.com>
@@ -148,7 +148,7 @@ class Release extends Model
     }
 
     /**
-     * Get the duration in seconds for this release
+     * Get the duration in seconds for this deployment
      *
      * @return int
      * @author Ronan Chilvers <ronan@d3r.com>

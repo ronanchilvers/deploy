@@ -5,15 +5,14 @@ namespace App\Action;
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
 use App\Action\Context;
-use App\Builder;
 use App\Facades\Log;
-use App\Model\Release;
+use App\Model\Deployment;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Orm\Orm;
 use Ronanchilvers\Utility\File;
 
 /**
- * Action to clean up old releases after deployment
+ * Action to clean up old deployments after deployment
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
@@ -24,30 +23,30 @@ class CleanupAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
-        $releaseBaseDir = $context->getOrThrow('release_base_dir', 'Invalid or missing release dir');
-        $project        = $context->getOrThrow('project', 'Invalid or missing project');
-        $number         = $configuration->get('cleanup.keep_releases', 5);
-        $releases       = Orm::finder(Release::class)->earlierThan(
+        $deploymentBaseDir = $context->getOrThrow('deployment_base_dir', 'Invalid or missing deployment dir');
+        $project           = $context->getOrThrow('project', 'Invalid or missing project');
+        $number            = $configuration->get('cleanup.keep_deployments', 5);
+        $deployments       = Orm::finder(Deployment::class)->earlierThan(
             $project,
             $number
         );
-        Log::debug(sprintf("Found %d releases to clean", count($releases)));
-        if (0 == count($releases)) {
+        Log::debug(sprintf("Found %d deployments to clean", count($deployments)));
+        if (0 == count($deployments)) {
             return;
         }
-        foreach ($releases as $release) {
-            $releaseDir = File::join($releaseBaseDir, $release->id);
-            Log::error('Cleaning old release', [
-                'release_dir' => $releaseDir,
+        foreach ($deployments as $deployment) {
+            $deploymentDir = File::join($deploymentBaseDir, $deployment->id);
+            Log::error('Cleaning old deployment', [
+                'deployment_dir' => $deploymentDir,
             ]);
-            if (!File::rm($releaseDir)) {
-                Log::error('Unable to remove old release directory', [
-                    'release_dir' => $releaseDir,
+            if (!File::rm($deploymentDir)) {
+                Log::error('Unable to remove old deployment directory', [
+                    'deployment_dir' => $deploymentDir,
                 ]);
             }
-            if (!$release->delete()) {
-                Log::error('Unable to remove old release', [
-                    'release' => $release->toArray(),
+            if (!$deployment->delete()) {
+                Log::error('Unable to remove old deployment', [
+                    'deployment' => $deployment->toArray(),
                 ]);
             }
         }

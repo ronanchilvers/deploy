@@ -15,7 +15,7 @@ use App\Builder;
 use App\Facades\Log;
 use App\Facades\Provider;
 use App\Model\Project;
-use App\Model\Release;
+use App\Model\Deployment;
 use Exception;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Foundation\Queue\Job\Job;
@@ -36,19 +36,19 @@ class DeployJob extends Job
     protected $queue = 'deploy';
 
     /**
-     * @var App\Model\Release
+     * @var App\Model\deployment
      */
-    protected $release;
+    protected $deployment;
 
     /**
      * Class constructor
      *
-     * @param App\Model\Release $project
+     * @param App\Model\Deployment $project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function __construct(Release $release)
+    public function __construct(Deployment $deployment)
     {
-        $this->release = $release;
+        $this->deployment = $deployment;
     }
 
     /**
@@ -59,12 +59,12 @@ class DeployJob extends Job
     public function execute()
     {
         try {
-            $project       = $this->release->project;
+            $project       = $this->deployment->project;
             $data          = Yaml::parseFile(__DIR__ . '/../../config/defaults.yaml');
             $configuration = new Config($data);
             $builder       = new Builder(
                 $project,
-                $this->release,
+                $this->deployment,
                 $configuration
             );
             $provider = Provider::forProject($project);
@@ -78,25 +78,25 @@ class DeployJob extends Job
             $builder->addAction(new FinaliseAction);
             $builder->addAction(new CleanupAction);
 
-            if (!$this->release->start()) {
-                throw new RuntimeException('Unable to mark the release as started');
+            if (!$this->deployment->start()) {
+                throw new RuntimeException('Unable to mark the deployment as started');
             }
             $builder->run($configuration, function ($data) use ($project) {
                 Log::debug($data, [
                     'project' => $project->toArray(),
                 ]);
             });
-            if (!$this->release->finish()) {
-                throw new RuntimeException('Unable to mark the release as finished');
+            if (!$this->deployment->finish()) {
+                throw new RuntimeException('Unable to mark the deployment as finished');
             }
         } catch (Exception $ex) {
             Log::critical($ex->getMessage(), [
                 'project'   => $project->toArray(),
-                'release'   => $release->toArray(),
+                'deployment'   => $deployment->toArray(),
                 'exception' => $ex,
             ]);
-            if (!$this->release->fail()) {
-                throw new RuntimeException('Unable to mark the release as failed');
+            if (!$this->deployment->fail()) {
+                throw new RuntimeException('Unable to mark the deployment as failed');
             }
             throw $ex;
         }

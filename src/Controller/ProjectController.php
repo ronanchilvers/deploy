@@ -7,7 +7,7 @@ use App\Facades\Provider;
 use App\Facades\Router;
 use App\Facades\View;
 use App\Model\Project;
-use App\Model\Release;
+use App\Model\Deployment;
 use App\Queue\DeployJob;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,17 +57,17 @@ class ProjectController
             );
         }
 
-        $finder   = Orm::finder(Release::class);
-        $releases = $finder->forProject($project);
+        $finder   = Orm::finder(Deployment::class);
+        $deployments = $finder->forProject($project);
 
         $selected_number = $request->getQueryParam(
-            'release',
-            (0 < count($releases)) ? $releases[0]->number : false
+            'deployment',
+            (0 < count($deployments)) ? $deployments[0]->number : false
         );
-        $selectedRelease = (0 < count($releases)) ? $releases[0] : false ;
-        foreach ($releases as $release) {
-            if ($release->number == $selected_number) {
-                $selectedRelease = $release;
+        $selecteddeployment = (0 < count($deployments)) ? $deployments[0] : false ;
+        foreach ($deployments as $deployment) {
+            if ($deployment->number == $selected_number) {
+                $selecteddeployment = $deployment;
                 break;
             }
         }
@@ -77,8 +77,8 @@ class ProjectController
             'project/view.html.twig',
             [
                 'project'          => $project,
-                'releases'         => $releases,
-                'selected_release' => $selectedRelease,
+                'deployments'         => $deployments,
+                'selected_deployment' => $selecteddeployment,
             ]
         );
     }
@@ -169,14 +169,14 @@ class ProjectController
         $head = $provider->getHeadInfo(
             $project
         );
-        $release = Orm::finder(Release::class)->nextForProject(
+        $deployment = Orm::finder(Deployment::class)->nextForProject(
             $project
         );
-        Log::debug('Updating release commit information', $head);
-        $release->sha     = $head['sha'];
-        $release->author  = $head['author'];
-        $release->message = $head['message'];
-        if (!$release->save()) {
+        Log::debug('Updating deployment commit information', $head);
+        $deployment->sha     = $head['sha'];
+        $deployment->author  = $head['author'];
+        $deployment->message = $head['message'];
+        if (!$deployment->save()) {
             // @todo Show error to user
             return $response->withRedirect(
                 Router::pathFor('project.view', [
@@ -185,7 +185,7 @@ class ProjectController
             );
         }
         Queue::dispatch(
-            new DeployJob($release)
+            new DeployJob($deployment)
         );
 
         // @todo Show confirmation to user

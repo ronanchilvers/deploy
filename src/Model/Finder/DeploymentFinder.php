@@ -3,19 +3,19 @@
 namespace App\Model\Finder;
 
 use App\Model\Project;
-use App\Model\Release;
+use App\Model\Deployment;
 use Ronanchilvers\Orm\Finder;
 use ClanCats\Hydrahon\Query\Expression;
 
 /**
- * Finder for release models
+ * Finder for deployment models
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class ReleaseFinder extends Finder
+class DeploymentFinder extends Finder
 {
     /**
-     * Get the releases for a project
+     * Get the deployments for a project
      *
      * @return array
      * @author Ronan Chilvers <ronan@d3r.com>
@@ -23,53 +23,53 @@ class ReleaseFinder extends Finder
     public function forProject(Project $project)
     {
         return $this->select()
-            ->where(Release::prefix('project'), $project->id)
-            ->orderBy(Release::prefix('number'), 'desc')
+            ->where(Deployment::prefix('project'), $project->id)
+            ->orderBy(Deployment::prefix('number'), 'desc')
             ->execute();
     }
 
     /**
-     * Get the latest release
+     * Get the latest deployment
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function lastForProject()
     {
         return $this->select()
-            ->where(Release::prefix('project'), $project->id)
-            ->orderBy(Release::prefix('number'), 'desc')
+            ->where(Deployment::prefix('project'), $project->id)
+            ->orderBy(Deployment::prefix('number'), 'desc')
             ->one();
     }
 
     /**
-     * Get the next release for a project
+     * Get the next deployment for a project
      *
-     * This method returns a new unsaved release with the correct release number.
+     * This method returns a new unsaved deployment with the correct deployment number.
      *
      * @param App\Model\Project $project
-     * @return App\Model\Release
+     * @return App\Model\deployment
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function nextForProject(Project $project)
     {
         $existing = $this->select()
-            ->where(Release::prefix('project'), $project->id)
-            ->orderBy(Release::prefix('number'), 'desc')
+            ->where(Deployment::prefix('project'), $project->id)
+            ->orderBy(Deployment::prefix('number'), 'desc')
             ->one();
-        if ($existing instanceof Release) {
+        if ($existing instanceof Deployment) {
             $number = $existing->number;
         } else {
             $number = 0;
         }
-        $release          = new Release;
-        $release->project = $project->id;
-        $release->number  = ++$number;
+        $deployment          = new Deployment;
+        $deployment->project = $project->id;
+        $deployment->number  = ++$number;
 
-        return $release;
+        return $deployment;
     }
 
     /**
-     * Get an array of releases with a number lower than a specified one
+     * Get an array of deployments with a number lower than a specified one
      *
      * @param App\Model\Project $project
      * @param int $number
@@ -78,12 +78,12 @@ class ReleaseFinder extends Finder
     public function earlierThan(Project $project, $number)
     {
         $sql = "SELECT *
-                FROM releases
-                WHERE release_project = 1 AND
-                      release_number <= (
-                          SELECT MAX(release_number)
-                          FROM releases
-                          WHERE release_project = :project
+                FROM deployments
+                WHERE deployment_project = 1 AND
+                      deployment_number <= (
+                          SELECT MAX(deployment_number)
+                          FROM deployments
+                          WHERE deployment_project = :project
                       ) - :number";
 
         return $this->query(

@@ -5,13 +5,9 @@ namespace App\Action;
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
 use App\Facades\Log;
-use App\Model\Project;
-use App\Model\Release;
-use App\Provider\Factory;
 use App\Provider\ProviderInterface;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\File;
-use RuntimeException;
 
 /**
  * Action to checkout the project from source control
@@ -40,35 +36,25 @@ class CheckoutAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
-        $releaseBaseDir = $context->getOrThrow('release_base_dir', 'Invalid or missing release_dir');
-        $project        = $context->getOrThrow('project', 'Invalid or missing project');
-        $release        = $context->getOrThrow('release', 'Invalid or missing release');
-        $releaseDir     = File::join(
-            $releaseBaseDir,
-            $release->number
+        $deploymentBaseDir = $context->getOrThrow('deployment_base_dir', 'Invalid or missing deployment_dir');
+        $project           = $context->getOrThrow('project', 'Invalid or missing project');
+        $deployment        = $context->getOrThrow('deployment', 'Invalid or missing deployment');
+        $deploymentDir     = File::join(
+            $deploymentBaseDir,
+            $deployment->number
         );
         $context->set(
-            'release_dir',
-            $releaseDir
+            'deployment_dir',
+            $deploymentDir
         );
-        // $head = $this->provider->getHeadInfo(
-        //     $project
-        // );
-        // Log::debug('Updating release commit information', $head);
-        // $release->sha     = $head['sha'];
-        // $release->author  = $head['author'];
-        // $release->message = $head['message'];
-        // if (!$release->save()) {
-        //     throw new RuntimeException('Unable to update release with commit information');
-        // }
         $params = [
             'repository' => $project->repository,
-            'sha'        => $release->sha,
+            'sha'        => $deployment->sha,
         ];
         Log::debug('Downloading codebase', $params);
         $this->provider->download(
             $params,
-            $releaseDir
+            $deploymentDir
         );
     }
 }

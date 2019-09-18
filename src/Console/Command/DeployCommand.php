@@ -14,9 +14,8 @@ use App\Action\WritablesAction;
 use App\Builder;
 use App\Builder\BuildException;
 use App\Facades\Provider;
-use App\Facades\Settings;
 use App\Model\Project;
-use App\Model\Release;
+use App\Model\Deployment;
 use Exception;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Orm\Orm;
@@ -62,13 +61,13 @@ class DeployCommand extends Command
             if (!$project instanceof Project) {
                 throw new RuntimeException('Invalid project id');
             }
-            $release       = Orm::finder(Release::class)->nextForProject($project);
-            $release->save();
+            $deployment       = Orm::finder(Deployment::class)->nextForProject($project);
+            $deployment->save();
             $data          = Yaml::parseFile(__DIR__ . '/../../../config/defaults.yaml');
             $configuration = new Config($data);
             $builder       = new Builder(
                 $project,
-                $release,
+                $deployment,
                 $configuration
             );
             $provider = Provider::forProject($project);
@@ -82,19 +81,19 @@ class DeployCommand extends Command
             $builder->addAction(new FinaliseAction);
             $builder->addAction(new CleanupAction);
 
-            if (!$release->start()) {
-                throw new RuntimeException('Unable to mark the release as started');
+            if (!$deployment->start()) {
+                throw new RuntimeException('Unable to mark the deployment as started');
             }
             $builder->run($configuration, function ($data) use ($output) {
                 $output->writeln($data);
             });
-            if (!$release->finish()) {
-                throw new RuntimeException('Unable to mark the release as finished');
+            if (!$deployment->finish()) {
+                throw new RuntimeException('Unable to mark the deployment as finished');
             }
         } catch (Exception $ex) {
             $output->writeln($ex->getMessage());
-            if (!$release->fail()) {
-                throw new RuntimeException('Unable to mark the release as failed');
+            if (!$deployment->fail()) {
+                throw new RuntimeException('Unable to mark the deployment as failed');
             }
             throw $ex;
         }

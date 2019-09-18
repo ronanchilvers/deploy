@@ -14,7 +14,7 @@ use App\Action\WritablesAction;
 use App\Builder;
 use App\Facades\Provider;
 use App\Model\Project;
-use App\Model\Release;
+use App\Model\Deployment;
 use Exception;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Orm\Orm;
@@ -50,14 +50,14 @@ class TestCommand extends Command
     {
         $configuration = $this->getApplication()->getContainer()->get('configuration');
         $project       = Orm::finder(Project::class)->one(1);
-        $release       = Orm::finder(Release::class)->nextForProject($project);
+        $deployment    = Orm::finder(Deployment::class)->nextForProject($project);
 
-        // Save the release
-        $release->save();
+        // Save the deployment
+        $deployment->save();
 
         $builder = new Builder(
             $project,
-            $release,
+            $deployment,
             $configuration
         );
         $builder->addAction(new ScanConfigurationAction(Provider::getService()));
@@ -73,8 +73,5 @@ class TestCommand extends Command
         $builder->run($configuration, function ($data) use ($output) {
             $output->writeln($data);
         });
-
-        // @TODO Remove var_dump
-        // var_dump($builder); exit();
     }
 }

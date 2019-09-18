@@ -19,7 +19,7 @@
             </div>
             <div class="column">
                 <span class="is-size-7">Last Deployment</span><br />
-                {% if not project.last_release %}Not yet deployed{% else %}{{ project.last_release|human_date }}{% endif %}
+                {% if not project.last_deployment %}Not yet deployed{% else %}{{ project.last_deployment|human_date }}{% endif %}
             </div>
             <div class="column">
                 <span class="is-size-7">Author</span><br />

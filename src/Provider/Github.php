@@ -210,7 +210,7 @@ class Github implements ProviderInterface
             throw new RuntimeException('Failed to download codebase - ' . $statusCode);
         }
 
-        // Make sure the release download directory exists
+        // Make sure the deployment download directory exists
         if (!is_dir($directory)) {
             $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
             if (!mkdir($directory, $mode, true)) {

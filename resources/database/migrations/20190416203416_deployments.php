@@ -3,7 +3,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Releases extends AbstractMigration
+class Deployments extends AbstractMigration
 {
     /**
      * Change Method.
@@ -32,49 +32,49 @@ class Releases extends AbstractMigration
      */
     public function change()
     {
-        $projects = $this->table('releases', [
-            'id' => 'release_id',
+        $projects = $this->table('deployments', [
+            'id' => 'deployment_id',
         ]);
         $projects
-            ->addColumn('release_project', 'integer')
-            ->addColumn('release_number', 'integer', [
+            ->addColumn('deployment_project', 'integer')
+            ->addColumn('deployment_number', 'integer', [
                 'default' => 0,
                 'null' => false
             ])
-            ->addColumn('release_sha', 'string', [
+            ->addColumn('deployment_sha', 'string', [
                 'length' => 64,
                 'null' => false
             ])
-            ->addColumn('release_author', 'string', [
+            ->addColumn('deployment_author', 'string', [
                 'length' => 256,
                 'null' => false
             ])
-            ->addColumn('release_message', 'string', [
+            ->addColumn('deployment_message', 'string', [
                 'length' => 1024,
                 'null' => false
             ])
-            ->addColumn('release_configuration', 'string', [
+            ->addColumn('deployment_configuration', 'string', [
                 'length' => 4096,
                 'null' => false
             ])
-            ->addColumn('release_status', 'string', [
+            ->addColumn('deployment_status', 'string', [
                 'length' => 20,
                 'null' => false
             ])
-            ->addColumn('release_started', 'datetime', [
+            ->addColumn('deployment_started', 'datetime', [
                 'null' => true,
                 'default' => null
             ])
-            ->addColumn('release_finished', 'datetime', [
+            ->addColumn('deployment_finished', 'datetime', [
                 'null' => true,
                 'default' => null
             ])
-            ->addColumn('release_failed', 'datetime', [
+            ->addColumn('deployment_failed', 'datetime', [
                 'null' => true,
                 'default' => null
             ])
-            ->addTimestamps('release_created', 'release_updated')
-            ->addIndex(['release_project'])
+            ->addTimestamps('deployment_created', 'deployment_updated')
+            ->addIndex(['deployment_project'])
             ->create();
     }
 }

@@ -30,7 +30,7 @@
         </div>
         <div class="column">
             <p class="heading">Last Deployment</p>
-            <p>{% if project.last_release %}{{ project.last_release|human_date }}{% else %}Not yet deployed{% endif %}</p>
+            <p>{% if project.last_deployment %}{{ project.last_deployment|human_date }}{% else %}Not yet deployed{% endif %}</p>
         </div>
         <div class="column">
             <p class="heading">Last Author</p>
@@ -53,20 +53,20 @@
     </div>
 </section>
 
-{% if 0 < releases|length %}
+{% if 0 < deployments|length %}
 <div class="tabs">
     <ul>
         <li class="tabs-heading">Deployment:</li>
-    {% for release in releases %}
-        <li{% if selected_release.number == release.number %} class="is-active"{% endif %}>
-            <a href="{{ path_for('project.view', { key: project.key }, { release: release.number } ) }}">#{{ release.number }}</a>
+    {% for deployment in deployments %}
+        <li{% if selected_deployment.number == deployment.number %} class="is-active"{% endif %}>
+            <a href="{{ path_for('project.view', { key: project.key }, { deployment: deployment.number } ) }}">#{{ deployment.number }}</a>
         </li>
     {% endfor %}
     </ul>
 </div>
 <section class="section">
-    <div class="box is-border-left-{{ selected_release.status }}">
-    {% if selected_release.deployed %}
+    <div class="box is-border-left-{{ selected_deployment.status }}">
+    {% if selected_deployment.deployed %}
         <a class="button is-once is-block-mobile is-pulled-right">
             <span class="icon"><i class="fas fa-redo-alt"></i></span>
             <span>Re-Deploy</span>
@@ -77,38 +77,38 @@
                 <ul class="content-list">
                     <li>
                         <span class="icon is-inline-block"><i class="fas fa-hashtag"></i></span>
-                        <span class="is-inline-block">{{ sha_link(project, selected_release.sha) }}</span>
+                        <span class="is-inline-block">{{ sha_link(project, selected_deployment.sha) }}</span>
                     </li>
                     <li>
                         <span class="icon is-inline-block"><i class="fas fa-user"></i></span>
-                        <span class="is-inline-block">{{ selected_release.author }}</span>
+                        <span class="is-inline-block">{{ selected_deployment.author }}</span>
                     </li>
                     <li>
                         <span class="icon is-inline-block"><i class="fas fa-align-left"></i></span>
-                        <code class="is-inline-block">{{ selected_release.message }}</code>
+                        <code class="is-inline-block">{{ selected_deployment.message }}</code>
                     </li>
                 </ul>
             </div>
             <div class="column is-narrow">
                 <ul class="content-list">
-                    <li class="is-{{ selected_release.status }}">
-                        {% if selected_release.deployed %}
+                    <li class="is-{{ selected_deployment.status }}">
+                        {% if selected_deployment.deployed %}
                         {% set icon="far fa-thumbs-up" %}
-                        {% elseif selected_release.failed %}
+                        {% elseif selected_deployment.failed %}
                         {% set icon="far fa-thumbs-down" %}
                         {% else %}
                         {% set icon="fas fa-spinner" %}
                         {% endif %}
                         <span class="icon is-inline-block"><i class="{{ icon }}"></i></span>
-                        <span class="is-inline-block">{{ selected_release.status|title }}</span>
+                        <span class="is-inline-block">{{ selected_deployment.status|title }}</span>
                     </li>
                     <li>
                         <span class="icon is-inline-block"><i class="fas fa-stopwatch"></i></span>
-                        <span class="is-inline-block">{{ selected_release.duration }} seconds</span>
+                        <span class="is-inline-block">{{ selected_deployment.duration }} seconds</span>
                     </li>
                     <li>
                         <span class="icon is-inline-block"><i class="far fa-calendar-alt"></i></span>
-                        <span class="is-inline-block tooltip" data-tooltip="{{ selected_release.finished }}">{{ selected_release.finished|human_date }}</span>
+                        <span class="is-inline-block tooltip" data-tooltip="{{ selected_deployment.finished }}">{{ selected_deployment.finished|human_date }}</span>
                     </li>
                 </ul>
             </div>
@@ -139,7 +139,7 @@
         </div>
     </div>
     <div class="tab-pane" id="js-configuration">
-        <pre>{{ selected_release.configuration }}</pre>
+        <pre>{{ selected_deployment.configuration }}</pre>
     </div>
 </section>
 

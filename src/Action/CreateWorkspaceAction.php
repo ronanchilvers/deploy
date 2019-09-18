@@ -32,13 +32,13 @@ class CreateWorkspaceAction extends AbstractAction implements ActionInterface
             $baseDir,
             $key
         );
-        $releaseDir = File::join(
+        $deploymentDir = File::join(
             $projectDir,
-            'releases'
+            'deployments'
         );
         $context->set('project_base_dir', $projectDir);
-        $context->set('release_base_dir', $releaseDir);
-        $locations   = [$projectDir, $releaseDir];
+        $context->set('deployment_base_dir', $deploymentDir);
+        $locations   = [$projectDir, $deploymentDir];
         $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
         foreach ($locations as $location) {
             if (is_dir($location)) {

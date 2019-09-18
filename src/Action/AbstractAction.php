@@ -9,7 +9,7 @@ use Ronanchilvers\Foundation\Traits\Optionable;
 use Ronanchilvers\Utility\Str;
 
 /**
- * Action to symlink the release in to the live location
+ * Action to symlink the deployment in to the live location
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
