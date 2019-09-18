@@ -2,31 +2,36 @@
 
 {% block body %}
 {% if 0 < projects|length %}
-<section class="section">
+<section class="section projects">
 {% for project in projects %}
-    <div class="box">
+    <div class="box project">
         <div class="columns">
-            <div class="column is-narrow is-border-right">
-                <i class="far fa-star"></i>
+            <div class="column is-narrow is-border-right is-border-none-mobile is-pulled-right-mobile">
+                <span class="icon"><i class="far fa-star"></i></span>
             </div>
             <div class="column">
-                <span class="icon"><i class="fab fa-{{ project.provider }}"></i></span><a href="{{ path_for('project.view', { key: project.key }) }}"><span>{{ project.repository }}</span></a>
+                <span class="is-size-7">Repository</span><br />
+                <a href="{{ path_for('project.view', { key: project.key }) }}" class="js-project-link">{{ project.repository }}</a>
             </div>
             <div class="column">
                 <span class="is-size-7">Default Branch</span><br />
                 {{ project.branch }}
             </div>
             <div class="column">
-                <span class="is-size-7">Last Release</span><br />
+                <span class="is-size-7">Last Deployment</span><br />
                 {{ project.last_release|human_date }}
             </div>
             <div class="column">
-                <span class="is-size-7">Commit</span><br />
+                <span class="is-size-7">Author</span><br />
+                {{ project.last_author }}
+            </div>
+            <div class="column">
+                <span class="is-size-7">SHA</span><br />
                 {{ sha_link(project, project.last_sha) }}
             </div>
-            <div class="column is-narrow">
+            <!-- <div class="column is-narrow">
                 <a class="button is-link" href="{{ path_for('project.view', { key: project.key }) }}">View</a>
-            </div>
+            </div> -->
         </div>
     </div>
 {% endfor %}

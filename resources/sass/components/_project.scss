@@ -1,5 +1,8 @@
+.projects .project:hover {
+    background-color: rgba(250,250,250,1);
+    cursor: pointer;
+}
 .project {
-
     &-heading {
         padding: 1rem 1.5rem;
     }
@@ -7,5 +10,4 @@
     &-heading + section.section {
         padding-top: 0;
     }
-
 }

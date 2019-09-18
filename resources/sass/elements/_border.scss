@@ -10,10 +10,25 @@ $colors: (
     .is-border-#{$direction} {
         border-#{$direction}: 1px solid rgba(200,200,200, 0.5);
     }
+    .is-border-none {
+        border: none;
+    }
     @each $status, $color in $status_colors {
         .is-border-#{$direction}-#{$status} {
             border-#{$direction}: 6px solid $color;
         }
     }
-
+    @include mobile() {
+        .is-border-#{$direction}-mobile {
+            border-#{$direction}: 1px solid rgba(200,200,200, 0.5);
+        }
+        .is-border-none-mobile {
+            border: none;
+        }
+        @each $status, $color in $status_colors {
+            .is-border-#{$direction}-#{$status}-mobile {
+                border-#{$direction}: 6px solid $color;
+            }
+        }
+    }
 }

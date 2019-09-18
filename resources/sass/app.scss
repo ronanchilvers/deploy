@@ -6,6 +6,9 @@
 @import "bulma/bulma.sass";
 @import "bulma-extensions/bulma-tooltip/src/sass/index.sass";
 
+// Utilities
+@import "utility/floats";
+
 // Elements
 @import "elements/html";
 @import "elements/body";

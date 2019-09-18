@@ -15,6 +15,7 @@ gulp.task('js', function() {
         }))
         .pipe(uglify())
         .pipe(gulp.dest('./web/js'))
+        .pipe(notify({message: "Javascript compilation complete", onLast: true}))
         .on('error', notify.onError())
         ;
 });

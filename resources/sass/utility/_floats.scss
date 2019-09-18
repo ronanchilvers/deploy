@@ -1,0 +1,9 @@
+$directions: right, left;
+
+@include mobile() {
+    @each $direction in $directions {
+        .is-pulled-#{$direction}-mobile {
+            float: right;
+        }
+    }
+}

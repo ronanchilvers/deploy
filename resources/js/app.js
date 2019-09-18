@@ -6,4 +6,10 @@ $(function () {
     $(".button.is-once").click(function (e) {
         $(this).addClass('is-loading');
     });
+    $('.projects').on('click', '.project', function () {
+        var $link = $(this).find('.js-project-link');
+        if (!!$link && !!$link.attr('href')) {
+            window.location = $link.attr('href');
+        }
+    });
 });
