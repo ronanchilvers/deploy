@@ -53,6 +53,10 @@ class Releases extends AbstractMigration
                 'length' => 1024,
                 'null' => false
             ])
+            ->addColumn('release_configuration', 'string', [
+                'length' => 4096,
+                'null' => false
+            ])
             ->addColumn('release_status', 'string', [
                 'length' => 20,
                 'null' => false

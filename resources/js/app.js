@@ -12,4 +12,14 @@ $(function () {
             window.location = $link.attr('href');
         }
     });
+    $('.tabs').on('click', '.tab', function (e) {
+        e.preventDefault();
+        $pane = $($(this).data('target'));
+        if (0 < $pane.length) {
+            $('.js-tabs li').removeClass('is-active');
+            $(this).closest('li').addClass('is-active');
+            $('.tab-pane').removeClass('is-active');
+            $pane.addClass('is-active');
+        }
+    });
 });

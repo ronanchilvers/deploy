@@ -19,15 +19,15 @@
             </div>
             <div class="column">
                 <span class="is-size-7">Last Deployment</span><br />
-                {{ project.last_release|human_date }}
+                {% if not project.last_release %}Not yet deployed{% else %}{{ project.last_release|human_date }}{% endif %}
             </div>
             <div class="column">
                 <span class="is-size-7">Author</span><br />
-                {{ project.last_author }}
+                {% if not project.last_author %}Not yet deployed{% else %}{{ project.last_author }}{% endif %}
             </div>
             <div class="column">
                 <span class="is-size-7">SHA</span><br />
-                {{ sha_link(project, project.last_sha) }}
+                {% if not project.last_sha %}Not yet deployed{% else %}{{ sha_link(project, project.last_sha) }}{% endif %}
             </div>
             <!-- <div class="column is-narrow">
                 <a class="button is-link" href="{{ path_for('project.view', { key: project.key }) }}">View</a>
@@ -36,43 +36,6 @@
     </div>
 {% endfor %}
 </section>
-
-{#
-<section class="section">
-    <div class="panel">
-        <div class="panel-block">
-            <div class="table-container">
-                <table class="table is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Repository</th>
-                            <th>Last Release</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        {% for project in projects %}
-                            <td>{{ project.name }}</td>
-                            <td>{{ repo_link(project) }} {{ branch_link(project) }}</td>
-                            <td>
-                            {% if project.last_release %}
-                                {{ sha_link(project, project.last_sha) }} deployed {{ project.last_release|human_date }}
-                            {% else %}
-                                Never
-                            {% endif %}
-                            </td>
-                            <td><a class="button is-small is-link" href="{{ path_for('project.view', { id: project.id }) }}">View</a></td>
-                        {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</section>
-#}
 {% else %}
 <section class="hero is-light has-text-centered">
   <div class="hero-body">

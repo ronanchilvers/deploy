@@ -56,7 +56,7 @@
 {% if 0 < releases|length %}
 <div class="tabs">
     <ul>
-        <li>Deployment:</li>
+        <li class="tabs-heading">Deployment:</li>
     {% for release in releases %}
         <li{% if selected_release.number == release.number %} class="is-active"{% endif %}>
             <a href="{{ path_for('project.view', { key: project.key }, { release: release.number } ) }}">#{{ release.number }}</a>
@@ -116,7 +116,33 @@
     </div>
 </section>
 
-{% elseif last_release.pending %}
+<section class="section">
+    <div class="tabs js-tabs">
+        <ul>
+            <li class="is-active"><a href="#" class="tab" data-target="#js-output">Output</a></li>
+            <li><a href="#" class="tab" data-target="#js-configuration">Configuration</a></li>
+        </ul>
+    </div>
+    <div class="tab-pane is-active" id="js-output">
+        <div class="output">
+            <p class="header">Heading line in output</p>
+            <p class="detail">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p class="header">Another Heading line in output</p>
+            <p class="detail">Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+    </div>
+    <div class="tab-pane" id="js-configuration">
+        <pre>{{ selected_release.configuration }}</pre>
+    </div>
+</section>
+
 {% else %}
 <section class="hero is-light has-text-centered">
   <div class="hero-body">
