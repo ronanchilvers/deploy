@@ -217,10 +217,10 @@ class ProjectController
         } catch (Exception $ex) {
             Session::flash(
                 [
-                    'subtitle' => 'Failed to initialise new deployment',
-                    'content'  => $ex->getMessage(),
+                    'heading' => 'Failed to initialise new deployment',
+                    'content' => $ex->getMessage(),
                 ],
-                'danger'
+                'error'
             );
             Log::error('Failed to initialise new deployment', [
                 'exception' => $ex,

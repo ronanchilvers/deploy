@@ -173,7 +173,7 @@ class Github implements ProviderInterface
         if (!$data = json_decode($data, true)) {
             $closure(
                 'error',
-                'Unable to parse Github Response JSON',
+                'Unable to parse Github response JSON',
                 "API URL : {$url}"
             );
             throw new RuntimeException('Invalid commit data for head');
@@ -370,10 +370,7 @@ class Github implements ProviderInterface
         if (404 == $info['http_code']) {
             $closure(
                 'info',
-                'No deployment configuration found in repository - using default',
-                implode("\n", [
-                    "API URL - {$url}",
-                ])
+                'No deployment configuration found in repository - using defaults'
             );
             Log::debug('Remote configuration file not found', [
                 'project' => $project->toArray(),
@@ -384,7 +381,7 @@ class Github implements ProviderInterface
         if (!$data || !isset($data['content'])) {
             $closure(
                 'error',
-                'Failed to parse ',
+                'Failed to parse Github response json',
                 implode("\n", [
                     "API URL - {$url}",
                     "JSON - " . $json

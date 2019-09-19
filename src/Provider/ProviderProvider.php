@@ -30,9 +30,9 @@ class ProviderProvider implements ServiceProviderInterface
         });
         // Gitlab
         $container->share(Gitlab::class, function ($c){
-            // $token = Settings::get('providers.github.token');
+            $token = Settings::get('providers.gitlab.token');
 
-            return new Gitlab('1234');
+            return new Gitlab($token);
         });
 
         $container->share(Factory::class, function ($c) {

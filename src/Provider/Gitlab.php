@@ -31,22 +31,17 @@ class Gitlab implements ProviderInterface
     /**
      * @var string
      */
-    protected $headUrl     = 'https://api.gitlab.com/repos/{repository}/git/refs/heads/{branch}';
+    protected $headUrl     = 'https://gitlab.com/api/v4/projects/{repository}/repository/commits/{branch}';
 
     /**
      * @var string
      */
-    protected $commitUrl   = 'https://api.gitlab.com/repos/{repository}/commits/{sha}';
+    protected $downloadUrl = 'https://gitlab.com/api/v4/projects/{repository}/repository/archive.tar.gz?sha={sha}';
 
     /**
      * @var string
      */
-    protected $downloadUrl = 'https://api.gitlab.com/repos/{repository}/tarball/{sha}';
-
-    /**
-     * @var string
-     */
-    protected $configUrl   = 'https://api.gitlab.com/repos/{repository}/contents/deploy.yaml';
+    protected $configUrl   = 'https://gitlab.com/api/v4/projects/{repository}/repository/files/deploy.yaml?ref={branch}';
 
     /**
      * @var string
@@ -149,35 +144,42 @@ class Gitlab implements ProviderInterface
     public function getHeadInfo(Project $project, Closure $closure = null)
     {
         $params = [
-            'repository' => $project->repository,
+            'repository' => urlencode($project->repository),
             'branch'     => $project->branch,
         ];
-        $url = $this->formatUrl(
-            $params,
-            $this->headUrl
+        $url = Str::moustaches(
+            $this->headUrl,
+            $params
         );
+        $closure('info', 'Querying Gitlab API for head commit data', "API URL : {$url}");
         $curl = $this->getCurlHandle($url);
         $data = curl_exec($curl);
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-        if (!$data = json_decode($data, true)) {
-            throw new RuntimeException('Invalid commit data for head');
+        if (200 != $statusCode) {
+            $closure(
+                'error',
+                'Gitlab API request failed',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
+                ])
+            );
+            throw new RuntimeException('Unable to query Gitlab API - ' . $statusCode . ' response code');
         }
-        $params['sha'] = $data['object']['sha'];
-        $url = $this->formatUrl(
-            $params,
-            $this->commitUrl
-        );
-        $curl = $this->getCurlHandle($url);
-        $data = curl_exec($curl);
-        curl_close($curl);
         if (!$data = json_decode($data, true)) {
-            throw new RuntimeException('Invalid commit data for ' . $params['sha']);
+            $closure(
+                'error',
+                'Unable to parse Gitlab response JSON',
+                "API URL : {$url}"
+            );
+            throw new RuntimeException('Invalid commit data for head');
         }
 
         return [
-            'sha'    => $data['sha'],
-            'author' => $data['commit']['author']['email'],
-            'message'=> $data['commit']['message'],
+            'sha'    => $data['id'],
+            'author' => $data['author_email'],
+            'message'=> $data['title'],
         ];
     }
 
@@ -186,14 +188,28 @@ class Gitlab implements ProviderInterface
      */
     public function download($params, $directory, Closure $closure = null)
     {
+        if (isset($params['repository'])) {
+            $params['repository'] = str_replace('.', '%2E', urlencode($params['repository']));
+        }
         $url = $this->formatUrl(
             $params,
             $this->downloadUrl
+        );
+        $closure(
+            'info',
+            'Initiating codebase download using Gitlab provider'
         );
 
         // Download the code tarball
         $filename = tempnam('/tmp', 'deploy-' . $params['sha'] . '-');
         if (!$handle = fopen($filename, "w")) {
+            $closure(
+                'error',
+                'Unable to open temporary download file',
+                implode("\n", [
+                    "Temporary filename - {$filename}"
+                ])
+            );
             throw new RuntimeException('Unable to open temporary file');
         }
         $curl = $this->getCurlHandle($url);
@@ -202,19 +218,50 @@ class Gitlab implements ProviderInterface
             CURLOPT_FILE           => $handle
         ]);
         if (false === curl_exec($curl)) {
+            $closure(
+                'error',
+                'Error downloading codebase',
+                implode("\n", [
+                    "Filename - {$filename}",
+                    "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl),
+                ])
+            );
             throw new RuntimeException(curl_errno($curl) . ' - ' . curl_error($curl));
         }
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
         fclose($handle);
         if($statusCode != 200){
+            $closure(
+                'error',
+                'Error downloading codebase',
+                implode("\n", [
+                    "Filename - {$filename}",
+                    "Status code - {$statusCode}",
+                ])
+            );
             throw new RuntimeException('Failed to download codebase - ' . $statusCode);
         }
 
         // Make sure the deployment download directory exists
         if (!is_dir($directory)) {
             $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
+            $closure(
+                'info',
+                'Creating deployment directory',
+                implode("\n", [
+                    "Directory - {$directory}",
+                ])
+            );
+
             if (!mkdir($directory, $mode, true)) {
+                $closure(
+                    'error',
+                    'Failed to create deployment directory',
+                    implode("\n", [
+                        "Directory - {$directory}",
+                    ])
+                );
                 throw new RuntimeException(
                     'Unable to create build directory at ' . $directory
                 );
@@ -222,17 +269,43 @@ class Gitlab implements ProviderInterface
         }
 
         // Decompress the archive into the download directory
-        $command = explode(' ', "/usr/bin/tar --strip-components=1 -xzf {$filename} -C {$directory}");
-        $process = new Process($command);
+        $command = "/usr/bin/tar --strip-components=1 -xzf {$filename} -C {$directory}";
+        $closure(
+            'info',
+            'Unpacking codebase tarball',
+            implode("\n", [
+                "Command - {$command}",
+            ])
+        );
+        $process = new Process(explode(' ', $command));
         $process->run();
         if (!$process->isSuccessful()) {
+            $closure(
+                'error',
+                'Failed to unpack codebase tarball',
+                implode("\n", [
+                    "Command - {$command}",
+                    $process->getErrorOutput(),
+                ])
+            );
             throw new ProcessFailedException($process);
         }
 
         // Remove the downloaded archive
         if (!unlink($filename)) {
+            $closure(
+                'error',
+                'Codebase tarball unpacked',
+                implode("\n", [
+                    $process->getOutput(),
+                ])
+            );
             throw new RuntimeException('Unable to remove local code archive');
         }
+        $closure(
+            'info',
+            'Codebase download completed'
+        );
 
         return true;
     }
@@ -242,28 +315,83 @@ class Gitlab implements ProviderInterface
      */
     public function scanConfiguration(Project $project, Closure $closure = null)
     {
+        $params = $project->toArray();
+        $params['repository'] = urlencode($params['repository']);
         $url = $this->formatUrl(
-            $project->toArray(),
+            $params,
             $this->configUrl
         );
+        $closure(
+            'info',
+            'Querying Gitlab API for deployment configuration',
+            implode("\n", [
+                "API URL - {$url}"
+            ])
+        );
         $curl = $this->getCurlHandle($url);
-        $data = curl_exec($curl);
+        if (false === ($json = curl_exec($curl))) {
+            $closure(
+                'error',
+                'Gitlab API request failed',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
+                ])
+            );
+            throw new RuntimeException("(" . curl_errno($curl) . ') ' . curl_error($curl));
+        }
         $info = curl_getinfo($curl);
         if (404 == $info['http_code']) {
+            $closure(
+                'info',
+                'No deployment configuration found in repository - using defaults'
+            );
             Log::debug('Remote configuration file not found', [
                 'project' => $project->toArray(),
             ]);
             return;
         }
-        $data = json_decode($data, true);
+        $data = json_decode($json, true);
         if (!$data || !isset($data['content'])) {
+            $closure(
+                'error',
+                'Failed to parse Gitlab response json',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "JSON - " . $json
+                ])
+            );
             Log::debug('Remote configuration file could not be read', [
                 'project' => $project->toArray(),
             ]);
             return;
         }
         $yaml = base64_decode($data['content']);
-        $yaml = Yaml::parse($yaml);
+        try {
+            $yaml = Yaml::parse($yaml);
+            $closure(
+                'info',
+                'Parsed YAML deployment configuration successfully',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "JSON - " . $json
+                ])
+            );
+        } catch (Exception $ex) {
+            $closure(
+                'info',
+                'Unable to parse YAML deployment configuration',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "Exception - " . $ex->getMessage(),
+                ])
+            );
+            Log::error('Unable to parse YAML deployment configuration', [
+                'project'   => $project->toArray(),
+                'exception' => $ex,
+            ]);
+            return;
+        }
 
         return new Config($yaml);
     }
@@ -302,7 +430,7 @@ class Gitlab implements ProviderInterface
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 5,
             CURLOPT_HTTPHEADER     => [
-                "Authorization: token {$this->token}"
+                "Private-Token: {$this->token}"
             ],
         ]);
 

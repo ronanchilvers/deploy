@@ -92,7 +92,7 @@ class DeployJob extends Job
         } catch (Exception $ex) {
             Log::critical($ex->getMessage(), [
                 'project'   => $project->toArray(),
-                'deployment'   => $deployment->toArray(),
+                'deployment'   => $this->deployment->toArray(),
                 'exception' => $ex,
             ]);
             if (!$this->deployment->fail()) {
