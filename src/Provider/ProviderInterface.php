@@ -3,6 +3,7 @@
 namespace App\Provider;
 
 use App\Model\Project;
+use Closure;
 
 /**
  * Interface for source control providers
@@ -53,25 +54,29 @@ interface ProviderInterface
      * Get the HEAD commit data for a given project, returned as an array
      *
      * @param App\Model\Project $project
+     * @param Closure $closure Callback for progress feedback - is passed $header and $detail strings
      * @return array
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getHeadInfo(Project $project);
+    public function getHeadInfo(Project $project, Closure $closure = null);
 
     /**
      * Download project code into a given directory
      *
      * @param array $params The parameters for the download - repository and ref (sha)
      * @param string $directory
+     * @param Closure $closure Callback for progress feedback - is passed $header and $detail strings
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function download($params, $directory);
+    public function download($params, $directory, Closure $closure = null);
 
     /**
      * Scan the remote repository for configuration information
      *
+     * @param App\Model\Project $project
+     * @param Closure $closure Callback for progress feedback - is passed $header and $detail strings
      * @return Ronanchilvers\Foundation\Config
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function scanConfiguration(Project $project);
+    public function scanConfiguration(Project $project, Closure $closure = null);
 }

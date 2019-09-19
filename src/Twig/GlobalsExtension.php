@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Facades\Session;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
@@ -18,6 +19,7 @@ class GlobalsExtension extends AbstractExtension implements GlobalsInterface
     public function getGlobals()
     {
         return [
+            'session'  => Session::getService(),
             'main_nav' => [
                 [
                     'name' => 'Project List',

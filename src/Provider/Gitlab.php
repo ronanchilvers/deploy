@@ -7,7 +7,8 @@ use App\Facades\Log;
 use App\Facades\Settings;
 use App\Model\Project;
 use App\Provider\ProviderInterface;
-use PharData;
+use Closure;
+use Exception;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\Str;
 use RuntimeException;
@@ -145,7 +146,7 @@ class Gitlab implements ProviderInterface
     /**
      * @see App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(Project $project)
+    public function getHeadInfo(Project $project, Closure $closure = null)
     {
         $params = [
             'repository' => $project->repository,
@@ -183,7 +184,7 @@ class Gitlab implements ProviderInterface
     /**
      * @see App\Provider\ProviderInterface::download()
      */
-    public function download($params, $directory)
+    public function download($params, $directory, Closure $closure = null)
     {
         $url = $this->formatUrl(
             $params,
@@ -239,7 +240,7 @@ class Gitlab implements ProviderInterface
     /**
      * @see App\Provider\ProviderInterface::scanConfiguration()
      */
-    public function scanConfiguration(Project $project)
+    public function scanConfiguration(Project $project, Closure $closure = null)
     {
         $url = $this->formatUrl(
             $project->toArray(),

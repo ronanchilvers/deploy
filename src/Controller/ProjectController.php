@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Facades\Log;
 use App\Facades\Provider;
 use App\Facades\Router;
+use App\Facades\Session;
 use App\Facades\View;
-use App\Model\Project;
 use App\Model\Deployment;
+use App\Model\Event;
+use App\Model\Project;
 use App\Queue\DeployJob;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Ronanchilvers\Foundation\Facade\Queue;
@@ -64,21 +67,26 @@ class ProjectController
             'deployment',
             (0 < count($deployments)) ? $deployments[0]->number : false
         );
-        $selecteddeployment = (0 < count($deployments)) ? $deployments[0] : false ;
+        $selectedDeployment = (0 < count($deployments)) ? $deployments[0] : false ;
         foreach ($deployments as $deployment) {
             if ($deployment->number == $selected_number) {
-                $selecteddeployment = $deployment;
+                $selectedDeployment = $deployment;
                 break;
             }
+        }
+        $events = [];
+        if ($selectedDeployment) {
+            $events = $selectedDeployment->events;
         }
 
         return View::render(
             $response,
             'project/view.html.twig',
             [
-                'project'          => $project,
+                'project'             => $project,
                 'deployments'         => $deployments,
-                'selected_deployment' => $selecteddeployment,
+                'selected_deployment' => $selectedDeployment,
+                'events'              => $events,
             ]
         );
     }
@@ -97,6 +105,9 @@ class ProjectController
             $data = $request->getParsedBody()['project'];
             $project->fromArray($data);
             if ($project->saveWithValidation()) {
+                Session::flash([
+                    'heading' => 'Project added'
+                ], 'success');
                 return $response->withRedirect(
                     Router::pathFor('project.index')
                 );
@@ -131,6 +142,9 @@ class ProjectController
             $data = $request->getParsedBody()['project'];
             $project->fromArray($data);
             if ($project->saveWithValidation()) {
+                Session::flash([
+                    'heading' => 'Project saved'
+                ]);
                 return $response->withRedirect(
                     Router::pathFor('project.edit', [
                         'key' => $project->key
@@ -158,35 +172,60 @@ class ProjectController
         ResponseInterface $response,
         $args
     ) {
-        if (!$project = $this->projectFromArgs($args)) {
-            return $response->withRedirect(
-                Router::pathFor('project.index')
+        try {
+            if (!$project = $this->projectFromArgs($args)) {
+                return $response->withRedirect(
+                    Router::pathFor('project.index')
+                );
+            }
+            $provider = Provider::forProject(
+                $project
             );
-        }
-        $provider = Provider::forProject(
-            $project
-        );
-        $head = $provider->getHeadInfo(
-            $project
-        );
-        $deployment = Orm::finder(Deployment::class)->nextForProject(
-            $project
-        );
-        Log::debug('Updating deployment commit information', $head);
-        $deployment->sha     = $head['sha'];
-        $deployment->author  = $head['author'];
-        $deployment->message = $head['message'];
-        if (!$deployment->save()) {
-            // @todo Show error to user
-            return $response->withRedirect(
-                Router::pathFor('project.view', [
-                    'key' => $project->key
-                ])
+            $deployment = Orm::finder(Deployment::class)->nextForProject(
+                $project
             );
+            $finder = Orm::finder(Event::class);
+            $head = $provider->getHeadInfo(
+                $project,
+                function ($type, $header, $detail = '') use ($finder, $deployment) {
+                    $finder->event(
+                        $type,
+                        $deployment,
+                        $header,
+                        $detail
+                    );
+                }
+            );
+            Log::debug('Updating deployment commit information', $head);
+            $deployment->sha     = $head['sha'];
+            $deployment->author  = $head['author'];
+            $deployment->message = $head['message'];
+            if (!$deployment->save()) {
+                // @todo Show error to user
+                return $response->withRedirect(
+                    Router::pathFor('project.view', [
+                        'key' => $project->key
+                    ])
+                );
+            }
+            Queue::dispatch(
+                new DeployJob($deployment)
+            );
+            Session::flash([
+                'heading' => 'Deploy queued successfully'
+            ]);
+        } catch (Exception $ex) {
+            Session::flash(
+                [
+                    'subtitle' => 'Failed to initialise new deployment',
+                    'content'  => $ex->getMessage(),
+                ],
+                'danger'
+            );
+            Log::error('Failed to initialise new deployment', [
+                'exception' => $ex,
+            ]);
         }
-        Queue::dispatch(
-            new DeployJob($deployment)
-        );
 
         // @todo Show confirmation to user
         return $response->withRedirect(

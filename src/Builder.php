@@ -5,10 +5,13 @@ namespace App;
 use App\Action\ActionInterface;
 use App\Action\Context;
 use App\Facades\Log;
-use App\Model\Project;
 use App\Model\Deployment;
+use App\Model\Event;
+use App\Model\Finder\EventFinder;
+use App\Model\Project;
 use Closure;
 use Ronanchilvers\Foundation\Config;
+use Ronanchilvers\Orm\Orm;
 use SplQueue;
 
 /**
@@ -84,12 +87,15 @@ class Builder
             };
         }
 
+        $eventFinder = Orm::finder(Event::class);
         $context = new Context();
         $context->set('project', $this->project);
         $context->set('deployment', $this->deployment);
 
         foreach ($this->actions as $action) {
-            $closure('Running action: ' . $action->getName());
+            $header = 'Running action: ' . $action->getName();
+            $closure($header);
+            $action->setEventFinder($eventFinder);
             $action->run(
                 $configuration,
                 $context

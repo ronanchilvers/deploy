@@ -7,7 +7,8 @@ use App\Facades\Log;
 use App\Facades\Settings;
 use App\Model\Project;
 use App\Provider\ProviderInterface;
-use PharData;
+use Closure;
+use Exception;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\Str;
 use RuntimeException;
@@ -145,7 +146,7 @@ class Github implements ProviderInterface
     /**
      * @see App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(Project $project)
+    public function getHeadInfo(Project $project, Closure $closure = null)
     {
         $params = [
             'repository' => $project->repository,
@@ -155,10 +156,26 @@ class Github implements ProviderInterface
             $params,
             $this->headUrl
         );
+        $closure('info', 'Querying Github API for head commit data', "API URL : {$url}");
         $curl = $this->getCurlHandle($url);
-        $data = curl_exec($curl);
+        if (false === ($data = curl_exec($curl))) {
+            $closure(
+                'error',
+                'Github API request failed',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
+                ])
+            );
+            throw new RuntimeException('CURL request failed - (' . curl_errno($curl) . ') ' . curl_error($curl));
+        }
         curl_close($curl);
         if (!$data = json_decode($data, true)) {
+            $closure(
+                'error',
+                'Unable to parse Github Response JSON',
+                "API URL : {$url}"
+            );
             throw new RuntimeException('Invalid commit data for head');
         }
         $params['sha'] = $data['object']['sha'];
@@ -166,10 +183,28 @@ class Github implements ProviderInterface
             $params,
             $this->commitUrl
         );
+        $closure('info', 'Querying Github API for commit detail', "API URL : {$url}");
         $curl = $this->getCurlHandle($url);
-        $data = curl_exec($curl);
+        if (false === ($data = curl_exec($curl))) {
+            $closure(
+                'error',
+                'Github API request failed',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
+                ])
+            );
+            throw new RuntimeException('CURL request failed - (' . curl_errno($curl) . ') ' . curl_error($curl));
+        }
         curl_close($curl);
         if (!$data = json_decode($data, true)) {
+            $closure(
+                'error',
+                'Unable to parse Github Response JSON',
+                implode("\n", [
+                    "API URL - {$url}"
+                ])
+            );
             throw new RuntimeException('Invalid commit data for ' . $params['sha']);
         }
 
@@ -183,16 +218,27 @@ class Github implements ProviderInterface
     /**
      * @see App\Provider\ProviderInterface::download()
      */
-    public function download($params, $directory)
+    public function download($params, $directory, Closure $closure = null)
     {
         $url = $this->formatUrl(
             $params,
             $this->downloadUrl
         );
+        $closure(
+            'info',
+            'Initiating codebase download using Github provider'
+        );
 
         // Download the code tarball
         $filename = tempnam('/tmp', 'deploy-' . $params['sha'] . '-');
         if (!$handle = fopen($filename, "w")) {
+            $closure(
+                'error',
+                'Unable to open temporary download file',
+                implode("\n", [
+                    "Temporary filename - {$filename}"
+                ])
+            );
             throw new RuntimeException('Unable to open temporary file');
         }
         $curl = $this->getCurlHandle($url);
@@ -201,19 +247,49 @@ class Github implements ProviderInterface
             CURLOPT_FILE           => $handle
         ]);
         if (false === curl_exec($curl)) {
+            $closure(
+                'error',
+                'Error downloading codebase',
+                implode("\n", [
+                    "Filename - {$filename}",
+                    "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl),
+                ])
+            );
             throw new RuntimeException(curl_errno($curl) . ' - ' . curl_error($curl));
         }
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
         fclose($handle);
         if($statusCode != 200){
+            $closure(
+                'error',
+                'Error downloading codebase',
+                implode("\n", [
+                    "Filename - {$filename}",
+                    "Status code - {$statusCode}",
+                ])
+            );
             throw new RuntimeException('Failed to download codebase - ' . $statusCode);
         }
 
         // Make sure the deployment download directory exists
         if (!is_dir($directory)) {
             $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
+            $closure(
+                'info',
+                'Creating deployment directory',
+                implode("\n", [
+                    "Directory - {$directory}",
+                ])
+            );
             if (!mkdir($directory, $mode, true)) {
+                $closure(
+                    'error',
+                    'Failed to create deployment directory',
+                    implode("\n", [
+                        "Directory - {$directory}",
+                    ])
+                );
                 throw new RuntimeException(
                     'Unable to create build directory at ' . $directory
                 );
@@ -221,17 +297,43 @@ class Github implements ProviderInterface
         }
 
         // Decompress the archive into the download directory
-        $command = explode(' ', "/usr/bin/tar --strip-components=1 -xzf {$filename} -C {$directory}");
-        $process = new Process($command);
+        $command = "/usr/bin/tar --strip-components=1 -xzf {$filename} -C {$directory}";
+        $closure(
+            'info',
+            'Unpacking codebase tarball',
+            implode("\n", [
+                "Command - {$command}",
+            ])
+        );
+        $process = new Process(explode(' ', $command));
         $process->run();
         if (!$process->isSuccessful()) {
+            $closure(
+                'error',
+                'Failed to unpack codebase tarball',
+                implode("\n", [
+                    "Command - {$command}",
+                    $process->getErrorOutput(),
+                ])
+            );
             throw new ProcessFailedException($process);
         }
 
         // Remove the downloaded archive
         if (!unlink($filename)) {
+            $closure(
+                'error',
+                'Codebase tarball unpacked',
+                implode("\n", [
+                    $process->getOutput(),
+                ])
+            );
             throw new RuntimeException('Unable to remove local code archive');
         }
+        $closure(
+            'info',
+            'Codebase download completed'
+        );
 
         return true;
     }
@@ -239,30 +341,86 @@ class Github implements ProviderInterface
     /**
      * @see App\Provider\ProviderInterface::scanConfiguration()
      */
-    public function scanConfiguration(Project $project)
+    public function scanConfiguration(Project $project, Closure $closure = null)
     {
         $url = $this->formatUrl(
             $project->toArray(),
             $this->configUrl
         );
+        $closure(
+            'info',
+            'Querying Github API for deployment configuration',
+            implode("\n", [
+                "API URL - {$url}"
+            ])
+        );
         $curl = $this->getCurlHandle($url);
-        $data = curl_exec($curl);
+        if (false === ($json = curl_exec($curl))) {
+            $closure(
+                'error',
+                'Github API request failed',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
+                ])
+            );
+            throw new RuntimeException("(" . curl_errno($curl) . ') ' . curl_error($curl));
+        }
         $info = curl_getinfo($curl);
         if (404 == $info['http_code']) {
+            $closure(
+                'info',
+                'No deployment configuration found in repository - using default',
+                implode("\n", [
+                    "API URL - {$url}",
+                ])
+            );
             Log::debug('Remote configuration file not found', [
                 'project' => $project->toArray(),
             ]);
             return;
         }
-        $data = json_decode($data, true);
+        $data = json_decode($json, true);
         if (!$data || !isset($data['content'])) {
+            $closure(
+                'error',
+                'Failed to parse ',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "JSON - " . $json
+                ])
+            );
             Log::debug('Remote configuration file could not be read', [
                 'project' => $project->toArray(),
             ]);
             return;
         }
         $yaml = base64_decode($data['content']);
-        $yaml = Yaml::parse($yaml);
+        try {
+            $yaml = Yaml::parse($yaml);
+            $closure(
+                'info',
+                'Parsed YAML deployment configuration successfully',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "JSON - " . $json
+                ])
+            );
+        } catch (Exception $ex) {
+            $closure(
+                'info',
+                'Unable to parse YAML deployment configuration',
+                implode("\n", [
+                    "API URL - {$url}",
+                    "Exception - " . $ex->getMessage(),
+                ])
+            );
+            Log::error('Unable to parse YAML deployment configuration', [
+                'project'   => $project->toArray(),
+                'exception' => $ex,
+            ]);
+            return;
+        }
 
         return new Config($yaml);
     }

@@ -2,17 +2,52 @@
     color: $white;
     background-color: $black;
     border-radius: $radius;
-    padding: 1.5rem;
+    padding: 1.5rem 0;
     font-family: monospace;
+    overflow: scroll;
 
     p {
         padding: 0;
         margin: 0;
     }
+    .header, .detail {
+        font-size: 1.1rem;
+        padding: 0 1.5rem;
+    }
     .header {
         font-weight: 600;
     }
+    .header.has-detail {
+        cursor: pointer;
+    }
+    .header:before {
+        display: inline-block;
+        content: " ";
+        padding-right: 1rem;
+    }
+    .header.has-detail:before {
+        content: "\25BA";
+        font-size: 0.7rem;
+        padding-right: 0.3rem;
+    }
+    .header.is-active.has-detail:before {
+        content: "\25BC";
+    }
+    .header.is-type-error {
+        color: $red;
+    }
     .detail {
-        padding-left: 0.5rem;
+        display: none;
+        font-weight: 300;
+        background-color: rgba(75,75,75,1);
+        padding-left: 2.5rem;
+    }
+    .detail.is-active {
+        display: block;
+    }
+    pre {
+        background-color: transparent;
+        color: $white;
+        padding: 0;
     }
 }

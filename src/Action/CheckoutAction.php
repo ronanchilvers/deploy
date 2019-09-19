@@ -51,10 +51,26 @@ class CheckoutAction extends AbstractAction implements ActionInterface
             'repository' => $project->repository,
             'sha'        => $deployment->sha,
         ];
+        $this->info(
+            $deployment,
+            'Downloading codebase',
+            [
+                "Repository - {$project->repository}",
+                "SHA - {$deployment->sha}",
+            ]
+        );
         Log::debug('Downloading codebase', $params);
         $this->provider->download(
             $params,
-            $deploymentDir
+            $deploymentDir,
+            function ($type, $header, $detail = '') use ($deployment) {
+                $this->eventFinder->event(
+                    $type,
+                    $deployment,
+                    $header,
+                    $detail
+                );
+            }
         );
     }
 }

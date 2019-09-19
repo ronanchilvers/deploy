@@ -6,6 +6,7 @@ use App\Action\AbstractAction;
 use App\Action\ActionInterface;
 use App\Facades\Log;
 use App\Facades\Settings;
+use App\Model\Deployment;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\File;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -23,12 +24,17 @@ class ComposerAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
+        $deployment    = $context->getOrThrow('deployment', 'Invalid or missing deployment');
         $deploymentDir = $context->getOrThrow('deployment_dir', 'Invalid or missing deployment directory');
         $composerJson  = File::join($deploymentDir, 'composer.json');
         if (!is_readable($composerJson)) {
+            $this->info(
+                $deployment,
+                'No composer.json file found - skipping composer installation'
+            );
             return;
         }
-        $composerPath = $this->getComposerPath();
+        $composerPath = $this->getComposerPath($deployment);
         $composerArgs = $configuration->get(
             'composer.command',
             'install --no-dev --optimize-autoloader'
@@ -38,11 +44,29 @@ class ComposerAction extends AbstractAction implements ActionInterface
         Log::debug('Executing composer', [
             'command' => $command,
         ]);
+        $this->info(
+            $deployment,
+            'Running composer to install dependencies',
+            [
+                "Directory - {$deploymentDir}",
+                "Command - {$command}",
+            ]
+        );
         $process      = new Process(explode(' ', $command), $deploymentDir);
         $process->run();
         if (!$process->isSuccessful()) {
+            $this->error(
+                $deployment,
+                'Composer run failed',
+                $process->getErrorOutput()
+            );
             throw new ProcessFailedException($process);
         }
+        $this->info(
+            $deployment,
+            'Composer run completed',
+            $process->getOutput()
+        );
     }
 
     /**
@@ -55,10 +79,14 @@ class ComposerAction extends AbstractAction implements ActionInterface
      * @throws RuntimeException If composer cannot be found
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function getComposerPath()
+    protected function getComposerPath(Deployment $deployment)
     {
         $filename = '/tmp/composer.phar';
         if (!is_readable($filename)) {
+            $this->info(
+                $deployment,
+                'Downloading composer.phar'
+            );
             $installer = '/tmp/composer-setup.php';
             if (!copy('https://getcomposer.org/installer', $installer)) {
                 throw new RuntimeException('Unable to download composer installer');
@@ -72,9 +100,18 @@ class ComposerAction extends AbstractAction implements ActionInterface
             $process = new Process([$phpPath, $installer], '/tmp');
             $process->run();
             if (!$process->isSuccessful()) {
+                $this->error(
+                    $deployment,
+                    'Failed downloading composer.phar',
+                    $process->getErrorOutput()
+                );
                 throw new RuntimeException('Failed to run composer installer');
             }
             if (!unlink($installer)) {
+                $this->error(
+                    $deployment,
+                    'Unable to remove the composer installer file ' . $installer
+                );
                 throw new RuntimeException('Unable to remove the composer installer file');
             }
         }

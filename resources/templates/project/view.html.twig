@@ -54,9 +54,9 @@
 </section>
 
 {% if 0 < deployments|length %}
-<div class="tabs">
+<div class="tabs is-boxed">
     <ul>
-        <li class="tabs-heading">Deployment:</li>
+        <!-- <li class="tabs-heading">Deployment:</li> -->
     {% for deployment in deployments %}
         <li{% if selected_deployment.number == deployment.number %} class="is-active"{% endif %}>
             <a href="{{ path_for('project.view', { key: project.key }, { deployment: deployment.number } ) }}">#{{ deployment.number }}</a>
@@ -125,21 +125,22 @@
     </div>
     <div class="tab-pane is-active" id="js-output">
         <div class="output">
-            <p class="header">Heading line in output</p>
-            <p class="detail">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            <p class="header">Another Heading line in output</p>
-            <p class="detail">Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    {% if events|length %}
+        {% for event in events %}
+            {% set type_class = 'is-type-' ~ event.type %}
+            {% set has_detail = (0 < event.detail|length) %}
+            <p {% if has_detail %}class="header has-detail {{ type_class }}" data-detail="event-detail-{{ loop.index }}"{% else %}class="header {{ type_class }}"{% endif %}>{{ event.header }}</p>
+            {% if has_detail %}
+            <pre class="detail" id="event-detail-{{ loop.index }}">{{ event.detail }}</pre>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p class="header">No events found</p>
+    {% endif %}
         </div>
     </div>
     <div class="tab-pane" id="js-configuration">
-        <pre>{{ selected_deployment.configuration }}</pre>
+        <pre>{% if selected_deployment.configuration %}{{ selected_deployment.configuration }}{% else %}Configuration not yet available{% endif %}</pre>
     </div>
 </section>
 

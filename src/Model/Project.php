@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use App\Facades\Strategy;
-use App\Model\AbstractModel;
 use App\Model\Finder\ProjectFinder;
 use Respect\Validation\Validator;
 use Ronanchilvers\Orm\Model;

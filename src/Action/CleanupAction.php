@@ -23,6 +23,7 @@ class CleanupAction extends AbstractAction implements ActionInterface
      */
     public function run(Config $configuration, Context $context)
     {
+        $thisDeployment    = $context->getOrThrow('deployment', 'Invalid or missing deployment');
         $deploymentBaseDir = $context->getOrThrow('deployment_base_dir', 'Invalid or missing deployment dir');
         $project           = $context->getOrThrow('project', 'Invalid or missing project');
         $number            = $configuration->get('cleanup.keep_deployments', 5);
@@ -30,8 +31,9 @@ class CleanupAction extends AbstractAction implements ActionInterface
             $project,
             $number
         );
-        Log::debug(sprintf("Found %d deployments to clean", count($deployments)));
-        if (0 == count($deployments)) {
+        $count = count($deployments);
+        Log::debug(sprintf("Found %d deployments to clean", $count));
+        if (0 == $count) {
             return;
         }
         foreach ($deployments as $deployment) {
@@ -40,15 +42,33 @@ class CleanupAction extends AbstractAction implements ActionInterface
                 'deployment_dir' => $deploymentDir,
             ]);
             if (!File::rm($deploymentDir)) {
+                $this->error(
+                    $thisDeployment,
+                    'Unable to remove deployment folder for deployment ' . $deployment->number,
+                    [
+                        "Deployment Folder - " . $deploymentDir
+                    ]
+                );
                 Log::error('Unable to remove old deployment directory', [
                     'deployment_dir' => $deploymentDir,
                 ]);
             }
             if (!$deployment->delete()) {
+                $this->error(
+                    $thisDeployment,
+                    'Unable to remove database entry for deployment ' . $deployment->number
+                );
                 Log::error('Unable to remove old deployment', [
                     'deployment' => $deployment->toArray(),
                 ]);
             }
+            $this->info(
+                $thisDeployment,
+                'Cleaned deployment ' . $deployment->number,
+                [
+                    "Deployment Folder - " . $deploymentDir
+                ]
+            );
         }
     }
 }

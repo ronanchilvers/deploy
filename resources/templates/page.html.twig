@@ -28,8 +28,38 @@
                     <a class="navbar-item{% if selected %} is-active{% endif %}" href="{{ path_for(item.route) }}"{% if selected %} aria-current="page"{% endif %}>{{ item.name }}</a>
                 {% endfor %}
                 </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item has-dropdown">
+                        <a class="navbar-link">
+                            Profile
+                        </a>
+
+                        <div class="navbar-dropdown is-right">
+                            <a class="navbar-item">
+                                Your profile
+                            </a>
+                            <hr class="navbar-divider">
+                            <a href="#" class="navbar-item">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </nav>
+    {% for type, spec in {'info': {key: 'success', title: 'Notice'}, 'error': {key: 'danger', title: 'Uh oh!'}} %}
+        {% for message in session.getFlash(type) %}
+        <div class="notification has-text-centered is-{{ spec.key }}">
+            <h3 class="title">{{ spec.title }}</h3>
+            <p class="subtitle">{{ message.heading }}</p>
+        {% if message.content %}
+            <p class="content">{{ message.content }}</p>
+        {% endif %}
+        </div>
+        {% endfor %}
+    {% endfor %}
         <div id="main-wrapper" class="container is-fluid">
             {% block body %}{% endblock %}
         </div>

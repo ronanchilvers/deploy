@@ -2,10 +2,9 @@
 
 namespace App\Model;
 
-use App\Model\AbstractModel;
+use App\Model\Event;
 use App\Model\Finder\DeploymentFinder;
 use App\Model\Project;
-use App\Provider\Gitlab;
 use Carbon\Carbon;
 use Respect\Validation\Validator;
 use Ronanchilvers\Orm\Model;
@@ -61,6 +60,19 @@ class Deployment extends Model
         return $this->belongsTo(
             Project::class
 
+        );
+    }
+
+    /**
+     * Relate events to this deployment
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function relateEvents()
+    {
+        return $this->hasMany(
+            Event::class
         );
     }
 
