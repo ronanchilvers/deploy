@@ -19,11 +19,8 @@ A work in progress, single server deployment tool.
 composer:
   install: install --no-dev
 writables:
-  folders:
-    - var/log
-    - var/cache
-  files:
-    - var/db/app.sq3
+  - var/log
+  - var/cache
 shared:
   files:
     - ".env.config.ini"
