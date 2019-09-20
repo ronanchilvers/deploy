@@ -42,6 +42,7 @@ class ScanConfigurationAction extends AbstractAction implements ActionInterface
         $deployment          = $context->getOrThrow('deployment', 'Invalid or missing deployment');
         $remoteConfiguration = $this->provider->scanConfiguration(
             $project,
+            $deployment,
             function ($type, $header, $detail = '') use ($deployment) {
                 $this->eventFinder->event(
                     $type,

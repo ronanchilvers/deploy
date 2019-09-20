@@ -172,4 +172,17 @@ class Deployment extends Model
         }
         return $this->finished->diffInSeconds($this->started);
     }
+
+    /**
+     * Initialise this deployment from another one
+     *
+     * @param App\Model\Deployment $deployment
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function initialiseFrom(Deployment $deployment)
+    {
+        foreach (['sha', 'author', 'message'] as $field) {
+            $this->$field = $deployment->$field;
+        }
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Provider;
 use App\Builder;
 use App\Facades\Log;
 use App\Facades\Settings;
+use App\Model\Deployment;
 use App\Model\Project;
 use App\Provider\ProviderInterface;
 use Closure;
@@ -41,7 +42,7 @@ class Gitlab implements ProviderInterface
     /**
      * @var string
      */
-    protected $configUrl   = 'https://gitlab.com/api/v4/projects/{repository}/repository/files/deploy.yaml?ref={branch}';
+    protected $configUrl   = 'https://gitlab.com/api/v4/projects/{repository}/repository/files/deploy.yaml?ref={sha}';
 
     /**
      * @var string
@@ -144,7 +145,7 @@ class Gitlab implements ProviderInterface
     public function getHeadInfo(Project $project, Closure $closure = null)
     {
         $params = [
-            'repository' => urlencode($project->repository),
+            'repository' => $this->encodeRepository($project->repository),
             'branch'     => $project->branch,
         ];
         $url = Str::moustaches(
@@ -186,11 +187,12 @@ class Gitlab implements ProviderInterface
     /**
      * @see App\Provider\ProviderInterface::download()
      */
-    public function download($params, $directory, Closure $closure = null)
+    public function download(Project $project, Deployment $deployment, $directory, Closure $closure = null)
     {
-        if (isset($params['repository'])) {
-            $params['repository'] = str_replace('.', '%2E', urlencode($params['repository']));
-        }
+        $params = [
+            'repository' => $this->encodeRepository($project->repository),
+            'sha'        => $deployment->sha,
+        ];
         $url = $this->formatUrl(
             $params,
             $this->downloadUrl
@@ -313,10 +315,12 @@ class Gitlab implements ProviderInterface
     /**
      * @see App\Provider\ProviderInterface::scanConfiguration()
      */
-    public function scanConfiguration(Project $project, Closure $closure = null)
+    public function scanConfiguration(Project $project, Deployment $deployment, Closure $closure = null)
     {
-        $params = $project->toArray();
-        $params['repository'] = urlencode($params['repository']);
+        $params = [
+            'repository' => $this->encodeRepository($project->repository),
+            'sha'        => $deployment->sha,
+        ];
         $url = $this->formatUrl(
             $params,
             $this->configUrl
@@ -435,5 +439,16 @@ class Gitlab implements ProviderInterface
         ]);
 
         return $curl;
+    }
+
+    /**
+     * Encode a repository name
+     *
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function encodeRepository($repository)
+    {
+        return str_replace('.', '%2E', urlencode($repository));
     }
 }

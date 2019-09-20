@@ -2,6 +2,7 @@
 
 namespace App\Provider;
 
+use App\Model\Deployment;
 use App\Model\Project;
 use Closure;
 
@@ -68,7 +69,7 @@ interface ProviderInterface
      * @param Closure $closure Callback for progress feedback - is passed $header and $detail strings
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function download($params, $directory, Closure $closure = null);
+    public function download(Project $project, Deployment $deployment, $directory, Closure $closure = null);
 
     /**
      * Scan the remote repository for configuration information
@@ -78,5 +79,5 @@ interface ProviderInterface
      * @return Ronanchilvers\Foundation\Config
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function scanConfiguration(Project $project, Closure $closure = null);
+    public function scanConfiguration(Project $project, Deployment $deployment, Closure $closure = null);
 }

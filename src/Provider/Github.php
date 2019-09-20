@@ -5,6 +5,7 @@ namespace App\Provider;
 use App\Builder;
 use App\Facades\Log;
 use App\Facades\Settings;
+use App\Model\Deployment;
 use App\Model\Project;
 use App\Provider\ProviderInterface;
 use Closure;
@@ -46,7 +47,7 @@ class Github implements ProviderInterface
     /**
      * @var string
      */
-    protected $configUrl   = 'https://api.github.com/repos/{repository}/contents/deploy.yaml';
+    protected $configUrl   = 'https://api.github.com/repos/{repository}/contents/deploy.yaml?ref={sha}';
 
     /**
      * @var string
@@ -218,8 +219,12 @@ class Github implements ProviderInterface
     /**
      * @see App\Provider\ProviderInterface::download()
      */
-    public function download($params, $directory, Closure $closure = null)
+    public function download(Project $project, Deployment $deployment, $directory, Closure $closure = null)
     {
+        $params = [
+            'repository' => $project->repository,
+            'sha'        => $deployment->sha,
+        ];
         $url = $this->formatUrl(
             $params,
             $this->downloadUrl
@@ -341,10 +346,14 @@ class Github implements ProviderInterface
     /**
      * @see App\Provider\ProviderInterface::scanConfiguration()
      */
-    public function scanConfiguration(Project $project, Closure $closure = null)
+    public function scanConfiguration(Project $project, Deployment $deployment, Closure $closure = null)
     {
+        $params = [
+            'repository' => $project->repository,
+            'sha'        => $deployment->sha,
+        ];
         $url = $this->formatUrl(
-            $project->toArray(),
+            $params,
             $this->configUrl
         );
         $closure(

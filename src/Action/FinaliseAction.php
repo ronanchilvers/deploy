@@ -30,6 +30,7 @@ class FinaliseAction extends AbstractAction implements ActionInterface
         $project->last_deployment = Carbon::now();
         $project->last_sha        = $deployment->sha;
         $project->last_author     = $deployment->author;
+        $project->last_status     = $deployment->status;
         if (!$project->save()) {
             throw new RuntimeException('Unable to update last deployment date for project');
         }

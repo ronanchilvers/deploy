@@ -100,6 +100,10 @@ class DeployJob extends Job
             if (!$this->deployment->fail()) {
                 throw new RuntimeException('Unable to mark the deployment as failed');
             }
+            $project->last_status = $this->deployment->status;
+            if (!$project->save()) {
+                throw new RuntimeException('Unable to project as failed');
+            }
             throw $ex;
         }
     }

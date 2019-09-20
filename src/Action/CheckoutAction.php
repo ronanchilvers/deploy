@@ -47,10 +47,6 @@ class CheckoutAction extends AbstractAction implements ActionInterface
             'deployment_dir',
             $deploymentDir
         );
-        $params = [
-            'repository' => $project->repository,
-            'sha'        => $deployment->sha,
-        ];
         $this->info(
             $deployment,
             'Downloading codebase',
@@ -59,9 +55,13 @@ class CheckoutAction extends AbstractAction implements ActionInterface
                 "SHA - {$deployment->sha}",
             ]
         );
-        Log::debug('Downloading codebase', $params);
+        Log::debug('Downloading codebase', [
+            'project'    => $project->toArray(),
+            'deployment' => $deployment->toArray(),
+        ]);
         $this->provider->download(
-            $params,
+            $project,
+            $deployment,
             $deploymentDir,
             function ($type, $header, $detail = '') use ($deployment) {
                 $this->eventFinder->event(

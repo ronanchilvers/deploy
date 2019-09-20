@@ -67,7 +67,8 @@
 <section class="section">
     <div class="box is-border-left-{{ selected_deployment.status }}">
     {% if selected_deployment.deployed %}
-        <a class="button is-once is-block-mobile is-pulled-right">
+        <a class="button is-once is-block-mobile is-pulled-right"
+           href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}">
             <span class="icon"><i class="fas fa-redo-alt"></i></span>
             <span>Re-Deploy</span>
         </a>

@@ -243,6 +243,68 @@ class ProjectController
         );
     }
 
+
+    /**
+     * Trigger a deploy for a project
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function redeploy(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ) {
+        try {
+            if (!$project = $this->projectFromArgs($args)) {
+                return $response->withRedirect(
+                    Router::pathFor('project.index')
+                );
+            }
+            $deployment = Orm::finder(Deployment::class)->nextForProject(
+                $project
+            );
+            $original = Orm::finder(Deployment::class)->one(
+                $args['deployment']
+            );
+            if (!$original instanceof Deployment) {
+                throw new RuntimeException('Invalid attempt to re-deploy non-existant deployment');
+            }
+            $deployment->initialiseFrom($original);
+
+            // Initial save of the deployment
+            if (!$deployment->save()) {
+                Log::debug('Unable to create re-deployment object', [
+                    'project' => $project->toArray(),
+                ]);
+                throw new RuntimeException('Unable to create new deployment');
+            }
+            Queue::dispatch(
+                new DeployJob($deployment)
+            );
+            Session::flash([
+                'heading' => 'Re-deploy queued successfully'
+            ]);
+        } catch (Exception $ex) {
+            Session::flash(
+                [
+                    'heading' => 'Failed to initialise re-deployment',
+                    'content' => $ex->getMessage(),
+                ],
+                'error'
+            );
+            Log::error('Failed to initialise re-deployment', [
+                'exception' => $ex,
+            ]);
+        }
+
+        // @todo Show confirmation to user
+        return $response->withRedirect(
+            Router::pathFor('project.view', [
+                'key' => $project->key
+            ])
+        );
+    }
+
     /**
      * Get a project from an args array
      *
