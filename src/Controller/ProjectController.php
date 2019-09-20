@@ -16,6 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Ronanchilvers\Foundation\Facade\Queue;
 use Ronanchilvers\Orm\Orm;
+use RuntimeException;
 
 /**
  * Controller for the index
@@ -184,6 +185,13 @@ class ProjectController
             $deployment = Orm::finder(Deployment::class)->nextForProject(
                 $project
             );
+            // Initial save of the deployment
+            if (!$deployment->save()) {
+                Log::debug('Unable to create new deployment object', [
+                    'project' => $project->toArray(),
+                ]);
+                throw new RuntimeException('Unable to create new deployment');
+            }
             $finder = Orm::finder(Event::class);
             $head = $provider->getHeadInfo(
                 $project,
