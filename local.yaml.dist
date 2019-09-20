@@ -1,0 +1,29 @@
+---
+# Below are the settings that you'll need to update to get things running
+
+# Database settings
+# It is highly recommended that you configure a database connection for
+# production rather than relying on the default sqlite database.
+database:
+  # name: deploy_production # Optional - only required for sqlite
+  dsn: mysql:host=localhost;dbname=deploy_production
+  username: deploy_user
+  password: complicatedsecretpasswordhere
+  options: []
+
+# You can run 'php vendor/bin/vendor/bin/generate-defuse-key' to create a unique key
+session:
+  encryption.key: "<generated_defuse_encryption_key>"
+
+# This is the base directory that all deployments will be created in
+build:
+  base_dir: <base_directory_for_all_deployments>
+
+# This is where you can set the access tokens for the code providers. You don't
+# have to set them all - only the ones you intend to use
+providers:
+  github:
+    token: <github_personal_access_token>
+  gitlab:
+    token: <gitlab_personal_access_token>
+

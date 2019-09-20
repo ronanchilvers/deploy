@@ -5,8 +5,8 @@ namespace App;
 use App\Provider\Factory;
 use App\Provider\Github;
 use App\Provider\StrategyFactory;
-use App\Twig\ProjectExtension;
 use App\Twig\GlobalsExtension;
+use App\Twig\ProjectExtension;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Monolog\Handler\StreamHandler;
@@ -22,6 +22,7 @@ use Ronanchilvers\Foundation\Filesystem\Disk;
 use Ronanchilvers\Foundation\Filesystem\DiskRegistry;
 use Ronanchilvers\Sessions\Session;
 use Ronanchilvers\Sessions\Storage\CookieStorage;
+use Ronanchilvers\Utility\File;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 use Symfony\Component\Yaml\Yaml;
@@ -46,6 +47,13 @@ class Provider implements ServiceProviderInterface
             $loggerSettings = $settings['logger'];
             $logger = new Logger('default');
             if (isset($loggerSettings['filename'])) {
+                if (DIRECTORY_SEPARATOR !== substr($loggerSettings['filename'], 0, 1)) {
+                    $loggerSettings['filename'] = File::join(
+                        __DIR__,
+                        '/../../',
+                        $loggerSettings['filename']
+                    );
+                }
                 $logger->pushHandler(
                     new StreamHandler(
                         $loggerSettings['filename'],

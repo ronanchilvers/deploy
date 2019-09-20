@@ -1,6 +1,7 @@
 <?php
 
 use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Yaml\Yaml;
 
 $settings = [
     // Slim3 settings
@@ -46,6 +47,7 @@ $settings = [
 
     // Deployment settings
     'build' => [
+        'symlink_name' => 'current',
         'temp_dir' => sys_get_temp_dir(),
         'base_dir' => '/Users/ronanchilvers/Personal/build',
         'chmod' => [
@@ -63,9 +65,14 @@ $settings = [
     ]
 ];
 
-$localConfig = __DIR__ . '/../local.config.php';
-if (file_exists($localConfig)) {
-    $localSettings = include($localConfig);
+// $localConfig = __DIR__ . '/../local.config.php';
+// if (file_exists($localConfig)) {
+//     $localSettings = include($localConfig);
+//     $settings = array_replace_recursive($settings, $localSettings);
+// }
+$localYaml = __DIR__ . '/../local.yaml';
+if (file_exists($localYaml)) {
+    $localSettings = Yaml::parseFile($localYaml);
     $settings = array_replace_recursive($settings, $localSettings);
 }
 

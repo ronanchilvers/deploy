@@ -2,6 +2,11 @@
 $settings = include(__DIR__ . '/config/settings.php');
 $config   = $settings['database'];
 
+if ('app.sq3' == $config['name'] && 'sqlite' != substr($config['dsn'], 0, 6)) {
+    preg_match('~dbname=([^;]*)(?:;|$)~', $config['dsn'], $matches);
+    $config['name'] = $matches[1];
+}
+
 return [
 
     // General settings
