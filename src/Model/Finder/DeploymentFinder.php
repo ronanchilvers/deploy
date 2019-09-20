@@ -79,7 +79,7 @@ class DeploymentFinder extends Finder
     {
         $sql = "SELECT *
                 FROM deployments
-                WHERE deployment_project = 1 AND
+                WHERE deployment_project = :project AND
                       deployment_number <= (
                           SELECT MAX(deployment_number)
                           FROM deployments
