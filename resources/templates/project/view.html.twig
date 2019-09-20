@@ -28,9 +28,24 @@
                 <span class="is-inline-block">{{ branch_link(project) }}</span>
             </p>
         </div>
-        <div class="column">
+        <div class="column{% if project.last_status %} is-{{ project.last_status }}{% endif %}">
             <p class="heading">Last Deployment</p>
-            <p>{% if project.last_deployment %}{{ project.last_deployment|human_date }}{% else %}Not yet deployed{% endif %}</p>
+            <p>
+            {% if project.last_deployment %}
+                {% if 'deployed' == project.last_status %}
+                {% set icon="far fa-thumbs-up" %}
+                {% elseif 'failed' == project.last_status %}
+                {% set icon="far fa-thumbs-down" %}
+                {% else %}
+                {% set icon="fas fa-spinner" %}
+                {% endif %}
+                <span class="icon is-inline"><i class="{{ icon }}"></i></span>
+                <span class="is-inline">{{ project.last_deployment|human_date }}</span>
+            {% else %}
+                Not yet deployed
+            {% endif %}
+                {#{% if project.last_deployment %}{{ project.last_deployment|human_date }}{% else %}Not yet deployed{% endif %}#}
+            </p>
         </div>
         <div class="column">
             <p class="heading">Last Author</p>

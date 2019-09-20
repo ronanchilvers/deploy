@@ -9,7 +9,7 @@
             <div class="column is-narrow is-border-right is-border-none-mobile is-pulled-right-mobile">
                 <span class="icon"><i class="far fa-star"></i></span>
             </div>
-            <div class="column">
+            <div class="column is-3">
                 <span class="is-size-7">Repository</span><br />
                 <a href="{{ path_for('project.view', { key: project.key }) }}" class="js-project-link">{{ project.repository }}</a>
             </div>
@@ -17,9 +17,21 @@
                 <span class="is-size-7">Default Branch</span><br />
                 {{ project.branch }}
             </div>
-            <div class="column">
+            <div class="column{% if project.last_status %} is-{{ project.last_status }}{% endif %}">
                 <span class="is-size-7">Last Deployment</span><br />
-                {% if not project.last_deployment %}Not yet deployed{% else %}{{ project.last_deployment|human_date }}{% endif %}
+            {% if project.last_deployment %}
+                {% if 'deployed' == project.last_status %}
+                {% set icon="far fa-thumbs-up" %}
+                {% elseif 'failed' == project.last_status %}
+                {% set icon="far fa-thumbs-down" %}
+                {% else %}
+                {% set icon="fas fa-spinner" %}
+                {% endif %}
+                <span class="icon is-inline"><i class="{{ icon }}"></i></span>
+                <span class="is-inline">{{ project.last_deployment|human_date }}</span>
+            {% else %}
+                Not yet deployed
+            {% endif %}
             </div>
             <div class="column">
                 <span class="is-size-7">Author</span><br />
