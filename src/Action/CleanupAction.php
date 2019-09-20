@@ -37,7 +37,7 @@ class CleanupAction extends AbstractAction implements ActionInterface
             return;
         }
         foreach ($deployments as $deployment) {
-            $deploymentDir = File::join($deploymentBaseDir, $deployment->id);
+            $deploymentDir = File::join($deploymentBaseDir, $deployment->number);
             Log::error('Cleaning old deployment', [
                 'deployment_dir' => $deploymentDir,
             ]);
@@ -50,8 +50,9 @@ class CleanupAction extends AbstractAction implements ActionInterface
                     ]
                 );
                 Log::error('Unable to remove old deployment directory', [
-                    'deployment_dir' => $deploymentDir,
+                    'deployment_dir' => $deploymentDir
                 ]);
+                continue;
             }
             if (!$deployment->delete()) {
                 $this->error(
@@ -61,6 +62,7 @@ class CleanupAction extends AbstractAction implements ActionInterface
                 Log::error('Unable to remove old deployment', [
                     'deployment' => $deployment->toArray(),
                 ]);
+                continue;
             }
             $this->info(
                 $thisDeployment,
