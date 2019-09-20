@@ -38,3 +38,4 @@ clear_paths:
 
 * https://developer.github.com/v3/repos/contents/#get-contents
 * https://mattstauffer.com/blog/introducing-envoyer.io/
+* https://docs.gitlab.com/ee/api/repositories.html#get-file-archive
