@@ -4,13 +4,13 @@ A work in progress, single server deployment tool.
 
 ## Things to do
 
-* User accounts
-* Hooks
-* Unit tests!
-* Environment variable support?
-* Notifications
-* Ability to keep specific releases
-* Ability to deploy a specific branch
+* [ ] User accounts
+* [ ] Hooks
+* [ ] Unit tests!
+* [ ] Environment variable support?
+* [x] Notifications
+* [ ] Ability to keep specific releases
+* [ ] Ability to deploy a specific branch
 
 ## Example deploy.yaml
 
