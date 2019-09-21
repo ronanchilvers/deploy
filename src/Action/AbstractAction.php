@@ -25,9 +25,9 @@ abstract class AbstractAction
     protected $eventFinder = null;
 
     /**
-     * @see App\Action\ActionInterface::getName()
+     * @see App\Action\ActionInterface::getKey()
      */
-    public function getName()
+    public function getKey()
     {
         $reflection = new ReflectionClass($this);
         $name       = Str::snake(
@@ -38,7 +38,7 @@ abstract class AbstractAction
             )
         );
 
-        return ucwords(str_replace('_', ' ', $name));
+        return str_replace('_', ' ', $name);
     }
 
     /**

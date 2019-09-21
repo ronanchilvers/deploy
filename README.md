@@ -16,6 +16,9 @@ A work in progress, single server deployment tool.
 
 ```yaml
 ---
+finalise:
+  slack:
+    webhook: https://hooks.slack.com/services/12345679/AKSJDHFGASJDHFG/ADLJFBWIAEJFBWIDJCDC
 composer:
   install: install --no-dev
 writables:

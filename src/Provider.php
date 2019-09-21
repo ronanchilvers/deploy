@@ -50,7 +50,7 @@ class Provider implements ServiceProviderInterface
                 if (DIRECTORY_SEPARATOR !== substr($loggerSettings['filename'], 0, 1)) {
                     $loggerSettings['filename'] = File::join(
                         __DIR__,
-                        '/../../',
+                        '/../',
                         $loggerSettings['filename']
                     );
                 }

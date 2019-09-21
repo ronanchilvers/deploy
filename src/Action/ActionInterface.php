@@ -13,12 +13,12 @@ use Ronanchilvers\Foundation\Config;
 interface ActionInterface
 {
     /**
-     * Get the name for this action
+     * Get the key for this action
      *
      * @return string
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getName();
+    public function getKey();
 
     /**
      * Run this action

@@ -170,7 +170,12 @@ class Deployment extends Model
         if ('deployed' != $this->status) {
             return null;
         }
-        return $this->finished->diffInSeconds($this->started);
+        $finished = $this->finished;
+        if ($finished instanceof Carbon) {
+            return $this->finished->diffInSeconds($this->started);
+        }
+
+        return null;
     }
 
     /**

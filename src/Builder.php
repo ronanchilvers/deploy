@@ -93,7 +93,7 @@ class Builder
         $context->set('deployment', $this->deployment);
 
         foreach ($this->actions as $action) {
-            $header = 'Running action: ' . $action->getName();
+            $header = 'Running action: ' . $action->getKey();
             $closure($header);
             $action->setEventFinder($eventFinder);
             $action->run(

@@ -14,6 +14,7 @@ use App\Action\SharedAction;
 use App\Action\WritablesAction;
 use App\Builder;
 use App\Facades\Log;
+use App\Facades\Notifier;
 use App\Facades\Provider;
 use App\Model\Deployment;
 use App\Model\Project;
@@ -79,7 +80,6 @@ class DeployJob extends Job
             $builder->addAction(new ActivateAction);
             $builder->addAction(new FinaliseAction);
             $builder->addAction(new CleanupAction);
-
             if (!$this->deployment->start()) {
                 throw new RuntimeException('Unable to mark the deployment as started');
             }
@@ -91,6 +91,17 @@ class DeployJob extends Job
             if (!$this->deployment->finish()) {
                 throw new RuntimeException('Unable to mark the deployment as finished');
             }
+            Notifier::send(
+                sprintf(
+                    "Deployment completed for <%s|%s>\nSHA: <%s|%s>\nAuthor: %s",
+                    $provider->getRepositoryLink($project->repository),
+                    $project->repository,
+                    $provider->getShaLink($project->repository, $this->deployment->sha),
+                    $this->deployment->sha,
+                    $this->deployment->author
+                ),
+                $configuration->get('notify', [])
+            );
         } catch (Exception $ex) {
             Log::critical($ex->getMessage(), [
                 'project'   => $project->toArray(),
@@ -104,6 +115,17 @@ class DeployJob extends Job
             if (!$project->save()) {
                 throw new RuntimeException('Unable to project as failed');
             }
+            Notifier::send(
+                sprintf(
+                    "Deployment failed for <%s|%s>\nSHA: <%s|%s>\nAuthor: %s",
+                    $provider->getRepositoryLink($project->repository),
+                    $project->repository,
+                    $provider->getShaLink($project->repository, $this->deployment->sha),
+                    $this->deployment->sha,
+                    $this->deployment->author
+                ),
+                $configuration->get('notify', [])
+            );
             throw $ex;
         }
     }
