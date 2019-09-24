@@ -7,6 +7,7 @@ use App\Provider\Github;
 use App\Provider\StrategyFactory;
 use App\Twig\GlobalsExtension;
 use App\Twig\ProjectExtension;
+use App\Twig\UserExtension;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Monolog\Handler\StreamHandler;
@@ -90,6 +91,9 @@ class Provider implements ServiceProviderInterface
             );
             $view->addExtension(
                 new ProjectExtension($c->get(Factory::class))
+            );
+            $view->addExtension(
+                new UserExtension()
             );
 
             return $view;

@@ -4,7 +4,9 @@
 //   - $container
 //   - $app
 
+use App\App;
 use App\Controller\ProjectController;
+use App\Controller\UserController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -20,3 +22,12 @@ $app->map(['GET', 'POST'], '/deploy/{key}', ProjectController::class . ':deploy'
     ->setName('project.deploy');
 $app->map(['GET', 'POST'], '/deploy/{key}/{deployment}', ProjectController::class . ':redeploy')
     ->setName('project.redeploy');
+
+$app->group('/user', function (App $app) {
+    $app->map(['GET', 'POST'], '/login', UserController::class . ':login')
+        ->setName('user.login');
+    $app->map(['GET'], '/logout', UserController::class . ':logout')
+        ->setName('user.logout');
+    $app->map(['GET', 'POST'], '/favourite/{project}', UserController::class . ':favourite')
+        ->setName('user.favourite');
+});

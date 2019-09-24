@@ -6,6 +6,7 @@ use Symfony\Component\Yaml\Yaml;
 $settings = [
     // Slim3 settings
     'displayErrorDetails' => false,
+    'determineRouteBeforeAppMiddleware' => true,
 
     // Binaries
     'binary' => [
@@ -25,6 +26,7 @@ $settings = [
 
     // Session settings
     'session' => [
+        'name'           => 'deploy_session',
         'encryption.key' => null,
     ],
 

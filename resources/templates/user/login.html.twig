@@ -1,0 +1,47 @@
+{% extends 'layout/enclosed.html.twig' %}
+
+{% block stylesheets %}
+<style type="text/css">
+body {
+    padding-top: 4rem;
+}
+@media screen and (max-width:960px){
+    body {
+        padding-top: 0;
+    }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="hero">
+    <div class="hero-body">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <form method="post" action="" class="box is-clearfix">
+                    <h1 class="title">Login</h1>
+                    <div class="field">
+                        <label class="label">Name</label>
+                        <p class="control has-icons-left has-icons-right">
+                            <input class="input" type="email" name="email" placeholder="Email">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label">Password:</label>
+                        <p class="control has-icons-left">
+                            <input class="input" type="password" name="password" placeholder="Password">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                        </p>
+                    </div>
+                    <button type="submit" class="button is-primary is-pulled-right">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

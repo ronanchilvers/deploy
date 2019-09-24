@@ -6,6 +6,7 @@
 // Vendored packages
 @import "bulma/bulma.sass";
 @import "bulma-extensions/bulma-tooltip/src/sass/index.sass";
+@import "bulma-extensions/bulma-divider/src/sass/index.sass";
 
 // Utilities
 @import "utility/floats";
@@ -25,6 +26,7 @@
 
 // Trumps
 @import "trumps/buttons";
+@import "trumps/favourites";
 @import "trumps/icon";
 @import "trumps/main-wrapper";
 @import "trumps/panel";
