@@ -6,6 +6,7 @@
 $container->register(new \App\Provider());
 $container->register(new \App\Provider\ProviderProvider());
 $container->register(new \App\Notifier\NotifierProvider());
+$container->register(new \App\Security\SecurityProvider());
 
 // Queue
 $container->register(new Ronanchilvers\Foundation\Queue\Provider(), [

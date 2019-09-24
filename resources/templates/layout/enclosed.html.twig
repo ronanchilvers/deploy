@@ -1,0 +1,8 @@
+{% extends 'page.html.twig' %}
+
+{% block layout %}
+{{ include('fragments/notifications.html.twig') }}
+<div id="main-wrapper" class="container is-fluid">
+    {% block body %}{% endblock %}
+</div>
+{% endblock %}

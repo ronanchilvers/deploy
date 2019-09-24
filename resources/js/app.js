@@ -16,12 +16,15 @@ $(function () {
     $(".button.is-once").click(function (e) {
         $(this).addClass('is-loading');
     });
-    $('.projects').on('click', '.project', function () {
-        var $link = $(this).find('.js-project-link');
-        if (!!$link && !!$link.attr('href')) {
-            window.location = $link.attr('href');
-        }
-    });
+    // $('.projects').on('click', '.project', function (e) {
+    //     if ($(e.target).hasClass('is-favourite') || $(e.target).parent().hasClass('is-favourite')) {
+    //         return;
+    //     }
+    //     var $link = $(this).find('.js-project-link');
+    //     if (!!$link && !!$link.attr('href')) {
+    //         window.location = $link.attr('href');
+    //     }
+    // });
     $('.tabs').on('click', '.tab', function (e) {
         e.preventDefault();
         $pane = $($(this).data('target'));
@@ -36,4 +39,6 @@ $(function () {
         $(this).toggleClass('is-active');
         $(this).next('.detail').toggleClass('is-active');
     });
+
+    App.Favourites.init();
 });

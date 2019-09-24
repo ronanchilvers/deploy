@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Command;
+namespace App\Console\Command\Queue;
 
 use Ronanchilvers\Foundation\Facade\Queue;
 use Symfony\Component\Console\Command\Command;

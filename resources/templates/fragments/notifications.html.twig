@@ -1,0 +1,11 @@
+{% for type, spec in {'info': {key: 'success', title: 'Notice'}, 'error': {key: 'danger', title: 'Uh oh!'}} %}
+{% for message in session.getFlash(type) %}
+<div class="notification has-text-centered is-{{ spec.key }}">
+    <h3 class="title">{{ spec.title }}</h3>
+    <p class="subtitle">{{ message.heading }}</p>
+{% if message.content %}
+    <p class="content">{{ message.content }}</p>
+{% endif %}
+</div>
+{% endfor %}
+{% endfor %}

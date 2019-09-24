@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Facades\Log;
 use App\Facades\Provider;
 use App\Facades\Router;
+use App\Facades\Security;
 use App\Facades\Session;
 use App\Facades\View;
 use App\Model\Deployment;
@@ -34,13 +35,25 @@ class ProjectController
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
-        $projects = Orm::finder(Project::class)->all();
+        $user = Security::user();
+        $all = Orm::finder(Project::class)->all();
+
+        $userFavourites = $user->preference('favourites', []);
+        $favourites = $projects = [];
+        foreach ($all as $project) {
+            if (in_array($project->id, $userFavourites)) {
+                $favourites[] = $project;
+                continue;
+            }
+            $projects[] = $project;
+        }
 
         return View::render(
             $response,
             'project/index.html.twig',
             [
-                'projects' => $projects
+                'favourites' => $favourites,
+                'projects'   => $projects
             ]
         );
     }

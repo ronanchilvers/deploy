@@ -1,0 +1,10 @@
+.is-favourite {
+    &-on,
+    &-on:hover {
+        color: $yellow;
+    }
+    &-off,
+    &-off:hover {
+        color: $grey;
+    }
+}

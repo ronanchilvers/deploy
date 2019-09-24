@@ -5,6 +5,10 @@ $radius-small: 2px;
 $radius: 2px;
 $radius-large: 2px;
 
+// Dividers
+$divider-background-color: rgba(220,220,220,1);
+$divider-thickness: 0.05rem;
+
 // Project / release settings
 $status_colors: (
     'pending': rgba(100,100,100,1),
