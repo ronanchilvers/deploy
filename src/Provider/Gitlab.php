@@ -178,9 +178,10 @@ class Gitlab implements ProviderInterface
         }
 
         return [
-            'sha'    => $data['id'],
-            'author' => $data['author_email'],
-            'message'=> $data['title'],
+            'sha'       => $data['id'],
+            'author'    => $data['author_email'],
+            'committer' => $data['committer_email'],
+            'message'   => $data['title'],
         ];
     }
 

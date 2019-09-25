@@ -38,7 +38,7 @@ class CleanupAction extends AbstractAction implements ActionInterface
         }
         foreach ($deployments as $deployment) {
             $deploymentDir = File::join($deploymentBaseDir, $deployment->number);
-            Log::error('Cleaning old deployment', [
+            Log::debug('Cleaning old deployment', [
                 'deployment_dir' => $deploymentDir,
             ]);
             if (!File::rm($deploymentDir)) {

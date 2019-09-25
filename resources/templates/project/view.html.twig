@@ -2,28 +2,9 @@
 
 {% block body %}
 <div class="project">
-    <header class="project-heading">
-        <div class="columns">
-            <div class="column">
-                <div class="columns is-mobile is-vcentered">
-                    <div class="column is-narrow">
-                        <span class="icon is-inline-block is-size-3"><i class="fab fa-{{ project.provider }}"></i></span>
-                    </div>
-                    <div class="column is-narrow">
-                        <h1 class="is-size-3">{{ project.repository }}</h1>
-                    </div>
-                    <div class="column is-narrow">
-                        <a href="{{ path_for('user.favourite', { project: project.id }) }}"
-                           class="icon is-favourite is-favourite-{{ is_favourite(project) ? 'on' : 'off' }}"><i class="{{ is_favourite(project) ? 'fas' : 'far' }} fa-star"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="column is-narrow">
-                <a class="button is-link is-block-mobile is-once"
-                   href="{{ path_for('project.deploy', { key: project.key }) }}">Deploy Now</a>
-            </div>
-        </div>
-    </header>
+
+    {{ include('fragments/project/header.html.twig', { project: project } )}}
+
     <section class="section">
         <div class="columns">
             <div class="column">
@@ -66,15 +47,15 @@
                     {% if project.last_sha %}{{ sha_link(project, project.last_sha) }}{% else %}Not yet deployed{% endif %}
                 </p>
             </div>
-            <div class="column is-narrow">
+            <!-- <div class="column is-narrow">
                 <a class="button is-block-mobile"
                    href="{{ path_for('project.edit', { key: project.key }) }}">Edit Project</a>
-            </div>
+            </div> -->
         </div>
     </section>
 
     {% if 0 < deployments|length %}
-    <div class="tabs is-boxed">
+    <div class="tabs is-boxed is-fullwidth">
         <ul>
             <!-- <li class="tabs-heading">Deployment:</li> -->
         {% for deployment in deployments %}
@@ -98,15 +79,19 @@
                     <ul class="content-list">
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-hashtag"></i></span>
-                            <span class="is-inline-block">{{ sha_link(project, selected_deployment.sha) }}</span>
+                            <span class="is-inline-block" title="Commit SHA">{{ sha_link(project, selected_deployment.sha) }}</span>
                         </li>
                         <li>
-                            <span class="icon is-inline-block"><i class="fas fa-user"></i></span>
-                            <span class="is-inline-block">{{ selected_deployment.author }}</span>
+                            <span class="icon is-inline-block"><i class="fas fa-user-edit"></i></span>
+                            <span class="is-inline-block" title="Author">{{ selected_deployment.author }}</span>
+                        </li>
+                        <li>
+                            <span class="icon is-inline-block"><i class="fas fa-user-shield"></i></span>
+                            <span class="is-inline-block" title="Committer">{{ selected_deployment.committer }}</span>
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-align-left"></i></span>
-                            <code class="is-inline-block">{{ selected_deployment.message }}</code>
+                            <code class="is-inline-block" title="Message">{{ selected_deployment.message }}</code>
                         </li>
                     </ul>
                 </div>
@@ -130,6 +115,10 @@
                         <li>
                             <span class="icon is-inline-block"><i class="far fa-calendar-alt"></i></span>
                             <span class="is-inline-block tooltip" data-tooltip="{{ selected_deployment.finished }}">{{ selected_deployment.finished|human_date }}</span>
+                        </li>
+                        <li>
+                            <span class="icon is-inline-block"><i class="fas fa-user-cog"></i></span>
+                            <span class="is-inline-block">{{ selected_deployment.source }}</span>
                         </li>
                     </ul>
                 </div>

@@ -210,9 +210,10 @@ class Github implements ProviderInterface
         }
 
         return [
-            'sha'    => $data['sha'],
-            'author' => $data['commit']['author']['email'],
-            'message'=> $data['commit']['message'],
+            'sha'       => $data['sha'],
+            'author'    => $data['commit']['author']['email'],
+            'committer' => $data['commit']['committer']['email'],
+            'message'   => $data['commit']['message'],
         ];
     }
 

@@ -198,6 +198,7 @@ class ProjectController
             $deployment = Orm::finder(Deployment::class)->nextForProject(
                 $project
             );
+            $deployment->source = Security::email();
             // Initial save of the deployment
             if (!$deployment->save()) {
                 Log::debug('Unable to create new deployment object', [
@@ -218,9 +219,10 @@ class ProjectController
                 }
             );
             Log::debug('Updating deployment commit information', $head);
-            $deployment->sha     = $head['sha'];
-            $deployment->author  = $head['author'];
-            $deployment->message = $head['message'];
+            $deployment->sha       = $head['sha'];
+            $deployment->author    = $head['author'];
+            $deployment->committer = $head['committer'];
+            $deployment->message   = $head['message'];
             if (!$deployment->save()) {
                 // @todo Show error to user
                 return $response->withRedirect(

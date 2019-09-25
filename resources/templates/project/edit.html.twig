@@ -1,6 +1,8 @@
 {% extends 'layout/default.html.twig' %}
 
 {% block body %}
+    {{ include('fragments/project/header.html.twig', { project: project } )}}
+
 <section class="section">
     <div class="panel">
         <h3 class="panel-heading">

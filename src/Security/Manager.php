@@ -57,7 +57,7 @@ class Manager
         $this->session->set(
             static::SESSION_KEY,
             [
-                'user' => $user->id,
+                'id' => $user->id,
                 'email' => $user->email,
             ]
         );
@@ -88,6 +88,24 @@ class Manager
         return $this->session->has(
             static::SESSION_KEY
         );
+    }
+
+    /**
+     * Get the current user id
+     *
+     * @return integer
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function id()
+    {
+        if (!$this->hasLogin()) {
+            return null;
+        }
+        $session = $this->session->get(
+            static::SESSION_KEY
+        );
+
+        return $session['id'];
     }
 
     /**
@@ -126,7 +144,7 @@ class Manager
             static::SESSION_KEY
         );
         $user = Orm::finder(User::class)->one(
-            $session['user']
+            $session['id']
         );
         if ($user instanceof User) {
             $this->user = $user;

@@ -1,0 +1,39 @@
+<header class="project-heading">
+    <div class="columns">
+        <div class="column">
+            <div class="columns is-mobile is-vcentered">
+                <div class="column is-narrow">
+                    <span class="icon is-inline-block is-size-3"><i class="fab fa-{{ project.provider }}"></i></span>
+                </div>
+                <div class="column is-narrow">
+                    <h1 class="is-size-3">{{ project.repository }}</h1>
+                </div>
+                <!-- <div class="column is-narrow">
+                    <a href="{{ path_for('user.favourite', { project: project.id }) }}"
+                       class="icon is-favourite is-favourite-{{ is_favourite(project) ? 'on' : 'off' }}"><i class="{{ is_favourite(project) ? 'fas' : 'far' }} fa-star"></i></a>
+                </div> -->
+            </div>
+        </div>
+        <div class="column is-narrow">
+            <div class="field is-grouped is-pulled-right-mobile">
+                <div class="control">
+                    <a href="{{ path_for('user.favourite', { project: project.id }) }}"
+                       class="button is-favourite is-favourite-{{ is_favourite(project) ? 'on' : 'off' }}"><span class="icon"><i class="{{ is_favourite(project) ? 'fas' : 'far' }} fa-star"></i></span></a>
+                </div>
+                <div class="control">
+                    <a class="button is-block-mobile is-once"
+                       href="{{ path_for('project.edit', { key: project.key }) }}"
+                       title="Project Settings">
+                        <span class="icon">
+                            <i class="fas fa-cog"></i>
+                        </span>
+                    </a>
+                </div>
+                <div class="control">
+                    <a class="button is-primary is-block-mobile is-once"
+                       href="{{ path_for('project.deploy', { key: project.key }) }}">Deploy Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

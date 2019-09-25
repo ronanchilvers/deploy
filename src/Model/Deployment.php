@@ -186,7 +186,7 @@ class Deployment extends Model
      */
     public function initialiseFrom(Deployment $deployment)
     {
-        foreach (['sha', 'author', 'message'] as $field) {
+        foreach (['sha', 'author', 'committer', 'message'] as $field) {
             $this->$field = $deployment->$field;
         }
     }

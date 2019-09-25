@@ -46,7 +46,7 @@ class Deployments extends AbstractMigration
                 'null' => false
             ])
             ->addColumn('deployment_author', 'string', [
-                'length' => 256,
+                'length' => 1024,
                 'null' => false
             ])
             ->addColumn('deployment_message', 'string', [
