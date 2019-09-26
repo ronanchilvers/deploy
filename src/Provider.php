@@ -5,6 +5,7 @@ namespace App;
 use App\Provider\Factory;
 use App\Provider\Github;
 use App\Provider\StrategyFactory;
+use App\Security\Manager;
 use App\Twig\GlobalsExtension;
 use App\Twig\ProjectExtension;
 use App\Twig\UserExtension;
@@ -87,7 +88,21 @@ class Provider implements ServiceProviderInterface
                 )
             );
             $view->addExtension(
-                new GlobalsExtension()
+                new GlobalsExtension([
+                    'session'  => $c->get('session'),
+                    'request'  => $c->get('request'),
+                    'security' => $c->get(Manager::class),
+                    'main_nav' => [
+                        [
+                            'name' => 'Project List',
+                            'route' => 'project.index',
+                        ],
+                        [
+                            'name' => 'Add Project',
+                            'route' => 'project.add',
+                        ],
+                    ],
+                ])
             );
             $view->addExtension(
                 new ProjectExtension($c->get(Factory::class))

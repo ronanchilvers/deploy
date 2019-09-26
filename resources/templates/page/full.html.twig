@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Deploy{% endblock %}</title>
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/app.css">
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+    {% if security.hasLogin() %}
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/">
+                    Deploy
+                </a>
+
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbar_menu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div id="navbar_menu" class="navbar-menu">
+                <div class="navbar-start">
+                {% for item in main_nav %}
+                    {% set selected = is_current_path(item.route) %}
+                    <a class="navbar-item{% if selected %} is-active{% endif %}" href="{{ path_for(item.route) }}"{% if selected %} aria-current="page"{% endif %}>{{ item.name }}</a>
+                {% endfor %}
+                </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item has-dropdown">
+                        <a class="navbar-link">
+                            Profile
+                        </a>
+                        <div class="navbar-dropdown is-right">
+                            {#<a href="#" class="navbar-item">
+                                Your profile
+                            </a>
+                            <hr class="navbar-divider">#}
+                            <a href="{{ path_for('user.logout') }}" class="navbar-item">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    {% endif %}
+        {{ include('fragments/notifications.html.twig') }}
+        <div id="main-wrapper" class="container is-fluid">
+            {% block body %}{% endblock %}
+        </div>
+    {% if security.hasLogin() %}
+        <div class="modal" id="js-modal">
+            <div class="modal-background"></div>
+            <div class="modal-content"></div>
+            <button class="modal-close is-large js-modal-close" aria-label="close"></button>
+        </div>
+    {% endif %}
+        <script type="text/javascript" src="/js/vendor.js"></script>
+        <script type="text/javascript" src="/js/app.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

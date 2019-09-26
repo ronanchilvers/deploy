@@ -145,13 +145,21 @@ class Github implements ProviderInterface
     }
 
     /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getRepositories()
+    {
+        // see https://developer.github.com/v3/repos/#list-your-repositories
+    }
+
+    /**
      * @see App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(Project $project, Closure $closure = null)
+    public function getHeadInfo(string $repository, string $branch, Closure $closure = null)
     {
         $params = [
-            'repository' => $project->repository,
-            'branch'     => $project->branch,
+            'repository' => $repository,
+            'branch'     => $branch,
         ];
         $url = $this->formatUrl(
             $params,

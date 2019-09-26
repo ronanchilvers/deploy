@@ -140,13 +140,21 @@ class Gitlab implements ProviderInterface
     }
 
     /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getRepositories()
+    {
+        // see https://docs.gitlab.com/ee/api/projects.html#list-all-projects
+    }
+
+    /**
      * @see App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(Project $project, Closure $closure = null)
+    public function getHeadInfo(string $repository, string $branch, Closure $closure = null)
     {
         $params = [
-            'repository' => $this->encodeRepository($project->repository),
-            'branch'     => $project->branch,
+            'repository' => $this->encodeRepository($repository),
+            'branch'     => $branch,
         ];
         $url = Str::moustaches(
             $this->headUrl,

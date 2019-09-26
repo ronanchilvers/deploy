@@ -18,7 +18,9 @@ $app->map(['GET', 'POST'], '/edit/{key}', ProjectController::class . ':edit')
     ->setName('project.edit');
 $app->map(['GET', 'POST'], '/view/{key}', ProjectController::class . ':view')
     ->setName('project.view');
-$app->map(['GET', 'POST'], '/deploy/{key}', ProjectController::class . ':deploy')
+$app->map(['GET'], '/prepare-deploy/{key}', ProjectController::class . ':prepareDeploy')
+    ->setName('project.prepare-deploy');
+$app->map(['POST'], '/deploy/{key}', ProjectController::class . ':deploy')
     ->setName('project.deploy');
 $app->map(['GET', 'POST'], '/deploy/{key}/{deployment}', ProjectController::class . ':redeploy')
     ->setName('project.redeploy');

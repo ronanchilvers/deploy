@@ -16,15 +16,11 @@ $(function () {
     $(".button.is-once").click(function (e) {
         $(this).addClass('is-loading');
     });
-    // $('.projects').on('click', '.project', function (e) {
-    //     if ($(e.target).hasClass('is-favourite') || $(e.target).parent().hasClass('is-favourite')) {
-    //         return;
-    //     }
-    //     var $link = $(this).find('.js-project-link');
-    //     if (!!$link && !!$link.attr('href')) {
-    //         window.location = $link.attr('href');
-    //     }
-    // });
+    $('.modal-trigger').on('click', function (e) {
+        e.preventDefault();
+        $modal = $($(this).data('modal'));
+        $modal.addClass('is-active');
+    });
     $('.tabs').on('click', '.tab', function (e) {
         e.preventDefault();
         $pane = $($(this).data('target'));
@@ -41,4 +37,5 @@ $(function () {
     });
 
     App.Favourites.init();
+    App.Modal.init();
 });

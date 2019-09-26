@@ -52,14 +52,23 @@ interface ProviderInterface
     public function getShaLink(string $repository, string $sha);
 
     /**
+     * Get a list of available repositories
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getRepositories();
+
+    /**
      * Get the HEAD commit data for a given project, returned as an array
      *
-     * @param App\Model\Project $project
+     * @param string $repository
+     * @param string $branch
      * @param Closure $closure Callback for progress feedback - is passed $header and $detail strings
      * @return array
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getHeadInfo(Project $project, Closure $closure = null);
+    public function getHeadInfo(string $repository, string $branch, Closure $closure = null);
 
     /**
      * Download project code into a given directory

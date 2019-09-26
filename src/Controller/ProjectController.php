@@ -177,6 +177,31 @@ class ProjectController
     }
 
     /**
+     * Prepare a deployment
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function prepareDeploy(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ) {
+        if (!$project = $this->projectFromArgs($args)) {
+            return $response->withRedirect(
+                Router::pathFor('project.index')
+            );
+        }
+
+        return View::render(
+            $response,
+            'project/prepare-deploy.html.twig',
+            [
+                'project' => $project,
+            ]
+        );
+    }
+
+    /**
      * Trigger a deploy for a project
      *
      * @author Ronan Chilvers <ronan@d3r.com>
@@ -192,6 +217,8 @@ class ProjectController
                     Router::pathFor('project.index')
                 );
             }
+            $input  = $request->getParsedBodyParam('project', []);
+            $branch = (!isset($input['branch']) || empty($input['branch'])) ? 'master' : $input['branch'];
             $provider = Provider::forProject(
                 $project
             );
@@ -208,7 +235,8 @@ class ProjectController
             }
             $finder = Orm::finder(Event::class);
             $head = $provider->getHeadInfo(
-                $project,
+                $project->repository,
+                $branch,
                 function ($type, $header, $detail = '') use ($finder, $deployment) {
                     $finder->event(
                         $type,
@@ -250,7 +278,6 @@ class ProjectController
             ]);
         }
 
-        // @todo Show confirmation to user
         return $response->withRedirect(
             Router::pathFor('project.view', [
                 'key' => $project->key

@@ -1,0 +1,23 @@
+{% extends 'page.html.twig' %}
+
+{% block body %}
+<div class="box">
+    <h3 class="is-size-4">Deploy {{ project.repository }}</h3>
+    <form method="POST" action="{{ path_for('project.deploy', { key: project.key } ) }}">
+        <div class="field {% if project.hasError('branch') %}errored{% endif %}">
+            <label class="label" for="project_branch">Branch</label>
+            <div class="control"><input class="input{% if project.hasError('branch') %} is-danger{% endif %}" type="text" placeholder="{{ project.branch }}" value="{{ project.branch}}" id="project_branch" name="project[branch]"></div>
+            <p class="help is-danger" id="project_branch_error">{{ project.getError('branch')|join(', ') }}</p>
+        </div>
+
+        <div class="field is-grouped is-grouped-right">
+            <div class="control">
+                <a class="button" href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { key: project.key }) }}{% endif %}">Cancel</a>
+            </div>
+            <div class="control">
+                <button type="submit" class="button is-primary is-once">Deploy Now</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

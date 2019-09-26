@@ -14,22 +14,26 @@ use Twig\Extension\GlobalsInterface;
 class GlobalsExtension extends AbstractExtension implements GlobalsInterface
 {
     /**
+     * @var array
+     */
+    protected $globals;
+
+    /**
+     * Class constructor
+     *
+     * @param array $globals
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function __construct(array $globals)
+    {
+        $this->globals = $globals;
+    }
+
+    /**
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function getGlobals()
     {
-        return [
-            'session'  => Session::getService(),
-            'main_nav' => [
-                [
-                    'name' => 'Project List',
-                    'route' => 'project.index',
-                ],
-                [
-                    'name' => 'Add Project',
-                    'route' => 'project.add',
-                ],
-            ],
-        ];
+        return $this->globals;
     }
 }

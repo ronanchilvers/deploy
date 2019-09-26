@@ -21,7 +21,6 @@ class Projects extends AbstractMigration
             ->addColumn('project_provider', 'string', [ 'length' => 15, 'null' => false ])
             ->addColumn('project_repository', 'string', [ 'length' => 1024, 'null' => false ])
             ->addColumn('project_branch', 'string', [ 'length' => 1024, 'null' => false ])
-            ->addColumn('project_notes', 'text')
             ->addColumn('project_last_number', 'integer', [ 'null' => true, 'default' => null ])
             ->addColumn('project_last_deployment', 'datetime', [ 'null' => true, 'default' => null ])
             ->addColumn('project_last_author', 'string', [ 'length' => 256, 'null' => true, 'default' => null ])

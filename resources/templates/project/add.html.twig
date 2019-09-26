@@ -1,14 +1,25 @@
-{% extends 'layout/default.html.twig' %}
+{% extends 'page.html.twig' %}
 
 {% block body %}
 <section class="section">
-    <div class="panel">
-        <h3 class="panel-heading">
-            Add project
-        </h3>
-        <div class="panel-block">
-            {% include 'project/form.html.twig' %}
-        </div>
-    </div>
+<div class="tabs">
+  <ul>
+    <li class="is-active">
+        <a href="#">
+            <span class="icon is-small"><i class="fab fa-github"></i></span>
+            <span>Github</span>
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <span class="icon is-small"><i class="fab fa-gitlab"></i></span>
+            <span>Gitlab</span>
+        </a>
+    </li>
+  </ul>
+</div>
+</section>
+<section class="section">
+    {% include 'fragments/project/form.html.twig' %}
 </section>
 {% endblock %}

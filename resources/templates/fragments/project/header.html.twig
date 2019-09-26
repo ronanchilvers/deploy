@@ -8,10 +8,6 @@
                 <div class="column is-narrow">
                     <h1 class="is-size-3">{{ project.repository }}</h1>
                 </div>
-                <!-- <div class="column is-narrow">
-                    <a href="{{ path_for('user.favourite', { project: project.id }) }}"
-                       class="icon is-favourite is-favourite-{{ is_favourite(project) ? 'on' : 'off' }}"><i class="{{ is_favourite(project) ? 'fas' : 'far' }} fa-star"></i></a>
-                </div> -->
             </div>
         </div>
         <div class="column is-narrow">
@@ -30,8 +26,9 @@
                     </a>
                 </div>
                 <div class="control">
-                    <a class="button is-primary is-block-mobile is-once"
-                       href="{{ path_for('project.deploy', { key: project.key }) }}">Deploy Now</a>
+                    <a class="button is-primary is-block-mobile js-modal-trigger"
+                       href="{{ path_for('project.prepare-deploy', { key: project.key }) }}"
+                       >Deploy</a>
                 </div>
             </div>
         </div>
