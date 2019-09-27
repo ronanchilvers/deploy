@@ -61,7 +61,9 @@ class Project extends Model
         if (empty($this->token)) {
             $this->token = Str::token(64);
         }
-        $this->key = preg_replace('#[^A-z0-9]#', '-', $this->name);
+        $name = preg_replace('#[^A-z0-9\-]#', '-', $this->name);
+        $name = preg_replace('#[-]{2,}#', '-', $name);
+        $this->key = $name;
     }
 
     /**
