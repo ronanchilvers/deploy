@@ -14,6 +14,20 @@ use ClanCats\Hydrahon\Query\Expression;
 class ProjectFinder extends Finder
 {
     /**
+     * Get a list of all projects ordered by project name
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function all()
+    {
+        return $this->select()
+            ->orderBy(Project::prefix('last_deployment'), 'desc')
+            ->orderBy(Project::prefix('repository'), 'asc')
+            ->execute();
+    }
+
+    /**
      * Get a project by project key
      *
      * @param string $key

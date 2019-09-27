@@ -1,25 +1,22 @@
 {% extends 'page.html.twig' %}
 
 {% block body %}
-<section class="section">
-<div class="tabs">
-  <ul>
-    <li class="is-active">
-        <a href="#">
-            <span class="icon is-small"><i class="fab fa-github"></i></span>
-            <span>Github</span>
-        </a>
-    </li>
-    <li>
-        <a href="#">
-            <span class="icon is-small"><i class="fab fa-gitlab"></i></span>
-            <span>Gitlab</span>
-        </a>
-    </li>
-  </ul>
-</div>
-</section>
-<section class="section">
+<header class="project-heading">
+    <div class="columns">
+        <div class="column">
+            <div class="columns is-mobile is-vcentered">
+                <div class="column is-narrow">
+                    <span class="icon is-inline-block is-size-3"><i class="far fa-plus-square"></i></span>
+                </div>
+                <div class="column is-narrow">
+                    <h1 class="is-size-3">Add project</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="box">
     {% include 'fragments/project/form.html.twig' %}
-</section>
+</div>
 {% endblock %}

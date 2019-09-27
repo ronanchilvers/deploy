@@ -3,14 +3,7 @@
 {% block body %}
     {{ include('fragments/project/header.html.twig', { project: project } )}}
 
-<section class="section">
-    <div class="panel">
-        <h3 class="panel-heading">
-            Edit project {{ project.repository }}
-        </h3>
-        <div class="panel-block">
-            {% include 'fragments/project/form.html.twig' %}
-        </div>
-    </div>
-</section>
+<div class="box">
+    {% include 'fragments/project/form.html.twig' %}
+</div>
 {% endblock %}

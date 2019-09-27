@@ -112,9 +112,10 @@ class ProjectController
      */
     public function add(
         ServerRequestInterface $request,
-        ResponseInterface $response
+        ResponseInterface $response,
+        $args
     ) {
-        $project = new Project();
+        $project = new Project;
         if ($request->isMethod('POST')) {
             $data = $request->getParsedBody()['project'];
             $project->fromArray($data);
@@ -123,9 +124,12 @@ class ProjectController
                     'heading' => 'Project added'
                 ], 'success');
                 return $response->withRedirect(
-                    Router::pathFor('project.index')
+                    Router::pathFor('project.view', [ 'key' => $project->key ])
                 );
             }
+            Log::debug('Project add failed', [
+                'errors' => $project->getErrors()
+            ]);
         }
 
         return View::render(

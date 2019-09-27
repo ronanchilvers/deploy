@@ -26,7 +26,7 @@
                 <div class="navbar-start">
                 {% for item in main_nav %}
                     {% set selected = is_current_path(item.route) %}
-                    <a class="navbar-item{% if selected %} is-active{% endif %}" href="{{ path_for(item.route) }}"{% if selected %} aria-current="page"{% endif %}>{{ item.name }}</a>
+                    <a class="navbar-item{% if item.class %} {{ item.class }}{% endif %}{% if selected %} is-active{% endif %}" href="{{ path_for(item.route) }}"{% if selected %} aria-current="page"{% endif %}>{{ item.name }}</a>
                 {% endfor %}
                 </div>
 

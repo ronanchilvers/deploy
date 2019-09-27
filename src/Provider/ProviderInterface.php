@@ -52,14 +52,6 @@ interface ProviderInterface
     public function getShaLink(string $repository, string $sha);
 
     /**
-     * Get a list of available repositories
-     *
-     * @return array
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function getRepositories();
-
-    /**
      * Get the HEAD commit data for a given project, returned as an array
      *
      * @param string $repository

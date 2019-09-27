@@ -145,14 +145,6 @@ class Github implements ProviderInterface
     }
 
     /**
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function getRepositories()
-    {
-        // see https://developer.github.com/v3/repos/#list-your-repositories
-    }
-
-    /**
      * @see App\Provider\ProviderInterface::getHeadInfo()
      */
     public function getHeadInfo(string $repository, string $branch, Closure $closure = null)

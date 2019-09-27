@@ -140,14 +140,6 @@ class Gitlab implements ProviderInterface
     }
 
     /**
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function getRepositories()
-    {
-        // see https://docs.gitlab.com/ee/api/projects.html#list-all-projects
-    }
-
-    /**
      * @see App\Provider\ProviderInterface::getHeadInfo()
      */
     public function getHeadInfo(string $repository, string $branch, Closure $closure = null)

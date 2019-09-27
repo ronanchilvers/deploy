@@ -21,8 +21,8 @@ class Project extends Model
     static protected $columnPrefix = 'project';
 
     protected $providers = [
-        'github' => 'Github.com',
-        'gitlab' => 'Gitlab.com',
+        'github' => 'Github',
+        'gitlab' => 'Gitlab',
     ];
 
     protected $data = [
@@ -50,6 +50,9 @@ class Project extends Model
             'repository' => Validator::notEmpty(),
             'branch'     => Validator::notEmpty(),
         ]);
+        $this->registerRules([
+            'provider'   => Validator::notEmpty()->in($providerKeys),
+        ], 'add-project');
     }
 
     /**
