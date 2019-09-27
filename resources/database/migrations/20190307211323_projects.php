@@ -16,6 +16,7 @@ class Projects extends AbstractMigration
             'id' => 'project_id',
         ]);
         $projects
+            ->addColumn('project_name', 'string', [ 'length' => 256, 'null' => false ])
             ->addColumn('project_token', 'string', [ 'length' => 64, 'null' => false ])
             ->addColumn('project_key', 'string', [ 'length' => 1024, 'null' => false ])
             ->addColumn('project_provider', 'string', [ 'length' => 15, 'null' => false ])

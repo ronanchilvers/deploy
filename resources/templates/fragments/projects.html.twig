@@ -6,8 +6,8 @@
                    class="icon is-favourite is-favourite-{{ is_favourite(project) ? 'on' : 'off' }}"><i class="{{ is_favourite(project) ? 'fas' : 'far' }} fa-star"></i></a>
             </div>
             <div class="column is-3">
-                <span class="is-size-7">Repository</span><br />
-                <a href="{{ path_for('project.view', { key: project.key }) }}" class="js-project-link">{{ project.repository }}</a>
+                <span class="is-size-7">Name</span><br />
+                <a href="{{ path_for('project.view', { key: project.key }) }}" class="js-project-link">{{ project.name }}</a>
             </div>
             <div class="column">
                 <span class="is-size-7">Default Branch</span><br />

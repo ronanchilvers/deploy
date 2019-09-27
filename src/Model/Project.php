@@ -46,13 +46,11 @@ class Project extends Model
     {
         $providerKeys = array_keys($this->providers);
         $this->registerRules([
+            'name'       => Validator::notEmpty(),
             'provider'   => Validator::notEmpty()->in($providerKeys),
             'repository' => Validator::notEmpty(),
             'branch'     => Validator::notEmpty(),
         ]);
-        $this->registerRules([
-            'provider'   => Validator::notEmpty()->in($providerKeys),
-        ], 'add-project');
     }
 
     /**
@@ -63,8 +61,7 @@ class Project extends Model
         if (empty($this->token)) {
             $this->token = Str::token(64);
         }
-        $repository = preg_replace('#[^A-z0-9]#', '-', $this->repository);
-        $this->key = Str::join('-', $this->provider, $repository);
+        $this->key = preg_replace('#[^A-z0-9]#', '-', $this->name);
     }
 
     /**

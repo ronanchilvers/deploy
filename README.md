@@ -10,8 +10,9 @@ A work in progress, single server deployment tool.
 * [ ] Environment variable support?
 * [x] Notifications
 * [ ] Ability to keep specific releases
-* [ ] Ability to deploy a specific branch
-* [ ] Associate deployments with users
+* [x] Ability to deploy a specific branch
+* [x] Associate deployments with users
+* [ ] Make sure project keys are unique
 
 ## Example deploy.yaml
 
