@@ -40,4 +40,20 @@ class ProjectFinder extends Finder
             ->where(Project::prefix('key'), $key)
             ->one();
     }
+
+    /**
+     * Check that a given key is unique
+     *
+     * @param string $key
+     * @return boolean
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function keyIsUnique($key)
+    {
+        $existing = $this->select()
+            ->where(Project::prefix('key'), $key)
+            ->one();
+
+        return ! $existing instanceof Project;
+    }
 }

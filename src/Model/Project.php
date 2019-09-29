@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Model\Finder\ProjectFinder;
 use Respect\Validation\Validator;
 use Ronanchilvers\Orm\Model;
+use Ronanchilvers\Orm\Orm;
 use Ronanchilvers\Orm\Traits\HasValidationTrait;
 use Ronanchilvers\Utility\Str;
 
@@ -61,9 +62,14 @@ class Project extends Model
         if (empty($this->token)) {
             $this->token = Str::token(64);
         }
-        $name = preg_replace('#[^A-z0-9\-]#', '-', $this->name);
-        $name = preg_replace('#[-]{2,}#', '-', $name);
-        $this->key = $name;
+        $key = preg_replace('#[^A-z0-9\-]#', '-', $this->name);
+        $key = preg_replace('#[-]{2,}#', '-', $key);
+        $key = strtolower($key);
+        if (!Orm::finder(get_called_class())->keyIsUnique($key)) {
+            $this->addError('name', 'Name must be unique');
+            return false;
+        }
+        $this->key = $key;
     }
 
     /**
