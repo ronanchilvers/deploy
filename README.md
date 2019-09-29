@@ -11,6 +11,7 @@ A work in progress, single server deployment tool.
 * [x] Ability to deploy a specific branch
 * [x] Associate deployments with users
 * [x] Make sure project keys are unique
+* [ ] Ability to trigger a deployment using a webhook
 
 ## Things to think about
 
