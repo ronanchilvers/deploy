@@ -7,18 +7,22 @@ A work in progress, single server deployment tool.
 * [x] User accounts
 * [ ] Hooks
 * [ ] Unit tests!
-* [ ] Environment variable support?
 * [x] Notifications
-* [ ] Ability to keep specific releases
 * [x] Ability to deploy a specific branch
 * [x] Associate deployments with users
-* [ ] Make sure project keys are unique
+* [x] Make sure project keys are unique
+
+## Things to think about
+
+* [ ] Environment variable support?
+* [ ] Ability to keep specific releases
+* [ ] Multi-server support
 
 ## Example deploy.yaml
 
 ```yaml
 ---
-finalise:
+notify:
   slack:
     webhook: https://hooks.slack.com/services/12345679/AKSJDHFGASJDHFG/ADLJFBWIAEJFBWIDJCDC
 composer:
