@@ -32,7 +32,7 @@ class WritablesAction extends AbstractAction implements
         $deployment    = $context->getOrThrow('deployment', 'Invalid or missing deployment');
         $deploymentDir = $context->getOrThrow('deployment_dir', 'Invalid or missing deployment directory');
         $writableMode  = Settings::get('build.chmod.writable_folder', Builder::MODE_WRITABLE_DIR);
-        $writables     = $configuration->get('writables', []);
+        $writables     = $configuration->get('writables.paths', []);
         if (0 == count($writables)) {
             $this->info(
                 $deployment,

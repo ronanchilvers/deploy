@@ -46,9 +46,6 @@ composer:
   install: install --no-dev
   after:
     - {php} scripts/myscript.php
-writables:
-  - var/log
-  - var/cache
 shared:
   files:
     - ".env.config.ini"
@@ -56,10 +53,15 @@ shared:
     - var/log
     - var/cache
     - var/db
+writables:
+  paths:
+    - var/log
+    - var/cache
 clear_paths:
-  - README.md
-  - package.json
-  - deploy.yaml
+  paths:
+    - README.md
+    - package.json
+    - deploy.yaml
 ```
 
 ## Useful things (for development)

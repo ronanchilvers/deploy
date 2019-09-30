@@ -34,7 +34,7 @@ class ClearPathsAction extends AbstractAction implements
             'deployment'     => $deployment->toArray(),
             'deployment_dir' => $deploymentDir,
         ]);
-        $clearPaths = $configuration->get('clear_paths', []);
+        $clearPaths = $configuration->get('clear_paths.paths', []);
         if (0 == count($clearPaths)) {
             $this->info(
                 $deployment,
