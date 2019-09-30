@@ -6,11 +6,8 @@
         <p class="help is-danger" id="project_branch_error">{{ project.getError('name')|join(', ') }}</p>
     </div>
 
-    <div class="field{% if not project.loaded %} required{% endif %}">
+    <div class="field required">
         <label class="label" for="project_provider">Source Control Provider</label>
-    {% if project.loaded %}
-        <p id="project_provider">{{ project.provider }}</p>
-    {% else %}
         <div class="control">
             <div class="select is-fullwidth{% if project.hasError('provider') %} is-danger{% endif %}">
                 <select id="project_provider" name="project[provider]">
@@ -25,18 +22,13 @@
         </div>
         <p class="help is-danger" id="project_provider_error">{{ project.getError('provider')|join(', ') }}</p>
         <p class="help"><strong>Please note: </strong>This field can't be changed once your project is added</p>
-    {% endif %}
     </div>
 
-    <div class="field{% if not project.loaded %} required{% endif %}{% if project.hasError('repository') %} errored{% endif %}">
+    <div class="field required{% if project.hasError('repository') %} errored{% endif %}">
         <label class="label" for="project_repository">Repository</label>
-    {% if project.loaded %}
-        <p id="project_repository">{{ project.repository }}</p>
-    {% else %}
         <div class="control"><input class="input{% if project.hasError('repository') %} is-danger{% endif %}" type="text" placeholder="vendor/project" value="{{ project.repository }}" id="project_repository" name="project[repository]"></div>
         <p class="help is-danger" id="project_repository_error">{{ project.getError('repository')|join(', ') }}</p>
         <p class="help"><strong>Please note: </strong>This field can't be changed once your project is added</p>
-    {% endif %}
     </div>
 
     <div class="field {% if project.hasError('branch') %}errored{% endif %}">
