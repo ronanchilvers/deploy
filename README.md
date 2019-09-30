@@ -1,23 +1,39 @@
 # deploy
 
-A work in progress, single server deployment tool.
+A tool for simple deployments from common source control providers.
+
+* Github and Gitlab support (Bitbucket planned)
+* Zero downtime deployments with rollbacks
+* Fine grained control of deployments using a repository based configuration file
+* Responsive UI - fully usable on any device
+* Shared and writable path support
+* Arbitrary hook support
+* Slack notifications
+* Simple user account management
 
 ## Things to do
 
-* [x] User accounts
-* [ ] Hooks
 * [ ] Unit tests!
+* [ ] Ability to trigger a deployment using a webhook
+* [ ] Bitbucket support
+* [ ] Better user account support
+
+## Things that are done
+
+* [x] User accounts
+* [x] Hooks
 * [x] Notifications
 * [x] Ability to deploy a specific branch
 * [x] Associate deployments with users
 * [x] Make sure project keys are unique
-* [ ] Ability to trigger a deployment using a webhook
 
 ## Things to think about
 
-* [ ] Environment variable support?
+* [ ] Environment variable support
 * [ ] Ability to keep specific releases
 * [ ] Multi-server support
+
+#
 
 ## Example deploy.yaml
 
@@ -46,7 +62,7 @@ clear_paths:
   - deploy.yaml
 ```
 
-## Useful things
+## Useful things (for development)
 
 * https://developer.github.com/v3/repos/contents/#get-contents
 * https://mattstauffer.com/blog/introducing-envoyer.io/
