@@ -4,6 +4,8 @@ namespace App\Action;
 
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
+use App\Action\HookableInterface;
+use App\Action\Traits\Hookable;
 use App\Facades\Log;
 use App\Provider\ProviderInterface;
 use Ronanchilvers\Foundation\Config;
@@ -14,8 +16,12 @@ use Ronanchilvers\Utility\File;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class CheckoutAction extends AbstractAction implements ActionInterface
+class CheckoutAction extends AbstractAction implements
+    ActionInterface,
+    HookableInterface
 {
+    use Hookable;
+
     /**
      * @var App\Provider\ProviderInterface
      */

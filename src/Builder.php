@@ -4,6 +4,7 @@ namespace App;
 
 use App\Action\ActionInterface;
 use App\Action\Context;
+use App\Action\HookableInterface;
 use App\Facades\Log;
 use App\Model\Deployment;
 use App\Model\Event;
@@ -100,6 +101,12 @@ class Builder
                 $configuration,
                 $context
             );
+            if ($action instanceof HookableInterface) {
+                $action->runHooks(
+                    $configuration,
+                    $context
+                );
+            }
         }
     }
 }

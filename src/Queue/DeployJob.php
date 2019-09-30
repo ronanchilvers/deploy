@@ -20,6 +20,7 @@ use App\Model\Deployment;
 use App\Model\Project;
 use Exception;
 use Ronanchilvers\Foundation\Config;
+use Ronanchilvers\Foundation\Queue\Exception\FatalException;
 use Ronanchilvers\Foundation\Queue\Job\Job;
 use Ronanchilvers\Orm\Orm;
 use RuntimeException;
@@ -126,7 +127,10 @@ class DeployJob extends Job
                 ),
                 $configuration->get('notify', [])
             );
-            throw $ex;
+            throw new FatalException(
+                $ex->getMessage(),
+                $ex->getCode()
+            );
         }
     }
 }

@@ -9,7 +9,7 @@
         "respect/validation": "^1.1",
         "robmorgan/phinx": "^0.11.0",
         "ronanchilvers/container-bridge-slim": "~1.0",
-        "ronanchilvers/foundation": "dev-master",
+        "ronanchilvers/foundation": "^1.0",
         "ronanchilvers/orm": "^1.0",
         "ronanchilvers/sessions": "^1.0",
         "ronanchilvers/utility": "^1.0",

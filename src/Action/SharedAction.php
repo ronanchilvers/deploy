@@ -4,6 +4,8 @@ namespace App\Action;
 
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
+use App\Action\HookableInterface;
+use App\Action\Traits\Hookable;
 use App\Action\Traits\IsInitialiseStage;
 use App\Builder;
 use App\Facades\Log;
@@ -17,8 +19,12 @@ use RuntimeException;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class SharedAction extends AbstractAction implements ActionInterface
+class SharedAction extends AbstractAction implements
+    ActionInterface,
+    HookableInterface
 {
+    use Hookable;
+
     /**
      * @see App\Action\ActionInterface::run()
      */
@@ -139,18 +145,17 @@ class SharedAction extends AbstractAction implements ActionInterface
                     ]
                 );
                 if (!File::rm($thisDeploymentDir)) {
-                    $this->error(
+                    $this->info(
                         $deployment,
-                        'Unable to remove shared folder from deployment directory',
+                        'Shared folder not found in deployment directory',
                         [
                             "Deployment folder - {$thisDeploymentDir}",
                         ]
                     );
-                    Log::debug('Unable to remove shared folder from deployment', [
-                        'shared_dir'  => $sharedDir,
+                    Log::debug('Shared folder not found in deployment directory', [
+                        'shared_dir'     => $sharedDir,
                         'deployment_dir' => $thisDeploymentDir,
                     ]);
-                    throw new RuntimeException('Unable to remove shared folder from deployment');
                 }
 
                 // Link the shared location into the deployment

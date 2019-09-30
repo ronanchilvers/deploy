@@ -28,6 +28,8 @@ notify:
     webhook: https://hooks.slack.com/services/12345679/AKSJDHFGASJDHFG/ADLJFBWIAEJFBWIDJCDC
 composer:
   install: install --no-dev
+  after:
+    - {php} scripts/myscript.php
 writables:
   - var/log
   - var/cache

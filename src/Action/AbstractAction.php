@@ -38,7 +38,7 @@ abstract class AbstractAction
             )
         );
 
-        return str_replace('_', ' ', $name);
+        return $name;
     }
 
     /**

@@ -5,6 +5,8 @@ namespace App\Action;
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
 use App\Action\Context;
+use App\Action\HookableInterface;
+use App\Action\Traits\Hookable;
 use App\Facades\Log;
 use App\Model\Deployment;
 use Ronanchilvers\Foundation\Config;
@@ -16,8 +18,12 @@ use Ronanchilvers\Utility\File;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class CleanupAction extends AbstractAction implements ActionInterface
+class CleanupAction extends AbstractAction implements
+    ActionInterface,
+    HookableInterface
 {
+    use Hookable;
+
     /**
      * @see App\Action\ActionInterface::run()
      */

@@ -4,6 +4,8 @@ namespace App\Action;
 
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
+use App\Action\HookableInterface;
+use App\Action\Traits\Hookable;
 use App\Facades\Log;
 use App\Facades\Settings;
 use App\Model\Deployment;
@@ -17,8 +19,12 @@ use Symfony\Component\Process\Process;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class ComposerAction extends AbstractAction implements ActionInterface
+class ComposerAction extends AbstractAction implements
+    ActionInterface,
+    HookableInterface
 {
+    use Hookable;
+
     /**
      * @see App\Action\ActionInterface::run()
      */

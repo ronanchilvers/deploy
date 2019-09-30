@@ -4,6 +4,8 @@ namespace App\Action;
 
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
+use App\Action\HookableInterface;
+use App\Action\Traits\Hookable;
 use App\Builder;
 use App\Facades\Log;
 use App\Facades\Settings;
@@ -16,8 +18,12 @@ use RuntimeException;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class WritablesAction extends AbstractAction implements ActionInterface
+class WritablesAction extends AbstractAction implements
+    ActionInterface,
+    HookableInterface
 {
+    use Hookable;
+
     /**
      * @see App\Action\ActionInterface::run()
      */
