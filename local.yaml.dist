@@ -1,4 +1,5 @@
 ---
+# -*- mode: yaml -*-
 # Below are the settings that you'll need to update to get things running
 
 # Database settings
@@ -26,4 +27,3 @@ providers:
     token: <github_personal_access_token>
   gitlab:
     token: <gitlab_personal_access_token>
-

@@ -33,8 +33,6 @@ A tool for simple deployments from common source control providers.
 * [ ] Ability to keep specific releases
 * [ ] Multi-server support
 
-#
-
 ## Example deploy.yaml
 
 ```yaml
