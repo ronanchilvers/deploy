@@ -1253,16 +1253,16 @@
         },
         {
             "name": "ronanchilvers/container",
-            "version": "1.4.1",
+            "version": "1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/container.git",
-                "reference": "1f315f696f88612542a692c7328f8fd58949b9dc"
+                "reference": "58d75fbd2b1d36eeada3887532cc395edbaae445"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/container/zipball/1f315f696f88612542a692c7328f8fd58949b9dc",
-                "reference": "1f315f696f88612542a692c7328f8fd58949b9dc",
+                "url": "https://api.github.com/repos/ronanchilvers/container/zipball/58d75fbd2b1d36eeada3887532cc395edbaae445",
+                "reference": "58d75fbd2b1d36eeada3887532cc395edbaae445",
                 "shasum": ""
             },
             "require": {
@@ -1289,20 +1289,20 @@
                 }
             ],
             "description": "A very simple, PSR-11 compatible container",
-            "time": "2019-05-13T07:36:20+00:00"
+            "time": "2019-10-01T07:24:31+00:00"
         },
         {
             "name": "ronanchilvers/container-bridge-slim",
-            "version": "1.1",
+            "version": "1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/container-bridge-slim.git",
-                "reference": "10ada131b19bd82c6b4247df64779edb7ce0438a"
+                "reference": "9dbdb1791ff5f484b32e02ec8f0ee49282520c8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/container-bridge-slim/zipball/10ada131b19bd82c6b4247df64779edb7ce0438a",
-                "reference": "10ada131b19bd82c6b4247df64779edb7ce0438a",
+                "url": "https://api.github.com/repos/ronanchilvers/container-bridge-slim/zipball/9dbdb1791ff5f484b32e02ec8f0ee49282520c8c",
+                "reference": "9dbdb1791ff5f484b32e02ec8f0ee49282520c8c",
                 "shasum": ""
             },
             "require": {
@@ -1329,20 +1329,20 @@
                 }
             ],
             "description": "Convenience bridge for using ronanchilvers/container with slim3",
-            "time": "2018-03-07T21:11:39+00:00"
+            "time": "2019-10-01T07:09:39+00:00"
         },
         {
             "name": "ronanchilvers/foundation",
-            "version": "1.0",
+            "version": "1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/foundation.git",
-                "reference": "f59fd962c57e36e53bdb64adc163d737b10e8a7e"
+                "reference": "6ec477bc7b73716627051c7b9cdaf17160052d9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/foundation/zipball/f59fd962c57e36e53bdb64adc163d737b10e8a7e",
-                "reference": "f59fd962c57e36e53bdb64adc163d737b10e8a7e",
+                "url": "https://api.github.com/repos/ronanchilvers/foundation/zipball/6ec477bc7b73716627051c7b9cdaf17160052d9a",
+                "reference": "6ec477bc7b73716627051c7b9cdaf17160052d9a",
                 "shasum": ""
             },
             "require": {
@@ -1387,23 +1387,23 @@
             ],
             "description": "Foundation classes for use in php projects",
             "support": {
-                "source": "https://github.com/ronanchilvers/foundation/tree/0.4",
+                "source": "https://github.com/ronanchilvers/foundation/tree/1.1",
                 "issues": "https://github.com/ronanchilvers/foundation/issues"
             },
-            "time": "2019-09-30T19:09:58+00:00"
+            "time": "2019-10-01T07:07:07+00:00"
         },
         {
             "name": "ronanchilvers/orm",
-            "version": "1.4",
+            "version": "1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/orm.git",
-                "reference": "65d43cf270d6cc9a43f4b970c392f4b60ca6cc48"
+                "reference": "02f0969ab6d5dbab3cc31857a4df840f7fd4c354"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/orm/zipball/65d43cf270d6cc9a43f4b970c392f4b60ca6cc48",
-                "reference": "65d43cf270d6cc9a43f4b970c392f4b60ca6cc48",
+                "url": "https://api.github.com/repos/ronanchilvers/orm/zipball/02f0969ab6d5dbab3cc31857a4df840f7fd4c354",
+                "reference": "02f0969ab6d5dbab3cc31857a4df840f7fd4c354",
                 "shasum": ""
             },
             "require": {
@@ -1434,20 +1434,20 @@
                 }
             ],
             "description": "Simple database ORM implementation",
-            "time": "2019-09-24T12:51:46+00:00"
+            "time": "2019-10-01T07:05:02+00:00"
         },
         {
             "name": "ronanchilvers/sessions",
-            "version": "1.0",
+            "version": "1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/sessions.git",
-                "reference": "6429d5a4bcc48c7f40e9ccd3d7d0240ccf49ac34"
+                "reference": "604537246fef792f56ae025fd35f7530347ca7b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/sessions/zipball/6429d5a4bcc48c7f40e9ccd3d7d0240ccf49ac34",
-                "reference": "6429d5a4bcc48c7f40e9ccd3d7d0240ccf49ac34",
+                "url": "https://api.github.com/repos/ronanchilvers/sessions/zipball/604537246fef792f56ae025fd35f7530347ca7b7",
+                "reference": "604537246fef792f56ae025fd35f7530347ca7b7",
                 "shasum": ""
             },
             "require": {
@@ -1481,23 +1481,23 @@
             ],
             "description": "Simple session handling",
             "support": {
-                "source": "https://github.com/ronanchilvers/sessions/tree/1.0",
+                "source": "https://github.com/ronanchilvers/sessions/tree/1.2",
                 "issues": "https://github.com/ronanchilvers/sessions/issues"
             },
-            "time": "2019-01-03T16:49:12+00:00"
+            "time": "2019-10-01T07:23:21+00:00"
         },
         {
             "name": "ronanchilvers/utility",
-            "version": "1.5.1",
+            "version": "1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/utility.git",
-                "reference": "704528a6eb045673ba2f9ee6d9199056215dae95"
+                "reference": "aa860b68eb7c19e5eefd5d0ad198afd22a3c5bd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/utility/zipball/704528a6eb045673ba2f9ee6d9199056215dae95",
-                "reference": "704528a6eb045673ba2f9ee6d9199056215dae95",
+                "url": "https://api.github.com/repos/ronanchilvers/utility/zipball/aa860b68eb7c19e5eefd5d0ad198afd22a3c5bd8",
+                "reference": "aa860b68eb7c19e5eefd5d0ad198afd22a3c5bd8",
                 "shasum": ""
             },
             "require": {
@@ -1523,7 +1523,7 @@
                 }
             ],
             "description": "Handy utility classes for PHP",
-            "time": "2019-09-11T21:34:12+00:00"
+            "time": "2019-10-01T07:36:51+00:00"
         },
         {
             "name": "slim/slim",
