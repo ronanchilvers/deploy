@@ -18,17 +18,11 @@ A tool for simple deployments to a single server (for now) from common source co
 * PHP 7.1.8+
 * Beanstalkd work queue (available as standard in most linux distributions)
 
-In addition it is *strongly* recommended that you use a proper RDBMS like MySQL
-or MariaDB to host the database. The default sqlite database is suitable for
-development but you will almost certainly run into database locks if you use it
-in production.
+In addition it is *strongly* recommended that you use a proper RDBMS like MySQL or MariaDB to host the database. The default sqlite database is suitable for development but you will almost certainly run into database locks if you use it in production.
 
-`deploy` includes a queue runner that does the heavy lifting. You can run this
-via cron if you want to but I recommend using supervisord (again available in most
-linux distributions in the standard package catalogue).
+`deploy` includes a queue runner that does the heavy lifting. You can run this via cron if you want to but I recommend using supervisord (again available in most linux distributions in the standard package catalogue).
 
-Once you have the required software installed on the host you can then get on with
-the installation.
+Once you have the required software installed on the host you can then get on with the installation.
 
 
 
