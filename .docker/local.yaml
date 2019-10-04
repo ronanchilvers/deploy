@@ -1,0 +1,30 @@
+---
+database:
+  dsn: mysql:host={DB_HOST};dbname={DB_DATABASE}
+  username: {DB_USERNAME}
+  password: {DB_PASSWORD}
+
+queue:
+  host: beanstalkd
+
+session:
+  encryption.key: "def0000049e9730fc85c0d44b41da713484d30012c41948802e2d803b2f4735d3a155a03cb05700704057fa224069ab88e77bc95c58186b653fa5a216b93dc7a1113ba34"
+
+build:
+  base_dir: /srv/sites
+
+providers:
+  github:
+    token: {GITHUB_TOKEN}
+  gitlab:
+    token: {GITLAB_TOKEN}
+
+# Local dev settings
+displayErrorDetails: true
+
+# logger:
+#   filename: php://stdout
+
+twig:
+  cache: false
+

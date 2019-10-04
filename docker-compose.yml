@@ -1,0 +1,33 @@
+---
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    image: deploy-docker
+    ports:
+      - 8080:80
+    links:
+      - mariadb
+      - beanstalkd
+    environment:
+      GITHUB_TOKEN: c5bd44a0370c23f57b39764273970c0be637226b
+      GITLAB_TOKEN: 7hj1oxg-wgstQciPyA2Z
+      DB_HOST: mariadb
+      DB_DATABASE: deploy
+      DB_USERNAME: deploy
+      DB_PASSWORD: deploy
+  mariadb:
+    image: mariadb:10.3
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: deploy
+      MYSQL_USER: deploy
+      MYSQL_PASSWORD: deploy
+      MYSQL_ROOT_PASSWORD: root_deploy
+  beanstalkd:
+    image: schickling/beanstalkd
+    ports:
+      - 11301:11300

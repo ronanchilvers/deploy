@@ -1,5 +1,6 @@
 <?php
 
+use Ronanchilvers\Utility\Str;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Yaml\Yaml;
 
@@ -74,7 +75,11 @@ $settings = [
 // }
 $localYaml = __DIR__ . '/../local.yaml';
 if (file_exists($localYaml)) {
-    $localSettings = Yaml::parseFile($localYaml);
+    $yaml = Str::moustaches(
+        file_get_contents($localYaml),
+        $_ENV
+    );
+    $localSettings = Yaml::parse($yaml);
     $settings = array_replace_recursive($settings, $localSettings);
 }
 
