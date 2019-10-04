@@ -153,9 +153,9 @@ class Github implements ProviderInterface
             'repository' => $repository,
             'branch'     => $branch,
         ];
-        $url = $this->formatUrl(
-            $params,
-            $this->headUrl
+        $url = Str::moustaches(
+            $this->headUrl,
+            $params
         );
         $closure('info', 'Querying Github API for head commit data', "API URL : {$url}");
         $curl = $this->getCurlHandle($url);
@@ -170,7 +170,21 @@ class Github implements ProviderInterface
             );
             throw new RuntimeException('CURL request failed - (' . curl_errno($curl) . ') ' . curl_error($curl));
         }
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
+        if($statusCode != 200){
+            $data = json_decode($data, true);
+            $closure(
+                'error',
+                'Error obtaining head info from Github',
+                implode("\n", [
+                    "URL - {$url}",
+                    "Status code - {$statusCode}",
+                    "Error - {$data['message']}"
+                ])
+            );
+            throw new RuntimeException('Github request failed - ' . $data['message']);
+        }
         if (!$data = json_decode($data, true)) {
             $closure(
                 'error',
@@ -180,9 +194,9 @@ class Github implements ProviderInterface
             throw new RuntimeException('Invalid commit data for head');
         }
         $params['sha'] = $data['object']['sha'];
-        $url = $this->formatUrl(
-            $params,
-            $this->commitUrl
+        $url = Str::moustaches(
+            $this->commitUrl,
+            $params
         );
         $closure('info', 'Querying Github API for commit detail', "API URL : {$url}");
         $curl = $this->getCurlHandle($url);
@@ -226,9 +240,9 @@ class Github implements ProviderInterface
             'repository' => $project->repository,
             'sha'        => $deployment->sha,
         ];
-        $url = $this->formatUrl(
-            $params,
-            $this->downloadUrl
+        $url = Str::moustaches(
+            $this->downloadUrl,
+            $params
         );
         $closure(
             'info',
@@ -353,9 +367,9 @@ class Github implements ProviderInterface
             'repository' => $project->repository,
             'sha'        => $deployment->sha,
         ];
-        $url = $this->formatUrl(
-            $params,
-            $this->configUrl
+        $url = Str::moustaches(
+            $this->configUrl,
+            $params
         );
         $closure(
             'info',
@@ -430,24 +444,6 @@ class Github implements ProviderInterface
         }
 
         return new Config($yaml);
-    }
-
-    /**
-     * Format a url for a project
-     *
-     * @param App\Model\Project $project
-     * @param string $urlTemplate
-     * @return string
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    protected function formatUrl($params, $urlTemplate)
-    {
-        $keys = array_map(function ($value) {
-            return '{'.$value.'}';
-        }, array_keys($params));
-        $values = array_values($params);
-
-        return str_replace($keys, $values, $urlTemplate);
     }
 
     /**

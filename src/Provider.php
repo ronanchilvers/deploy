@@ -48,7 +48,7 @@ class Provider implements ServiceProviderInterface
             $settings = $c->get('settings');
             $loggerSettings = $settings['logger'];
             $logger = new Logger('default');
-            if (isset($loggerSettings['filename'])) {
+            if (isset($loggerSettings['filename']) && false !== $loggerSettings['filename']) {
                 if (DIRECTORY_SEPARATOR !== substr($loggerSettings['filename'], 0, 1)) {
                     $loggerSettings['filename'] = File::join(
                         __DIR__,

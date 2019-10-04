@@ -8,6 +8,7 @@ use App\Action\HookableInterface;
 use App\Action\Traits\Hookable;
 use Carbon\Carbon;
 use Ronanchilvers\Foundation\Config;
+use Ronanchilvers\Utility\File;
 use RuntimeException;
 
 /**
@@ -40,5 +41,19 @@ class FinaliseAction extends AbstractAction implements
         if (!$project->save()) {
             throw new RuntimeException('Unable to update last deployment date for project');
         }
+        $deploymentDir = $context->get('deployment_dir', null);
+        if (is_null($deploymentDir)) {
+            return;
+        }
+        $info = [
+            'SHA : ' . $deployment->sha,
+            'Deployed : ' . $deployment->started->format('Y-m-d H:i:s'),
+            'Author : ' . $deployment->author,
+            'Committer : ' . $deployment->committer,
+        ];
+        file_put_contents(
+            File::join($deploymentDir, '.deploy_info'),
+            implode("\n", $info) . "\n"
+        );
     }
 }

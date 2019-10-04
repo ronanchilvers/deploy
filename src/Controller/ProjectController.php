@@ -16,7 +16,9 @@ use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Ronanchilvers\Foundation\Facade\Queue;
+use Ronanchilvers\Foundation\Queue\Exception\FailedDispatchException;
 use Ronanchilvers\Orm\Orm;
+use Ronanchilvers\Utility\Str;
 use RuntimeException;
 
 /**
@@ -226,54 +228,78 @@ class ProjectController
             $provider = Provider::forProject(
                 $project
             );
-            $deployment = Orm::finder(Deployment::class)->nextForProject(
-                $project
-            );
-            $deployment->source = Security::email();
-            // Initial save of the deployment
-            if (!$deployment->save()) {
-                Log::debug('Unable to create new deployment object', [
-                    'project' => $project->toArray(),
-                ]);
-                throw new RuntimeException('Unable to create new deployment');
-            }
-            $finder = Orm::finder(Event::class);
-            $head = $provider->getHeadInfo(
-                $project->repository,
-                $branch,
-                function ($type, $header, $detail = '') use ($finder, $deployment) {
-                    $finder->event(
-                        $type,
-                        $deployment,
-                        $header,
-                        $detail
+            Orm::transaction(function () use ($project, $provider, $branch) {
+                $deployment = Orm::finder(Deployment::class)->nextForProject(
+                    $project
+                );
+                $deployment->source = Security::email();
+                // Initial save of the deployment
+                if (!$deployment->save()) {
+                    Log::debug('Unable to create new deployment object', [
+                        'project' => $project->toArray(),
+                    ]);
+                    throw new RuntimeException('Unable to create new deployment');
+                }
+                $finder = Orm::finder(Event::class);
+                $head = $provider->getHeadInfo(
+                    $project->repository,
+                    $branch,
+                    function ($type, $header, $detail = '') use ($finder, $deployment) {
+                        $finder->event(
+                            $type,
+                            $deployment,
+                            $header,
+                            $detail
+                        );
+                    }
+                );
+                Log::debug('Updating deployment commit information', $head);
+                $deployment->sha       = $head['sha'];
+                $deployment->author    = $head['author'];
+                $deployment->committer = $head['committer'];
+                $deployment->message   = $head['message'];
+                if (!$deployment->save()) {
+                    // @todo Show error to user
+                    return $response->withRedirect(
+                        Router::pathFor('project.view', [
+                            'key' => $project->key
+                        ])
                     );
                 }
-            );
-            Log::debug('Updating deployment commit information', $head);
-            $deployment->sha       = $head['sha'];
-            $deployment->author    = $head['author'];
-            $deployment->committer = $head['committer'];
-            $deployment->message   = $head['message'];
-            if (!$deployment->save()) {
-                // @todo Show error to user
-                return $response->withRedirect(
-                    Router::pathFor('project.view', [
-                        'key' => $project->key
-                    ])
+                Queue::dispatch(
+                    new DeployJob($deployment)
                 );
-            }
-            Queue::dispatch(
-                new DeployJob($deployment)
-            );
+            });
+
             Session::flash([
                 'heading' => 'Deploy queued successfully'
             ]);
+        // } catch (FailedDispatchException $ex) {
+        //     $message = [$ex->getMessage()];
+        //     if ($previous = $message->getPrevious()) {
+        //         $message[] = $previous->getMessage();
+        //     }
+        //     $message = Str::join(' - ', $message);
+        //     Session::flash(
+        //         [
+        //             'heading' => 'Failed to queue new deployment',
+        //             'content' => $message,
+        //         ],
+        //         'error'
+        //     );
+        //     Log::error($message, [
+        //         'exception' => $ex,
+        //     ]);
         } catch (Exception $ex) {
+            $message = [$ex->getMessage()];
+            if ($previous = $ex->getPrevious()) {
+                $message[] = $previous->getMessage();
+            }
+            $message = implode(' - ', $message);
             Session::flash(
                 [
                     'heading' => 'Failed to initialise new deployment',
-                    'content' => $ex->getMessage(),
+                    'content' => $message,
                 ],
                 'error'
             );
@@ -288,7 +314,6 @@ class ProjectController
             ])
         );
     }
-
 
     /**
      * Trigger a deploy for a project
@@ -306,27 +331,29 @@ class ProjectController
                     Router::pathFor('project.index')
                 );
             }
-            $deployment = Orm::finder(Deployment::class)->nextForProject(
-                $project
-            );
-            $original = Orm::finder(Deployment::class)->one(
-                $args['deployment']
-            );
-            if (!$original instanceof Deployment) {
-                throw new RuntimeException('Invalid attempt to re-deploy non-existant deployment');
-            }
-            $deployment->initialiseFrom($original);
+            Orm::transaction(function () use ($project, $args) {
+                $deployment = Orm::finder(Deployment::class)->nextForProject(
+                    $project
+                );
+                $original = Orm::finder(Deployment::class)->one(
+                    $args['deployment']
+                );
+                if (!$original instanceof Deployment) {
+                    throw new RuntimeException('Invalid attempt to re-deploy non-existant deployment');
+                }
+                $deployment->initialiseFrom($original);
 
-            // Initial save of the deployment
-            if (!$deployment->save()) {
-                Log::debug('Unable to create re-deployment object', [
-                    'project' => $project->toArray(),
-                ]);
-                throw new RuntimeException('Unable to create new deployment');
-            }
-            Queue::dispatch(
-                new DeployJob($deployment)
-            );
+                // Initial save of the deployment
+                if (!$deployment->save()) {
+                    Log::debug('Unable to create re-deployment object', [
+                        'project' => $project->toArray(),
+                    ]);
+                    throw new RuntimeException('Unable to create new deployment');
+                }
+                Queue::dispatch(
+                    new DeployJob($deployment)
+                );
+            });
             Session::flash([
                 'heading' => 'Re-deploy queued successfully'
             ]);

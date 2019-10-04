@@ -48,17 +48,23 @@ class CleanupAction extends AbstractAction implements
                 'deployment_dir' => $deploymentDir,
             ]);
             if (!File::rm($deploymentDir)) {
-                $this->error(
+                if (!is_dir($deploymentDir)) {
+                    $method = 'info';
+                    $message = 'Deployment folder not found for deployment ' . $deployment->number;
+                } else {
+                    $method = 'error';
+                    $message = 'Unable to remove deployment folder for deployment ' . $deployment->number;
+                }
+                $this->$method(
                     $thisDeployment,
-                    'Unable to remove deployment folder for deployment ' . $deployment->number,
+                    $message,
                     [
                         "Deployment Folder - " . $deploymentDir
                     ]
                 );
-                Log::error('Unable to remove old deployment directory', [
+                Log::error($message, [
                     'deployment_dir' => $deploymentDir
                 ]);
-                continue;
             }
             if (!$deployment->delete()) {
                 $this->error(

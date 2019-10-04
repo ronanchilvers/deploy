@@ -194,9 +194,9 @@ class Gitlab implements ProviderInterface
             'repository' => $this->encodeRepository($project->repository),
             'sha'        => $deployment->sha,
         ];
-        $url = $this->formatUrl(
-            $params,
-            $this->downloadUrl
+        $url = Str::moustaches(
+            $this->downloadUrl,
+            $params
         );
         $closure(
             'info',
@@ -322,9 +322,9 @@ class Gitlab implements ProviderInterface
             'repository' => $this->encodeRepository($project->repository),
             'sha'        => $deployment->sha,
         ];
-        $url = $this->formatUrl(
-            $params,
-            $this->configUrl
+        $url = Str::moustaches(
+            $this->configUrl,
+            $params
         );
         $closure(
             'info',
@@ -399,24 +399,6 @@ class Gitlab implements ProviderInterface
         }
 
         return new Config($yaml);
-    }
-
-    /**
-     * Format a url for a project
-     *
-     * @param App\Model\Project $project
-     * @param string $urlTemplate
-     * @return string
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    protected function formatUrl($params, $urlTemplate)
-    {
-        $keys = array_map(function ($value) {
-            return '{'.$value.'}';
-        }, array_keys($params));
-        $values = array_values($params);
-
-        return str_replace($keys, $values, $urlTemplate);
     }
 
     /**
