@@ -170,7 +170,21 @@ class Github implements ProviderInterface
             );
             throw new RuntimeException('CURL request failed - (' . curl_errno($curl) . ') ' . curl_error($curl));
         }
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
+        if($statusCode != 200){
+            $data = json_decode($data, true);
+            $closure(
+                'error',
+                'Error obtaining head info from Github',
+                implode("\n", [
+                    "URL - {$url}",
+                    "Status code - {$statusCode}",
+                    "Error - {$data['message']}"
+                ])
+            );
+            throw new RuntimeException('Github request failed - ' . $data['message']);
+        }
         if (!$data = json_decode($data, true)) {
             $closure(
                 'error',
