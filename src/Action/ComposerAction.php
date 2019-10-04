@@ -71,7 +71,10 @@ class ComposerAction extends AbstractAction implements
         $this->info(
             $deployment,
             'Composer run completed',
-            $process->getOutput()
+            [
+                $process->getOutput(),
+                $process->getErrorOutput(),
+            ]
         );
     }
 
