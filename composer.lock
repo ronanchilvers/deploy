@@ -658,16 +658,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.24.0",
+            "version": "2.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "934459c5ac0658bc765ad1e53512c7c77adcac29"
+                "reference": "b70da677101cca7b584c7489770d2677c2733593"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/934459c5ac0658bc765ad1e53512c7c77adcac29",
-                "reference": "934459c5ac0658bc765ad1e53512c7c77adcac29",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/b70da677101cca7b584c7489770d2677c2733593",
+                "reference": "b70da677101cca7b584c7489770d2677c2733593",
                 "shasum": ""
             },
             "require": {
@@ -714,14 +714,14 @@
                     "homepage": "http://github.com/kylekatarnls"
                 }
             ],
-            "description": "A API extension for DateTime that supports 281 different languages.",
+            "description": "An API extension for DateTime that supports 281 different languages.",
             "homepage": "http://carbon.nesbot.com",
             "keywords": [
                 "date",
                 "datetime",
                 "time"
             ],
-            "time": "2019-08-31T16:37:55+00:00"
+            "time": "2019-09-30T16:22:22+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -1333,16 +1333,16 @@
         },
         {
             "name": "ronanchilvers/foundation",
-            "version": "1.1",
+            "version": "1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/foundation.git",
-                "reference": "6ec477bc7b73716627051c7b9cdaf17160052d9a"
+                "reference": "b3c633cd3ed6935e215bd0ffa05f15ffbec36000"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/foundation/zipball/6ec477bc7b73716627051c7b9cdaf17160052d9a",
-                "reference": "6ec477bc7b73716627051c7b9cdaf17160052d9a",
+                "url": "https://api.github.com/repos/ronanchilvers/foundation/zipball/b3c633cd3ed6935e215bd0ffa05f15ffbec36000",
+                "reference": "b3c633cd3ed6935e215bd0ffa05f15ffbec36000",
                 "shasum": ""
             },
             "require": {
@@ -1387,10 +1387,10 @@
             ],
             "description": "Foundation classes for use in php projects",
             "support": {
-                "source": "https://github.com/ronanchilvers/foundation/tree/1.1",
+                "source": "https://github.com/ronanchilvers/foundation/tree/1.2",
                 "issues": "https://github.com/ronanchilvers/foundation/issues"
             },
-            "time": "2019-10-01T07:07:07+00:00"
+            "time": "2019-10-04T11:44:06+00:00"
         },
         {
             "name": "ronanchilvers/orm",
