@@ -13,6 +13,7 @@ use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\File;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use RuntimeException;
 
 /**
  * Action to run composer on the project if a composer.json file is found
@@ -112,7 +113,7 @@ class ComposerAction extends AbstractAction implements
                 $this->error(
                     $deployment,
                     'Failed downloading composer.phar',
-                    $process->getErrorOutput()
+                    [$process->getOutput(), $process->getErrorOutput()]
                 );
                 throw new RuntimeException('Failed to run composer installer');
             }
