@@ -51,7 +51,7 @@ trait Hookable /* implements HookableInterface */
                 $this->error(
                     $deployment,
                     sprintf('%s hook failed to run : %s', $key, $hook),
-                    $process->getErrorOutput()
+                    [$process->getOutput, $process->getErrorOutput()]
                 );
                 throw new RuntimeException('Unable to run deployment hook');
             }
