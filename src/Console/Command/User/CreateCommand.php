@@ -27,6 +27,11 @@ class CreateCommand extends Command
             ->setName('user:create')
             ->setDescription('Create a user')
             ->addArgument(
+                'name',
+                InputArgument::REQUIRED,
+                'The name for the user'
+            )
+            ->addArgument(
                 'email',
                 InputArgument::REQUIRED,
                 'The email address for the user'
@@ -39,9 +44,11 @@ class CreateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $name = $input->getArgument('name');
         $email = $input->getArgument('email');
 
         $output->writeln('Creating new user...');
+        $output->writeln('Name : ' . $name);
         $output->writeln('Email : ' . $email);
         $helper = $this->getHelper('question');
 
@@ -63,6 +70,7 @@ class CreateCommand extends Command
 
         $output->writeln('Creating user record...');
         $user = new User();
+        $user->name = $name;
         $user->email = $email;
         $user->password = password_hash($password, PASSWORD_DEFAULT);
         if (!$user->saveWithValidation()) {

@@ -51,7 +51,7 @@ class Manager
         if (!$user instanceof User) {
             return false;
         }
-        if (!password_verify($password, $user->password)) {
+        if (!$user->verify($password)) {
             return false;
         }
         $this->session->set(

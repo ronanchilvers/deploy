@@ -3,9 +3,9 @@
         padding-left: 1rem;
     }
 }
-.tabs.is-boxed li.is-active a {
-    background-color: #fafafa;
-}
+// .tabs.is-boxed li.is-active a {
+//     background-color: #fafafa;
+// }
 @each $status,$color in $status_colors {
     .tab-is-#{$status} {
         // border-top: 1px solid $color !important;
@@ -19,5 +19,22 @@
 
     &.is-active {
         display: block;
+    }
+}
+.tabs.is-vertical {
+    ul {
+        display: block;
+        border: none;
+    }
+    li a {
+        border: none;
+        border-left: 2px solid transparent;
+        text-align: left;
+        justify-content: inherit;
+    }
+    li.is-active a {
+        border: none;
+        background-color: $white;
+        border-left: 2px solid #3273dc;
     }
 }

@@ -1,0 +1,33 @@
+{% extends 'page.html.twig' %}
+
+{% block body %}
+{% set tabs = { profile: 'Profile', security: 'Security' } %}
+<header class="project-heading">
+    <div class="columns">
+        <div class="column">
+            <div class="columns is-mobile is-vcentered">
+                <div class="column is-narrow">
+                    <span class="icon is-inline-block is-size-3"><i class="fas fa-user"></i></span>
+                </div>
+                <div class="column is-narrow">
+                    <h1 class="is-size-3">Your account</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="columns">
+    <div class="column is-2">
+        <div class="tabs is-1boxed is-vertical">
+            <ul>
+            {% for route,label in tabs %}
+                <li{% if 'user.' ~ route == current_route %} class="is-active"{% endif %}><a href="{{ path_for('user.' ~ route) }}">{{ label }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="column">
+        {% block layout_body %}{% endblock %}
+    </div>
+</div>
+{% endblock %}
