@@ -3,6 +3,17 @@
         padding-left: 1rem;
     }
 }
+.tabs.is-boxed li.is-active a {
+    background-color: #fafafa;
+}
+@each $status,$color in $status_colors {
+    .tab-is-#{$status} {
+        // border-top: 1px solid $color !important;
+        a {
+            color: $color !important;
+        }
+    }
+}
 .tab-pane {
     display: none;
 

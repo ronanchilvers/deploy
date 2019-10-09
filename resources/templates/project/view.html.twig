@@ -58,7 +58,7 @@
         <ul>
             <!-- <li class="tabs-heading">Deployment:</li> -->
         {% for deployment in deployments %}
-            <li{% if selected_deployment.number == deployment.number %} class="is-active"{% endif %}>
+            <li class="tab-is-{{ deployment.status }} {% if selected_deployment.number == deployment.number %} is-active {% endif %}">
                 <a href="{{ path_for('project.view', { key: project.key }, { deployment: deployment.number } ) }}">#{{ deployment.number }}</a>
             </li>
         {% endfor %}
