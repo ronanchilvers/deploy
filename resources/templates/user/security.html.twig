@@ -22,12 +22,6 @@
             <p class="help is-danger" id="user_name">{{ user.getError('password_confirm')|join(', ') }}</p>
         </div>
 
-        {#<div class="field">
-            <input id="user_2fa" type="hidden" name="user[2fa]" value="false">
-            <input id="user_2fa" type="checkbox" name="user[2fa]" class="switch" value="true">
-            <label for="user_2fa">Enable two factor authentication?</label>
-        </div>#}
-
         <div class="field is-grouped is-grouped-right">
             <div class="control">
                 <button type="submit" class="button is-primary is-once">Save</button>
