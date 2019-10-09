@@ -146,6 +146,7 @@ class UserController
             $data = $request->getParsedBody()['user'];
             $user->fromArray($data);
             if ($user->saveWithValidation()) {
+                Security::refresh($user);
                 Session::flash([
                     'heading' => 'Profile saved'
                 ]);

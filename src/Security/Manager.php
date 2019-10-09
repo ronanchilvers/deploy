@@ -58,6 +58,7 @@ class Manager
             static::SESSION_KEY,
             [
                 'id' => $user->id,
+                'name' => $user->name,
                 'email' => $user->email,
             ]
         );
@@ -91,6 +92,33 @@ class Manager
     }
 
     /**
+     * Refresh the session data
+     *
+     * @param App\Model\User $user
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function refresh(User $user)
+    {
+        if (!$this->hasLogin()) {
+            return false;
+        }
+        $session = $this->session->get(
+            static::SESSION_KEY
+        );
+        if ($user->id !== $session['id']) {
+            return false;
+        }
+        $session['name'] = $user->name;
+        $session['email']= $user->email;
+        $this->session->set(
+            static::SESSION_KEY,
+            $session
+        );
+
+        return true;
+    }
+
+    /**
      * Get the current user id
      *
      * @return integer
@@ -106,6 +134,24 @@ class Manager
         );
 
         return $session['id'];
+    }
+
+    /**
+     * Get the current logger in email
+     *
+     * @return null|string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function name()
+    {
+        if (!$this->hasLogin()) {
+            return null;
+        }
+        $session = $this->session->get(
+            static::SESSION_KEY
+        );
+
+        return $session['name'];
     }
 
     /**
