@@ -47,6 +47,7 @@ class Manager
     {
         $user = Orm::finder(User::class)->select()
             ->where(User::prefix('email'), $email)
+            ->where(User::prefix('status'), User::STATUS_ACTIVE)
             ->one();
         if (!$user instanceof User) {
             return false;
