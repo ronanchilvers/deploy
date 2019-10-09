@@ -25,10 +25,6 @@ class Users extends AbstractMigration
                 'length' => 128,
                 'null'   => false,
             ])
-            ->addColumn('user_secret', 'string', [
-                'length'  => 1024,
-                'null'    => true,
-            ])
             ->addColumn('user_status', 'string', [
                 'length'  => 24,
                 'null'    => false,
