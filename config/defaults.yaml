@@ -2,5 +2,5 @@
 composer:
   command: install --no-dev --optimize-autoloader
 cleanup:
-  keep_releases: 5
+  keep_deployments: 5
 notify: []
