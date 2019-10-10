@@ -12,6 +12,7 @@ use App\Model\Deployment;
 use App\Model\Event;
 use App\Model\Project;
 use App\Queue\DeployJob;
+use App\Queue\ReactivateJob;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -335,7 +336,7 @@ class ProjectController
                 );
             }
             Orm::transaction(function () use ($project, $args) {
-                $deployment = Orm::finder(Deployment::class)->nextForProject(
+                $dummy = Orm::finder(Deployment::class)->nextForProject(
                     $project
                 );
                 $original = Orm::finder(Deployment::class)->one(
@@ -344,11 +345,13 @@ class ProjectController
                 if (!$original instanceof Deployment) {
                     throw new RuntimeException('Invalid attempt to re-deploy non-existant deployment');
                 }
-                $deployment->initialiseFrom($original);
+                $deployment           = clone $original;
+                $deployment->original = $original->id;
+                $deployment->number   = $dummy->number;
 
                 // Initial save of the deployment
                 if (!$deployment->save()) {
-                    Log::debug('Unable to create re-deployment object', [
+                    Log::debug('Unable to create deployment object', [
                         'project' => $project->toArray(),
                     ]);
                     throw new RuntimeException('Unable to create new deployment');
@@ -357,7 +360,7 @@ class ProjectController
                     throw new RuntimeException('Unable to mark project as deploying');
                 }
                 Queue::dispatch(
-                    new DeployJob($deployment)
+                    new ReactivateJob($original, $deployment)
                 );
             });
             Session::flash([

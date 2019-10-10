@@ -64,7 +64,9 @@
     <div class="tabs is-boxed">
         <ul>
             <!-- <li class="tabs-heading">Deployment:</li> -->
+        {% set first = 0 %}
         {% for deployment in deployments %}
+            {% if first == 0 %}{% set first = deployment.id %}{% endif %}
             <li class="tab-is-{{ deployment.status }} {% if selected_deployment.number == deployment.number %} is-active {% endif %}">
                 <a href="{{ path_for('project.view', { key: project.key }, { deployment: deployment.number } ) }}">#{{ deployment.number }}</a>
             </li>
@@ -73,12 +75,18 @@
     </div>
     <section class="section">
         <div class="box is-border-left-{{ selected_deployment.status }}">
-        {% if selected_deployment.deployed %}
+        {% if not selected_deployment.reactivation %}
+        {% if selected_deployment.id != first and selected_deployment.deployed %}
             <a class="button is-once is-block-mobile is-pulled-right confirm{% if not project.deployable %} tooltip is-tooltip-bottom{% endif %}>"
                href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}"
                {% if not project.deployable %}disabled data-tooltip="Project is not currently deployable"{% endif %}>
                 <span class="icon"><i class="fas fa-redo-alt"></i></span>
                 <span>Re-Deploy</span>
+            </a>
+        {% endif %}
+        {% else %}
+            <a class="is-text is-pulled-right" href="{{ path_for('project.view', { key: project.key }, { deployment: selected_deployment.original.number } ) }}">
+                <span>Reactivation of #{{ selected_deployment.original.number }}</span>
             </a>
         {% endif %}
             <div class="columns">
@@ -117,7 +125,7 @@
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-stopwatch"></i></span>
-                            <span class="is-inline-block tooltip" data-tooltip="Duration">{{ selected_deployment.duration }} seconds</span>
+                            <span class="is-inline-block tooltip" data-tooltip="Duration">{% if selected_deployment.deployed %}{{ selected_deployment.duration }} seconds{% else %}N/A{% endif %}</span>
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="far fa-calendar-alt"></i></span>
@@ -125,7 +133,7 @@
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-user-cog"></i></span>
-                            <span class="is-inline-block tooltip" data-tooltip="Deployed by">{{ selected_deployment.source }}</span>
+                            <span class="is-inline-block tooltip" data-tooltip="Deployed by">{% if selected_deployment.deployed %}{{ selected_deployment.source }}{% else %}N/A{% endif %}</span>
                         </li>
                     </ul>
                 </div>

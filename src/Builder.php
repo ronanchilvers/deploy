@@ -80,7 +80,7 @@ class Builder
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function run(Config $configuration, Closure $closure = null)
+    public function run(Config $configuration, Context $context = null, Closure $closure = null)
     {
         if (is_null($closure)) {
             $closure = function ($string) {
@@ -89,7 +89,9 @@ class Builder
         }
 
         $eventFinder = Orm::finder(Event::class);
-        $context = new Context();
+        if (!$context instanceof Context) {
+            $context = new Context();
+        }
         $context->set('project', $this->project);
         $context->set('deployment', $this->deployment);
 
