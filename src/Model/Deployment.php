@@ -149,7 +149,7 @@ class Deployment extends Model
      */
     public function isReactivation()
     {
-        return 0 < $this->original;
+        return 0 < $this->getAttributeRaw('original');
     }
 
     /**
