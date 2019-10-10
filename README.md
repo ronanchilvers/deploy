@@ -16,10 +16,10 @@ A tool for simple deployments from common source control providers.
 * [ ] Unit tests!
 * [ ] Ability to trigger a deployment using a webhook
 * [ ] Bitbucket support
-* [ ] Block deployments for a project when one is queued or in progress
 
 ## Things that are done
 
+* [x] Block deployments for a project when one is queued or in progress
 * [x] Better user account support
 * [x] User accounts
 * [x] Hooks
