@@ -17,13 +17,35 @@ A tool for simple deployments to a single server (for now) from common source co
 
 * PHP 7.1.8+
 * Beanstalkd work queue (available as standard in most linux distributions)
+* A backend database supported by PDO and (Phinx)[https://github.com/cakephp/phinx]
+* (Composer)[https://getcomposer.org/] for `deploy` dependency installation
 
-In addition it is *strongly* recommended that you use a proper RDBMS like MySQL or MariaDB to host the database. The default sqlite database is suitable for development but you will almost certainly run into database locks if you use it in production.
+In addition it is *strongly* recommended that you use a proper RDBMS like MySQL, MariaDB or PostgreSQL to host the database. The default SQLite database is suitable for development but you will almost certainly run into database contention locks if you use it in production.
 
 `deploy` includes a queue runner that does the heavy lifting. You can run this via cron if you want to but I recommend using supervisord (again available in most linux distributions in the standard package catalogue).
 
 Once you have the required software installed on the host you can then get on with the installation.
 
+### Codebase setup
+
+* Create a database and database user in your chosen DBMS. `deploy` needs CREATE, DROP, ALTER, SELECT, INSERT, UPDATE, DELETE, INDEX permissions. We will leave this step to you as it's implementation depends on your chosen RDBMS backend.
+* Clone this repository into an appropriate place on your server
+```bash
+git clone https://github.com/ronanchilvers/deploy.git deploy
+cd deploy
+```
+* Install dependencies
+```bash
+composer install
+```
+* Create the local configuration. Instructions are provided within the file.
+```bash
+cp local.yaml.dist local.yaml
+```
+* Run phinx database migrations
+```bash
+php vendor/bin/phinx migrate
+```
 
 
 ## Things to do
