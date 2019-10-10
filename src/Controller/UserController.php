@@ -196,7 +196,6 @@ class UserController
 
                 $user->password = password_hash($data['password_new'], PASSWORD_DEFAULT);
 
-                // $user->fromArray($data);
                 if (!$user->saveWithValidation()) {
                     throw new RuntimeException('Unable to save new password');
                 }

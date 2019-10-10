@@ -214,17 +214,4 @@ class Deployment extends Model
 
         return null;
     }
-
-    /**
-     * Initialise this deployment from another one
-     *
-     * @param App\Model\Deployment $deployment
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function initialiseFrom(Deployment $deployment)
-    {
-        foreach (['sha', 'author', 'committer', 'message'] as $field) {
-            $this->$field = $deployment->$field;
-        }
-    }
 }

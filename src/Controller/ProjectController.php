@@ -234,7 +234,6 @@ class ProjectController
                     $project
                 );
                 $deployment->source = Security::email();
-                // Initial save of the deployment
                 if (!$deployment->save()) {
                     Log::debug('Unable to create new deployment object', [
                         'project' => $project->toArray(),
@@ -260,7 +259,6 @@ class ProjectController
                 $deployment->committer = $head['committer'];
                 $deployment->message   = $head['message'];
                 if (!$deployment->save()) {
-                    // @todo Show error to user
                     return $response->withRedirect(
                         Router::pathFor('project.view', [
                             'key' => $project->key
@@ -278,22 +276,6 @@ class ProjectController
             Session::flash([
                 'heading' => 'Deploy queued successfully'
             ]);
-        // } catch (FailedDispatchException $ex) {
-        //     $message = [$ex->getMessage()];
-        //     if ($previous = $message->getPrevious()) {
-        //         $message[] = $previous->getMessage();
-        //     }
-        //     $message = Str::join(' - ', $message);
-        //     Session::flash(
-        //         [
-        //             'heading' => 'Failed to queue new deployment',
-        //             'content' => $message,
-        //         ],
-        //         'error'
-        //     );
-        //     Log::error($message, [
-        //         'exception' => $ex,
-        //     ]);
         } catch (Exception $ex) {
             $message = [$ex->getMessage()];
             if ($previous = $ex->getPrevious()) {
@@ -348,8 +330,6 @@ class ProjectController
                 $deployment           = clone $original;
                 $deployment->original = $original->id;
                 $deployment->number   = $dummy->number;
-
-                // Initial save of the deployment
                 if (!$deployment->save()) {
                     Log::debug('Unable to create deployment object', [
                         'project' => $project->toArray(),
@@ -379,7 +359,6 @@ class ProjectController
             ]);
         }
 
-        // @todo Show confirmation to user
         return $response->withRedirect(
             Router::pathFor('project.view', [
                 'key' => $project->key
