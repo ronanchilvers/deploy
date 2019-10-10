@@ -74,8 +74,9 @@
     <section class="section">
         <div class="box is-border-left-{{ selected_deployment.status }}">
         {% if selected_deployment.deployed %}
-            <a class="button is-once is-block-mobile is-pulled-right confirm"
-               href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}">
+            <a class="button is-once is-block-mobile is-pulled-right confirm{% if not project.deployable %} tooltip is-tooltip-bottom{% endif %}>"
+               href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}"
+               {% if not project.deployable %}disabled data-tooltip="Project is not currently deployable"{% endif %}>
                 <span class="icon"><i class="fas fa-redo-alt"></i></span>
                 <span>Re-Deploy</span>
             </a>

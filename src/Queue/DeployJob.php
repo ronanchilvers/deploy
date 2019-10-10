@@ -131,6 +131,10 @@ class DeployJob extends Job
                 $ex->getMessage(),
                 $ex->getCode()
             );
+        } finally {
+            if (!$project->markActive()) {
+                throw new RuntimeException('Unable to mark project as deploying');
+            }
         }
     }
 }

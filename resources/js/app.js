@@ -13,6 +13,9 @@ $(function () {
             });
         }, 3000);
     }
+    $('[disabled]').on('click', function (e) {
+        e.preventDefault();
+    });
     $(".button.is-once").click(function (e) {
         $(this).addClass('is-loading');
     });

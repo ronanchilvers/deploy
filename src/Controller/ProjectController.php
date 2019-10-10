@@ -266,6 +266,9 @@ class ProjectController
                         ])
                     );
                 }
+                if (!$project->markDeploying()) {
+                    throw new RuntimeException('Unable to mark project as deploying');
+                }
                 Queue::dispatch(
                     new DeployJob($deployment)
                 );
@@ -349,6 +352,9 @@ class ProjectController
                         'project' => $project->toArray(),
                     ]);
                     throw new RuntimeException('Unable to create new deployment');
+                }
+                if (!$project->markDeploying()) {
+                    throw new RuntimeException('Unable to mark project as deploying');
                 }
                 Queue::dispatch(
                     new DeployJob($deployment)
