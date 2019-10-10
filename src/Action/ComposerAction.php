@@ -13,6 +13,7 @@ use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\File;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use RuntimeException;
 
 /**
  * Action to run composer on the project if a composer.json file is found
@@ -58,7 +59,13 @@ class ComposerAction extends AbstractAction implements
                 "Command - {$command}",
             ]
         );
-        $process      = new Process(explode(' ', $command), $deploymentDir);
+        $process      = new Process(
+            explode(' ', $command),
+            $deploymentDir,
+            [
+                'COMPOSER_HOME' => dirname($composerPath),
+            ]
+        );
         $process->run();
         if (!$process->isSuccessful()) {
             $this->error(
@@ -90,13 +97,14 @@ class ComposerAction extends AbstractAction implements
      */
     protected function getComposerPath(Deployment $deployment)
     {
-        $filename = '/tmp/composer.phar';
+        $baseDir  = Settings::get('build.base_dir');
+        $filename = File::join($baseDir, 'composer.phar');
         if (!is_readable($filename)) {
             $this->info(
                 $deployment,
                 'Downloading composer.phar'
             );
-            $installer = '/tmp/composer-setup.php';
+            $installer = File::join($baseDir, 'composer-setup.php');
             if (!copy('https://getcomposer.org/installer', $installer)) {
                 throw new RuntimeException('Unable to download composer installer');
             }
@@ -106,13 +114,19 @@ class ComposerAction extends AbstractAction implements
                 throw new RuntimeException('Signature mismatch for composer installer');
             }
             $phpPath = Settings::get('binary.php');
-            $process = new Process([$phpPath, $installer], '/tmp');
+            $process = new Process(
+                [$phpPath, $installer],
+                $baseDir,
+                [
+                    'COMPOSER_HOME' => $baseDir,
+                ]
+            );
             $process->run();
             if (!$process->isSuccessful()) {
                 $this->error(
                     $deployment,
                     'Failed downloading composer.phar',
-                    $process->getErrorOutput()
+                    [$process->getOutput(), $process->getErrorOutput()]
                 );
                 throw new RuntimeException('Failed to run composer installer');
             }

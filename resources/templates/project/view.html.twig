@@ -2,11 +2,17 @@
 
 {% block body %}
 <div class="project">
-
     {{ include('fragments/project/header.html.twig', { project: project } )}}
 
     <section class="section">
         <div class="columns">
+            <div class="column">
+                <p class="heading">Repository</p>
+                <p>
+                    <span class="icon is-inline-block is-size-7"><i class="fab fa-{{ project.provider }}"></i></span>
+                    <span class="is-inline-block">{{ repo_link(project) }}</span>
+                </p>
+            </div>
             <div class="column">
                 <p class="heading">Default Branch</p>
                 <p>
@@ -58,8 +64,10 @@
     <div class="tabs is-boxed">
         <ul>
             <!-- <li class="tabs-heading">Deployment:</li> -->
+        {% set first = 0 %}
         {% for deployment in deployments %}
-            <li{% if selected_deployment.number == deployment.number %} class="is-active"{% endif %}>
+            {% if first == 0 %}{% set first = deployment.id %}{% endif %}
+            <li class="tab-is-{{ deployment.status }} {% if selected_deployment.number == deployment.number %} is-active {% endif %}">
                 <a href="{{ path_for('project.view', { key: project.key }, { deployment: deployment.number } ) }}">#{{ deployment.number }}</a>
             </li>
         {% endfor %}
@@ -67,11 +75,18 @@
     </div>
     <section class="section">
         <div class="box is-border-left-{{ selected_deployment.status }}">
-        {% if selected_deployment.deployed %}
-            <a class="button is-once is-block-mobile is-pulled-right"
-               href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}">
+        {% if not selected_deployment.reactivation %}
+        {% if selected_deployment.id != first and selected_deployment.deployed %}
+            <a class="button is-once is-block-mobile is-pulled-right confirm{% if not project.deployable %} tooltip is-tooltip-bottom{% endif %}>"
+               href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}"
+               {% if not project.deployable %}disabled data-tooltip="Project is not currently deployable"{% endif %}>
                 <span class="icon"><i class="fas fa-redo-alt"></i></span>
-                <span>Re-Deploy</span>
+                <span>Re-Activate</span>
+            </a>
+        {% endif %}
+        {% else %}
+            <a class="is-text is-pulled-right" href="{{ path_for('project.view', { key: project.key }, { deployment: selected_deployment.original.number } ) }}">
+                <span>Reactivation of #{{ selected_deployment.original.number }}</span>
             </a>
         {% endif %}
             <div class="columns">
@@ -79,19 +94,19 @@
                     <ul class="content-list">
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-hashtag"></i></span>
-                            <span class="is-inline-block" title="Commit SHA">{{ sha_link(project, selected_deployment.sha) }}</span>
+                            <span class="is-inline-block tooltip" data-tooltip="Commit SHA">{{ sha_link(project, selected_deployment.sha) }}</span>
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-user-edit"></i></span>
-                            <span class="is-inline-block" title="Author">{{ selected_deployment.author }}</span>
+                            <span class="is-inline-block tooltip" data-tooltip="Author">{{ selected_deployment.author }}</span>
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-user-shield"></i></span>
-                            <span class="is-inline-block" title="Committer">{{ selected_deployment.committer }}</span>
+                            <span class="is-inline-block tooltip" data-tooltip="Committer">{{ selected_deployment.committer }}</span>
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-align-left"></i></span>
-                            <code class="is-inline-block" title="Message">{{ selected_deployment.message }}</code>
+                            <code class="is-inline-block tooltip" data-tooltip="Message">{{ selected_deployment.message }}</code>
                         </li>
                     </ul>
                 </div>
@@ -110,15 +125,15 @@
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-stopwatch"></i></span>
-                            <span class="is-inline-block">{{ selected_deployment.duration }} seconds</span>
+                            <span class="is-inline-block tooltip" data-tooltip="Duration">{% if selected_deployment.deployed %}{{ selected_deployment.duration }} seconds{% else %}N/A{% endif %}</span>
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="far fa-calendar-alt"></i></span>
-                            <span class="is-inline-block tooltip" data-tooltip="{{ selected_deployment.finished }}">{{ selected_deployment.finished|human_date }}</span>
+                            <span class="is-inline-block tooltip" data-tooltip="Deployed at {{ selected_deployment.finished }}">{{ selected_deployment.finished|human_date }}</span>
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-user-cog"></i></span>
-                            <span class="is-inline-block">{{ selected_deployment.source }}</span>
+                            <span class="is-inline-block tooltip" data-tooltip="Deployed by">{% if selected_deployment.deployed %}{{ selected_deployment.source }}{% else %}N/A{% endif %}</span>
                         </li>
                     </ul>
                 </div>

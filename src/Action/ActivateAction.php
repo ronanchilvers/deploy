@@ -32,7 +32,7 @@ class ActivateAction extends AbstractAction implements
         $projectDir    = $context->getOrThrow('project_base_dir', 'Missing or invalid project base directory');
         $deploymentDir = $context->getOrThrow('deployment_dir', 'Missing or invalid deployment directory');
         $linkFilename  = File::join($projectDir, 'current');
-        Log::debug('Preparing to symlink new deployment', [
+        Log::debug('Preparing to symlink deployment', [
             'deployment_dir' => $deploymentDir,
             'link_name' => $linkFilename,
         ]);
@@ -84,7 +84,7 @@ class ActivateAction extends AbstractAction implements
         }
         $this->info(
             $deployment,
-            'Symlinked new deployment successfully',
+            'Symlinked deployment successfully',
             [
                 'Deployment Folder - ' . $deploymentDir,
                 'Link Name - ' . $linkFilename,

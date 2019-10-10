@@ -37,9 +37,9 @@
         <p class="help is-danger" id="project_branch_error">{{ project.getError('branch')|join(', ') }}</p>
     </div>
 
-    <div class="field is-grouped is-grouped-right">
+    <div class="field is-grouped is-both-sides">
         <div class="control">
-            <a class="button" href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { key: project.key }) }}{% endif %}">Cancel</a>
+            <a class="button" href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { key: project.key }) }}{% endif %}">{% if not project.loaded %}Cancel{% else %}Back{% endif %}</a>
         </div>
         <div class="control">
             <button type="submit" class="button is-primary is-once">Save</button>

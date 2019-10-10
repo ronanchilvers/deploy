@@ -130,4 +130,99 @@ class UserController
 
         return $response->withJson($json);
     }
+
+    /**
+     * User profile page
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function profile(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ) {
+        $user = Security::user();
+
+        if ($request->isMethod('POST')) {
+            $data = $request->getParsedBody()['user'];
+            $user->fromArray($data);
+            if ($user->saveWithValidation()) {
+                Security::refresh($user);
+                Session::flash([
+                    'heading' => 'Profile saved'
+                ]);
+                return $response->withRedirect(
+                    Router::pathFor('user.profile')
+                );
+            }
+        }
+
+        return View::render(
+            $response,
+            'user/profile.html.twig',
+            [
+                'title'         => 'Profile',
+                'current_route' => 'user.profile',
+                'user'          => $user,
+            ]
+        );
+    }
+
+    /**
+     * Security action for user passwords, etc
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function security(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ) {
+        $user = Security::user();
+
+        try {
+            if ($request->isMethod('POST')) {
+                $data = $request->getParsedBody()['user'];
+
+                if (empty($data['password']) || empty($data['password_new']) || empty($data['password_confirm'])) {
+                    throw new RuntimeException('Invalid or missing input');
+                }
+
+                if (!$user->verify($data['password'])) {
+                    throw new RuntimeException('Current password was incorrect');
+                }
+
+                if (trim($data['password_new']) != trim($data['password_confirm'])) {
+                    throw new RuntimeException('New password does not match confirmation');
+                }
+
+                $user->password = password_hash($data['password_new'], PASSWORD_DEFAULT);
+
+                if (!$user->saveWithValidation()) {
+                    throw new RuntimeException('Unable to save new password');
+                }
+                Session::flash([
+                    'heading' => 'Profile saved'
+                ]);
+                return $response->withRedirect(
+                    Router::pathFor('user.security')
+                );
+            }
+        } catch (RuntimeException $ex) {
+            Session::flash([
+                    'heading' => 'Save failed',
+                    'content' => $ex->getMessage()
+                ],
+                'error'
+            );
+        }
+
+        return View::render(
+            $response,
+            'user/security.html.twig',
+            [
+                'title'         => 'Security',
+                'current_route' => 'user.security',
+                'user'          => $user,
+            ]
+        );
+    }
 }

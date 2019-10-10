@@ -317,7 +317,8 @@ class Github implements ProviderInterface
         }
 
         // Decompress the archive into the download directory
-        $command = "/usr/bin/tar --strip-components=1 -xzf {$filename} -C {$directory}";
+        $tar     = Settings::get('binary.tar', '/bin/tar');
+        $command = "{$tar} --strip-components=1 -xzf {$filename} -C {$directory}";
         $closure(
             'info',
             'Unpacking codebase tarball',

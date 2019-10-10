@@ -45,6 +45,10 @@ class FinaliseAction extends AbstractAction implements
         if (is_null($deploymentDir)) {
             return;
         }
+        $filename = File::join($deploymentDir, '.deploy_info');
+        if (file_exists($filename)) {
+            return;
+        }
         $info = [
             'SHA : ' . $deployment->sha,
             'Deployed : ' . $deployment->started->format('Y-m-d H:i:s'),
@@ -52,7 +56,7 @@ class FinaliseAction extends AbstractAction implements
             'Committer : ' . $deployment->committer,
         ];
         file_put_contents(
-            File::join($deploymentDir, '.deploy_info'),
+            $filename,
             implode("\n", $info) . "\n"
         );
     }

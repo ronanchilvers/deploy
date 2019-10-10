@@ -33,13 +33,13 @@
                 <div class="navbar-end">
                     <div class="navbar-item has-dropdown">
                         <a class="navbar-link">
-                            Profile
+                            {{ security.name }}
                         </a>
                         <div class="navbar-dropdown is-right">
-                            {#<a href="#" class="navbar-item">
-                                Your profile
+                            <a href="{{ path_for('user.profile') }}" class="navbar-item">
+                                Account
                             </a>
-                            <hr class="navbar-divider">#}
+                            <hr class="navbar-divider">
                             <a href="{{ path_for('user.logout') }}" class="navbar-item">
                                 Logout
                             </a>
@@ -60,6 +60,16 @@
             <button class="modal-close is-large js-modal-close" aria-label="close"></button>
         </div>
     {% endif %}
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <strong>deploy</strong> by <a target="_blank" href="https://github.com/ronanchilvers">Ronan Chilvers</a>.
+                    Licensed with <a target="_blank" href="https://choosealicense.com/licenses/mit/">MIT</a>.
+                    Styled with <a target="_blank" href="https://bulma.io">Bulma</a>.
+                    Icons by <a target="_blank" href="https://fontawesome.com">Font Awesome</a>.
+                </p>
+            </div>
+        </footer>
         <script type="text/javascript" src="/js/vendor.js"></script>
         <script type="text/javascript" src="/js/app.js"></script>
         {% block javascripts %}{% endblock %}

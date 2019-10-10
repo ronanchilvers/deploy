@@ -1,0 +1,12 @@
+.field.is-both-sides {
+    @include clearfix();
+    display: block;
+    .control:first-child {
+        float: left;
+        clear: none;
+    }
+    .control:last-child {
+        float: right;
+        clear: none;
+    }
+}

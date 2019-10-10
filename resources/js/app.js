@@ -13,8 +13,17 @@ $(function () {
             });
         }, 3000);
     }
+    $('[disabled]').on('click', function (e) {
+        e.preventDefault();
+    });
     $(".button.is-once").click(function (e) {
         $(this).addClass('is-loading');
+    });
+    $('.confirm').on('click', function (e) {
+        if (!confirm('Are you sure?')) {
+            $(this).removeClass('is-loading');
+            e.preventDefault();
+        }
     });
     $('.modal-trigger').on('click', function (e) {
         e.preventDefault();

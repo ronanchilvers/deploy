@@ -31,10 +31,12 @@ Once you have the required software installed on the host you can then get on wi
 * [ ] Unit tests!
 * [ ] Ability to trigger a deployment using a webhook
 * [ ] Bitbucket support
-* [ ] Better user account support
+* [ ] Implement re-activation rather than deployment for old releases (change of symlink)
 
 ## Things that are done
 
+* [x] Block deployments for a project when one is queued or in progress
+* [x] Better user account support
 * [x] User accounts
 * [x] Hooks
 * [x] Notifications

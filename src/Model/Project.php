@@ -51,6 +51,7 @@ class Project extends Model
             'provider'   => Validator::notEmpty()->in($providerKeys),
             'repository' => Validator::notEmpty(),
             'branch'     => Validator::notEmpty(),
+            'status'     => Validator::notEmpty()->in(['active', 'deploying']),
         ]);
     }
 
@@ -81,5 +82,41 @@ class Project extends Model
     public function getProviderOptions()
     {
         return $this->providers;
+    }
+
+    /**
+     * Mark this project as deploying
+     *
+     * @return boolean
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function markDeploying()
+    {
+        $this->status = 'deploying';
+
+        return $this->save();
+    }
+
+    /**
+     * Mark this project as active
+     *
+     * @return boolean
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function markActive()
+    {
+        $this->status = 'active';
+
+        return $this->save();
+    }
+
+    /**
+     * Is this project deployable?
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function isDeployable()
+    {
+        return 'active' == $this->status;
     }
 }

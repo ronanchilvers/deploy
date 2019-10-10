@@ -32,4 +32,8 @@ $app->group('/user', function (App $app) {
         ->setName('user.logout');
     $app->map(['GET', 'POST'], '/favourite/{project}', UserController::class . ':favourite')
         ->setName('user.favourite');
+    $app->map(['GET', 'POST'], '/profile', UserController::class . ':profile')
+        ->setName('user.profile');
+    $app->map(['GET', 'POST'], '/security', UserController::class . ':security')
+        ->setName('user.security');
 });

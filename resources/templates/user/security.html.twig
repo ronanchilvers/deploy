@@ -1,0 +1,32 @@
+{% extends 'layouts/user.html.twig' %}
+
+{% block layout_body %}
+<div class="box">
+    <form method="POST" action="">
+
+        <div class="field required{% if user.hasError('password') %} errored{% endif %}">
+            <label class="label" for="user_password">Current Password</label>
+            <div class="control"><input class="input{% if user.hasError('password') %} is-danger{% endif %}" type="password" id="user_password" name="user[password]"></div>
+            <p class="help is-danger" id="user_name">{{ user.getError('password')|join(', ') }}</p>
+        </div>
+
+        <div class="field required{% if user.hasError('password_new') %} errored{% endif %}">
+            <label class="label" for="user_password_new">New Password</label>
+            <div class="control"><input class="input{% if user.hasError('password_new') %} is-danger{% endif %}" type="password" id="user_password_new" name="user[password_new]"></div>
+            <p class="help is-danger" id="user_name">{{ user.getError('password_new')|join(', ') }}</p>
+        </div>
+
+        <div class="field required{% if user.hasError('password_confirm') %} errored{% endif %}">
+            <label class="label" for="user_password_confirm">Confirm New Password</label>
+            <div class="control"><input class="input{% if user.hasError('password_confirm') %} is-danger{% endif %}" type="password" id="user_password_confirm" name="user[password_confirm]"></div>
+            <p class="help is-danger" id="user_name">{{ user.getError('password_confirm')|join(', ') }}</p>
+        </div>
+
+        <div class="field is-grouped is-grouped-right">
+            <div class="control">
+                <button type="submit" class="button is-primary is-once">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

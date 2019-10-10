@@ -10,7 +10,7 @@
                 </div>
             </div>
         </div>
-        <div class="column is-narrow">
+        <div class="column is-narrow is-clearfix">
             <div class="field is-grouped is-pulled-right-mobile">
                 <div class="control">
                     <a href="{{ path_for('user.favourite', { project: project.id }) }}"
@@ -26,8 +26,9 @@
                     </a>
                 </div>
                 <div class="control">
-                    <a class="button is-primary is-block-mobile js-modal-trigger"
+                    <a class="button is-primary is-block-mobile js-modal-trigger{% if not project.deployable %} tooltip is-tooltip-left{% endif %}"
                        href="{{ path_for('project.prepare-deploy', { key: project.key }) }}"
+                       {% if not project.deployable %}disabled data-tooltip="Project is not currently deployable"{% endif %}
                        >Deploy</a>
                 </div>
             </div>

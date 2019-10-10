@@ -1,9 +1,10 @@
 {% extends 'page.html.twig' %}
 
 {% block body %}
+<div class="project">
     {{ include('fragments/project/header.html.twig', { project: project } )}}
-
-<div class="box">
-    {% include 'fragments/project/form.html.twig' %}
+    <div class="box">
+        {% include 'fragments/project/form.html.twig' %}
+    </div>
 </div>
 {% endblock %}

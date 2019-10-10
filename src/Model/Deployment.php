@@ -40,12 +40,24 @@ class Deployment extends Model
     /**
      * @author Ronan Chilvers <ronan@d3r.com>
      */
+    protected function clone()
+    {
+        $this->status   = 'pending';
+        $this->started  = null;
+        $this->finished = null;
+        $this->failed   = null;
+    }
+
+    /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
     protected function setupValidation()
     {
         $this->registerRules([
             'project' => Validator::notEmpty()->intVal()->min(1),
             'hash'    => Validator::stringType(),
             'status'  => Validator::notEmpty()->in(['pending', 'deploying', 'deployed', 'failed']),
+            'type'    => Validator::notEmpty()->in(['deployment', 'reactivation']),
         ]);
     }
 
@@ -73,6 +85,20 @@ class Deployment extends Model
     {
         return $this->hasMany(
             Event::class
+        );
+    }
+
+    /**
+     * Relate original deployment to this one for reactivations
+     *
+     * @return App\Model\Deployment|null
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function relateOriginal()
+    {
+        return $this->belongsTo(
+            Deployment::class,
+            'original'
         );
     }
 
@@ -113,6 +139,17 @@ class Deployment extends Model
         $this->failed = Carbon::now();
 
         return $this->save();
+    }
+
+    /**
+     * Is this a full deployment?
+     *
+     * @return boolean
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function isReactivation()
+    {
+        return 0 < $this->getAttributeRaw('original');
     }
 
     /**
@@ -176,18 +213,5 @@ class Deployment extends Model
         }
 
         return null;
-    }
-
-    /**
-     * Initialise this deployment from another one
-     *
-     * @param App\Model\Deployment $deployment
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function initialiseFrom(Deployment $deployment)
-    {
-        foreach (['sha', 'author', 'committer', 'message'] as $field) {
-            $this->$field = $deployment->$field;
-        }
     }
 }
