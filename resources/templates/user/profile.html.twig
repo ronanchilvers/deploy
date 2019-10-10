@@ -1,0 +1,25 @@
+{% extends 'layouts/user.html.twig' %}
+
+{% block layout_body %}
+<div class="box">
+    <form method="POST" action="">
+        <div class="field required{% if user.hasError('name') %} errored{% endif %}">
+            <label class="label" for="user_name">Name</label>
+            <div class="control"><input class="input{% if user.hasError('name') %} is-danger{% endif %}" type="text" value="{{ user.name}}" id="user_name" name="user[name]"></div>
+            <p class="help is-danger" id="user_name">{{ user.getError('name')|join(', ') }}</p>
+        </div>
+
+        <div class="field required{% if user.hasError('email') %} errored{% endif %}">
+            <label class="label" for="user_email">Email</label>
+            <div class="control"><input class="input{% if user.hasError('email') %} is-danger{% endif %}" type="text" value="{{ user.email}}" id="user_email" name="user[email]"></div>
+            <p class="help is-danger" id="user_email">{{ user.getError('email')|join(', ') }}</p>
+        </div>
+
+        <div class="field is-grouped is-grouped-right">
+            <div class="control">
+                <button type="submit" class="button is-primary is-once">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

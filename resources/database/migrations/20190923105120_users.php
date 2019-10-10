@@ -13,6 +13,10 @@ class Users extends AbstractMigration
             'id' => 'user_id',
         ]);
         $table
+            ->addColumn('user_name', 'string', [
+                'length' => 1024,
+                'null'   => false,
+            ])
             ->addColumn('user_email', 'string', [
                 'length' => 1024,
                 'null'   => false,

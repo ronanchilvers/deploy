@@ -3,6 +3,7 @@
     "description": "Base framework that extends slim and adds some useful components",
     "type": "project",
     "require": {
+        "php": "^7.1",
         "defuse/php-encryption": "^2.1",
         "dflydev/fig-cookies": "^1.0",
         "monolog/monolog": "^1.23",

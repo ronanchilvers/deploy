@@ -46,5 +46,4 @@ class UserExtension extends AbstractExtension
 
         return in_array($project->id, $favourites);
     }
-
 }

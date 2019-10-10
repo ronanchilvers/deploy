@@ -41,6 +41,7 @@ class User extends Model
     protected function setupValidation()
     {
         $this->registerRules([
+            'name'     => Validator::notEmpty(),
             'email'    => Validator::notEmpty()->email(),
             'password' => Validator::notEmpty(),
             'status'   => Validator::notEmpty()->in([static::STATUS_INACTIVE, static::STATUS_ACTIVE]),
@@ -81,5 +82,21 @@ class User extends Model
         $this->preferences = $preferences;
 
         return $this->save();
+    }
+
+    /**
+     * Verify a password against this user
+     *
+     * @param string $password
+     * @return boolean
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function verify($password)
+    {
+        if (!$this->isLoaded()) {
+            return false;
+        }
+
+        return password_verify($password, $this->password);
     }
 }

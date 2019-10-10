@@ -33,13 +33,13 @@
                 <div class="navbar-end">
                     <div class="navbar-item has-dropdown">
                         <a class="navbar-link">
-                            Profile
+                            {{ security.name }}
                         </a>
                         <div class="navbar-dropdown is-right">
-                            {#<a href="#" class="navbar-item">
-                                Your profile
+                            <a href="{{ path_for('user.profile') }}" class="navbar-item">
+                                Account
                             </a>
-                            <hr class="navbar-divider">#}
+                            <hr class="navbar-divider">
                             <a href="{{ path_for('user.logout') }}" class="navbar-item">
                                 Logout
                             </a>

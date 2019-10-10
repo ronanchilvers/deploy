@@ -3,6 +3,7 @@
 namespace App\Console\Command\User;
 
 use App\Model\User;
+use Ronanchilvers\Orm\Orm;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,6 +28,11 @@ class CreateCommand extends Command
             ->setName('user:create')
             ->setDescription('Create a user')
             ->addArgument(
+                'name',
+                InputArgument::REQUIRED,
+                'The name for the user'
+            )
+            ->addArgument(
                 'email',
                 InputArgument::REQUIRED,
                 'The email address for the user'
@@ -39,11 +45,22 @@ class CreateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $email = $input->getArgument('email');
+        $name = trim($input->getArgument('name'));
+        $email = trim($input->getArgument('email'));
 
         $output->writeln('Creating new user...');
+        $output->writeln('Name : ' . $name);
         $output->writeln('Email : ' . $email);
         $helper = $this->getHelper('question');
+
+        $existing = Orm::finder(User::class)->select()
+            ->where(User::prefix('email'), $email)
+            ->one();
+        if ($existing instanceof User) {
+            throw new RuntimeException('User already exists with email ' . $email);
+            // $output->writeln('!!! User already exists with email ' . $email);
+            // return;
+        }
 
         $question = new Question('Enter the password for the new user : ');
         $question->setHidden(true);
@@ -55,6 +72,7 @@ class CreateCommand extends Command
 
         $password     = $helper->ask($input, $output, $question);
         $confirmation = $helper->ask($input, $output, $confirm);
+
         $password     = trim($password);
         $confirmation = trim($confirmation);
         if ($password !== $confirmation) {
@@ -63,6 +81,7 @@ class CreateCommand extends Command
 
         $output->writeln('Creating user record...');
         $user = new User();
+        $user->name = $name;
         $user->email = $email;
         $user->password = password_hash($password, PASSWORD_DEFAULT);
         if (!$user->saveWithValidation()) {

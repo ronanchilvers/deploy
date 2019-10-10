@@ -78,8 +78,6 @@ class Provider implements ServiceProviderInterface
                     'cache' => $settings['cache']
                 ]
             );
-            $request = $c->get('request');
-            // $basePath = rtrim(str_ireplace('index.php', '', $request->getUri()->getBasePath()), '/');
             $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
             $view->addExtension(
                 new TwigExtension(

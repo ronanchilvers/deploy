@@ -27,17 +27,18 @@ class ProjectExtension extends AbstractExtension
     /**
      * @var string
      */
-    protected $repoLinkHtml = '<span class="icon"><i class="fab fa-{provider}"></i></span><a class="button is-text" href="{user_url}" target="_blank"><span>{user}</span></a>/<a class="button is-text" href="{repo_url}" target="_blank">{repo}</a>';
+    // protected $repoLinkHtml = '<span class="icon"><i class="fab fa-{provider}"></i></span><a class="button is-text" href="{user_url}" target="_blank"><span>{user}</span></a>/<a class="button is-text" href="{repo_url}" target="_blank">{repo}</a>';
+    protected $repoLinkHtml = '<a href="{user_url}" target="_blank">{user}</a>/<a href="{repo_url}" target="_blank">{repo}</a>';
 
     /**
      * @var string
      */
-    protected $branchLinkHtml = '<a class="button is-text" href="{url}" target="_blank">{branch}</a>';
+    protected $branchLinkHtml = '<a href="{url}" target="_blank">{branch}</a>';
 
     /**
      * @var string
      */
-    protected $shaLinkHtml = '<a class="button is-text" href="{url}" target="_blank">{sha}</a>';
+    protected $shaLinkHtml = '<a href="{url}" target="_blank">{sha}</a>';
 
     /**
      * Class constructor
