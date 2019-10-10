@@ -16,10 +16,10 @@ A tool for simple deployments from common source control providers.
 * [ ] Unit tests!
 * [ ] Ability to trigger a deployment using a webhook
 * [ ] Bitbucket support
-* [ ] Better user account support
 
 ## Things that are done
 
+* [x] Better user account support
 * [x] User accounts
 * [x] Hooks
 * [x] Notifications
