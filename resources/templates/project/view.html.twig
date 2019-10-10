@@ -81,7 +81,7 @@
                href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}"
                {% if not project.deployable %}disabled data-tooltip="Project is not currently deployable"{% endif %}>
                 <span class="icon"><i class="fas fa-redo-alt"></i></span>
-                <span>Re-Deploy</span>
+                <span>Re-Activate</span>
             </a>
         {% endif %}
         {% else %}
