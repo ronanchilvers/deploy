@@ -65,13 +65,15 @@ sudo supervisorctl update
 sudo supervisorctl status
 ```
 
-## Things to do
+## Roadmap (sort of!)
+
+### Things to do
 
 * [ ] Unit tests!
 * [ ] Ability to trigger a deployment using a webhook
 * [ ] Bitbucket support
 
-## Things that are done
+### Things that are done
 
 * [x] Implement re-activation rather than deployment for old releases (change of symlink)
 * [x] Block deployments for a project when one is queued or in progress
@@ -95,9 +97,9 @@ sudo supervisorctl status
 ---
 notify:
   slack:
-    webhook: https://hooks.slack.com/services/12345679/AKSJDHFGASJDHFG/ADLJFBWIAEJFBWIDJCDC
+    webhook: https://hooks.slack.com/services/12345679/ABCDE/FGHIJK
 composer:
-  install: install --no-dev
+  install: install --no-dev -o
   after:
     - {php} scripts/myscript.php
 shared:
