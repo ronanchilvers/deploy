@@ -15,13 +15,9 @@ use Symfony\Component\Process\Process;
 trait Hookable /* implements HookableInterface */
 {
     /**
-     * Run a set of hooks from a configuration object
-     *
-     * @param Ronanchilvers\Foundation\Config $configuration
-     * @param App\Action\Context
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function runHooks(Config $configuration, Context $context)
+    public function runHooks($hook, Config $configuration, Context $context)
     {
         $deployment = $context->getOrThrow(
             'deployment',
@@ -31,7 +27,11 @@ trait Hookable /* implements HookableInterface */
             'deployment_dir',
             'Invalid or missing deployment directory'
         );
-        $key   = $this->getKey() . '.after';
+        $hook = strtolower($hook);
+        if (!in_array($hook, ['before', 'after'])) {
+            return;
+        }
+        $key   = $this->getKey() . '.' . $hook;
         $hooks = $configuration->get($key);
         if (!is_array($hooks) || empty($hooks)) {
             $this->info(

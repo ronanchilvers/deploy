@@ -15,9 +15,10 @@ interface HookableInterface
     /**
      * Run a set of hooks from a configuration object
      *
+     * @param string $hook Either 'before' or 'after'
      * @param Ronanchilvers\Foundation\Config $configuration
      * @param App\Action\Context
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function runHooks(Config $configuration, Context $context);
+    public function runHooks($hook, Config $configuration, Context $context);
 }

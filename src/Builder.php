@@ -99,12 +99,20 @@ class Builder
             $header = 'Running action: ' . $action->getKey();
             $closure($header);
             $action->setEventFinder($eventFinder);
+            if ($action instanceof HookableInterface) {
+                $action->runHooks(
+                    'before',
+                    $configuration,
+                    $context
+                );
+            }
             $action->run(
                 $configuration,
                 $context
             );
             if ($action instanceof HookableInterface) {
                 $action->runHooks(
+                    'after',
                     $configuration,
                     $context
                 );

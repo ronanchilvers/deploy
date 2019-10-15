@@ -7,6 +7,7 @@ use App\Action\CheckoutAction;
 use App\Action\CleanupAction;
 use App\Action\ClearPathsAction;
 use App\Action\ComposerAction;
+use App\Action\Context;
 use App\Action\CreateWorkspaceAction;
 use App\Action\FinaliseAction;
 use App\Action\ScanConfigurationAction;
@@ -16,6 +17,7 @@ use App\Builder;
 use App\Facades\Log;
 use App\Facades\Notifier;
 use App\Facades\Provider;
+use App\Facades\Settings;
 use App\Model\Deployment;
 use App\Model\Project;
 use Exception;
@@ -23,6 +25,7 @@ use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Foundation\Queue\Exception\FatalException;
 use Ronanchilvers\Foundation\Queue\Job\Job;
 use Ronanchilvers\Orm\Orm;
+use Ronanchilvers\Utility\File;
 use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -70,6 +73,25 @@ class DeployJob extends Job
                 $this->deployment,
                 $configuration
             );
+            $baseDir    = Settings::get('build.base_dir');
+            $key        = $project->key;
+            $projectDir = File::join(
+                $baseDir,
+                $key
+            );
+            // We set the deployment_dir to the original one, not the new one!!
+            $deploymentBaseDir = File::join(
+                $projectDir,
+                'deployments'
+            );
+            $deploymentDir = File::join(
+                $deploymentBaseDir,
+                $this->deployment->number
+            );
+            $context = new Context;
+            $context->set('project_base_dir', $projectDir);
+            $context->set('deployment_base_dir', $deploymentBaseDir);
+            $context->set('deployment_dir', $deploymentDir);
             $provider = Provider::forProject($project);
             $builder->addAction(new ScanConfigurationAction($provider));
             $builder->addAction(new CreateWorkspaceAction);
@@ -86,7 +108,7 @@ class DeployJob extends Job
             }
             $builder->run(
                 $configuration,
-                null,
+                $context,
                 function ($data) use ($project) {
                     Log::debug($data, [
                         'project' => $project->toArray(),
@@ -133,7 +155,8 @@ class DeployJob extends Job
             );
             throw new FatalException(
                 $ex->getMessage(),
-                $ex->getCode()
+                $ex->getCode(),
+                $ex
             );
         } finally {
             if (!$project->markActive()) {
