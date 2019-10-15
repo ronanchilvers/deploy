@@ -72,6 +72,7 @@ sudo supervisorctl status
 * [ ] Unit tests!
 * [ ] Ability to trigger a deployment using a webhook
 * [ ] Bitbucket support
+* [ ] Allow different / extended defaults for specific frameworks
 
 ### Things that are done
 
