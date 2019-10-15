@@ -118,9 +118,13 @@ clear_paths:
     - README.md
     - package.json
     - deploy.yaml
+  after:
+    - {php} vendor/bin/phinx migrate
+cleanup:
+  keep_deployments: 10
 ```
 
-## Useful things (for development)
+## Useful notes (for development)
 
 * https://developer.github.com/v3/repos/contents/#get-contents
 * https://mattstauffer.com/blog/introducing-envoyer.io/
