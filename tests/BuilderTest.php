@@ -19,7 +19,7 @@ class BuilderTest extends TestCase
      * @return App\Builder
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function newBuilder()
+    protected function newInstance()
     {
         $builder = new Builder(
             $this->mockProject(),
@@ -49,9 +49,9 @@ class BuilderTest extends TestCase
      * @test
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function testNewBuilderHasEmptyActionQueue()
+    public function tesInstanceHasEmptyActionQueue()
     {
-        $builder = $this->newBuilder();
+        $builder = $this->newInstance();
         $queue = $this->getProtectedProperty(
             $builder,
             'actions'
@@ -68,7 +68,7 @@ class BuilderTest extends TestCase
     public function testAddActionsToBuilder()
     {
         $action = $this->mockAction();
-        $builder = $this->newBuilder();
+        $builder = $this->newInstance();
         $builder->addAction($action);
 
         $queue = $this->getProtectedProperty(
@@ -86,7 +86,7 @@ class BuilderTest extends TestCase
      */
     public function testRunIsCalledOnActions()
     {
-        $builder = $this->newBuilder();
+        $builder = $this->newInstance();
         $action = $this->mockAction();
         $action
                ->expects($this->once())
@@ -110,7 +110,7 @@ class BuilderTest extends TestCase
     {
         $mockConfig  = $this->mockConfig();
         $mockContext = $this->mockContext();
-        $builder     = $this->newBuilder();
+        $builder     = $this->newInstance();
         $action      = $this->mockAction();
         $action
                ->expects($this->any())
@@ -146,7 +146,7 @@ class BuilderTest extends TestCase
     {
         $mockConfig  = $this->mockConfig();
         $mockContext = $this->mockContext();
-        $builder     = $this->newBuilder();
+        $builder     = $this->newInstance();
         $action      = $this->mockAction();
         $action
                ->expects($this->any())
