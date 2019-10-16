@@ -7,3 +7,4 @@
 /vendor/
 local.config.php
 local.yaml
+phpunit.xml
