@@ -1,6 +1,6 @@
 ---
 composer:
-  command: install --no-dev --optimize-autoloader
+  command: install --no-interaction --prefer-dist --no-dev --optimize-autoloader
 cleanup:
   keep_deployments: 5
 notify: []
