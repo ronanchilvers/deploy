@@ -135,4 +135,35 @@ class BuilderTest extends TestCase
             function () {}
         );
     }
+
+    /**
+     * Test that an action that does not support hooks is not hooked
+     *
+     * @test
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function testHooksAreNotRunWhenActionIsNotHookable()
+    {
+        $mockConfig  = $this->mockConfig();
+        $mockContext = $this->mockContext();
+        $builder     = $this->newBuilder();
+        $action      = $this->mockAction();
+        $action
+               ->expects($this->any())
+               ->method('isHookable')
+               ->willReturn(false);
+        $action
+               ->expects($this->never())
+               ->method('runHooks');
+        $action
+               ->expects($this->once())
+               ->method('run')
+               ->willReturn(true);
+        $builder->addAction($action);
+        $builder->run(
+            $mockConfig,
+            $mockContext,
+            function () {}
+        );
+    }
 }
