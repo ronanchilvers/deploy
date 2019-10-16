@@ -4,8 +4,6 @@ namespace App\Action;
 
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
-use App\Action\HookableInterface;
-use App\Action\Traits\Hookable;
 use App\Builder;
 use App\Facades\Log;
 use Ronanchilvers\Foundation\Config;
@@ -17,12 +15,8 @@ use RuntimeException;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class ClearPathsAction extends AbstractAction implements
-    ActionInterface,
-    HookableInterface
+class ClearPathsAction extends AbstractAction
 {
-    use Hookable;
-
     /**
      * @see App\Action\ActionInterface::run()
      */

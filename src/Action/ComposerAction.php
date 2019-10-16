@@ -4,8 +4,6 @@ namespace App\Action;
 
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
-use App\Action\HookableInterface;
-use App\Action\Traits\Hookable;
 use App\Facades\Log;
 use App\Facades\Settings;
 use App\Model\Deployment;
@@ -20,12 +18,8 @@ use RuntimeException;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class ComposerAction extends AbstractAction implements
-    ActionInterface,
-    HookableInterface
+class ComposerAction extends AbstractAction
 {
-    use Hookable;
-
     /**
      * @see App\Action\ActionInterface::run()
      */

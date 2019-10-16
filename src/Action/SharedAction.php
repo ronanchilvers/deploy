@@ -4,8 +4,6 @@ namespace App\Action;
 
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
-use App\Action\HookableInterface;
-use App\Action\Traits\Hookable;
 use App\Action\Traits\IsInitialiseStage;
 use App\Builder;
 use App\Facades\Log;
@@ -19,9 +17,7 @@ use RuntimeException;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class SharedAction extends AbstractAction implements
-    ActionInterface,
-    HookableInterface
+class SharedAction extends AbstractAction
 {
     use Hookable;
 

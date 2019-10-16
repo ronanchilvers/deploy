@@ -4,8 +4,6 @@ namespace App\Action;
 
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
-use App\Action\HookableInterface;
-use App\Action\Traits\Hookable;
 use Carbon\Carbon;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\File;
@@ -16,9 +14,7 @@ use RuntimeException;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class FinaliseAction extends AbstractAction implements
-    ActionInterface,
-    HookableInterface
+class FinaliseAction extends AbstractAction
 {
     use Hookable;
 
