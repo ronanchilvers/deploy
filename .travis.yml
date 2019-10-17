@@ -24,11 +24,11 @@ install:
   - sudo apt-get install parallel -y
   - travis_retry composer install --no-interaction --prefer-dist --dev
 
-# before_script:
+before_script:
+  - '/usr/bin/parallel php -l ::: $(/usr/bin/find ./src -iname "*.php")'
 
 script:
-  - '/usr/bin/parallel php -l ::: $(/usr/bin/find ./src -iname "*.php")'
-  # - vendor/bin/phpunit --coverage-clover=coverage.xml
+  - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
