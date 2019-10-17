@@ -139,12 +139,5 @@ class Provider implements ServiceProviderInterface
                 $settings['options']
             );
         });
-
-        // Default configuration
-        // $container->share('configuration', function ($c) {
-        //     $data = Yaml::parseFile(__DIR__ . '/../config/defaults.yaml');
-
-        //     return new Config($data);
-        // });
     }
 }

@@ -16,7 +16,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class ScanConfigurationAction extends AbstractAction implements ActionInterface
+class ScanConfigurationAction extends AbstractAction
 {
     /**
      * @var App\Provider\ProviderInterface

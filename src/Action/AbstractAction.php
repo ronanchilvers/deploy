@@ -2,7 +2,10 @@
 
 namespace App\Action;
 
+use App\Action\ActionInterface;
 use App\Action\Context;
+use App\Action\HookableInterface;
+use App\Action\Traits\Hookable;
 use App\Model\Deployment;
 use App\Model\Finder\EventFinder;
 use ReflectionClass;
@@ -15,7 +18,7 @@ use Ronanchilvers\Utility\Str;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-abstract class AbstractAction
+abstract class AbstractAction implements ActionInterface
 {
     use Optionable;
 
@@ -23,6 +26,11 @@ abstract class AbstractAction
      * @var App\Model\Finder\EventFinder
      */
     protected $eventFinder = null;
+
+    /**
+     * @var boolean
+     */
+    protected $hookable = true;
 
     /**
      * @see App\Action\ActionInterface::getKey()
@@ -42,15 +50,74 @@ abstract class AbstractAction
     }
 
     /**
-     * Set the event finder for this action
-     *
-     * @param App\Model\Finder\EventFinder $eventFinder
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function setEventFinder(EventFinder $eventFinder)
     {
         $this->eventFinder = $eventFinder;
     }
+
+    /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function isHookable()
+    {
+        return $this->hookable;
+    }
+
+    /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function runHooks($hook, Config $configuration, Context $context)
+    {
+        $deployment = $context->getOrThrow(
+            'deployment',
+            'Invalid or missing deployment in hook runner'
+        );
+        $deploymentDir = $context->getOrThrow(
+            'deployment_dir',
+            'Invalid or missing deployment directory'
+        );
+        $hook = strtolower($hook);
+        if (!in_array($hook, ['before', 'after'])) {
+            return;
+        }
+        $key   = $this->getKey() . '.' . $hook;
+        $hooks = $configuration->get($key);
+        if (!is_array($hooks) || empty($hooks)) {
+            $this->info(
+                $deployment,
+                sprintf('%s hooks not defined', $key)
+            );
+            return;
+        }
+        foreach ($hooks as $hook) {
+            $this->info(
+                $deployment,
+                sprintf('%s hook running - %s', $key, $hook)
+            );
+            $process = new Process($hook, $deploymentDir);
+            $process->run();
+            if (!$process->isSuccessful()) {
+                $this->error(
+                    $deployment,
+                    sprintf('%s hook failed to run : %s', $key, $hook),
+                    [$process->getOutput, $process->getErrorOutput()]
+                );
+                throw new RuntimeException('Unable to run deployment hook');
+            }
+            $this->info(
+                $deployment,
+                sprintf('%s hook ran successfully', $key),
+                $process->getOutput()
+            );
+        }
+    }
+
+    /**
+     * @see App\Action\ActionInterface::run()
+     */
+    abstract public function run(Config $configuration, Context $context);
 
     /**
      * Log an info event
@@ -95,9 +162,4 @@ abstract class AbstractAction
             $detail
         );
     }
-
-    /**
-     * @see App\Action\ActionInterface::run()
-     */
-    abstract public function run(Config $configuration, Context $context);
 }
