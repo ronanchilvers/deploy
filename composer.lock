@@ -658,16 +658,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.25.1",
+            "version": "2.25.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "d59c6cea9c4a3547bb6c0dfec451319abdaa4fb1"
+                "reference": "443fe5f1498147e0fbc792142b5dc43e2e8a533f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/d59c6cea9c4a3547bb6c0dfec451319abdaa4fb1",
-                "reference": "d59c6cea9c4a3547bb6c0dfec451319abdaa4fb1",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/443fe5f1498147e0fbc792142b5dc43e2e8a533f",
+                "reference": "443fe5f1498147e0fbc792142b5dc43e2e8a533f",
                 "shasum": ""
             },
             "require": {
@@ -721,7 +721,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2019-10-05T15:52:23+00:00"
+            "time": "2019-10-14T14:18:59+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -1333,16 +1333,16 @@
         },
         {
             "name": "ronanchilvers/foundation",
-            "version": "1.2",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/foundation.git",
-                "reference": "b3c633cd3ed6935e215bd0ffa05f15ffbec36000"
+                "reference": "abc9f9c2b25b6fab8b16d6c5f7573a8ba3389cb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/foundation/zipball/b3c633cd3ed6935e215bd0ffa05f15ffbec36000",
-                "reference": "b3c633cd3ed6935e215bd0ffa05f15ffbec36000",
+                "url": "https://api.github.com/repos/ronanchilvers/foundation/zipball/abc9f9c2b25b6fab8b16d6c5f7573a8ba3389cb7",
+                "reference": "abc9f9c2b25b6fab8b16d6c5f7573a8ba3389cb7",
                 "shasum": ""
             },
             "require": {
@@ -1387,23 +1387,23 @@
             ],
             "description": "Foundation classes for use in php projects",
             "support": {
-                "source": "https://github.com/ronanchilvers/foundation/tree/1.2",
+                "source": "https://github.com/ronanchilvers/foundation/tree/1.2.2",
                 "issues": "https://github.com/ronanchilvers/foundation/issues"
             },
-            "time": "2019-10-04T11:44:06+00:00"
+            "time": "2019-10-17T09:57:35+00:00"
         },
         {
             "name": "ronanchilvers/orm",
-            "version": "1.6",
+            "version": "1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/orm.git",
-                "reference": "121d2167566f71de96a299f56558e24ce1b706fb"
+                "reference": "a574395b5e7225afd41aaf9dbb91b7a22bec9873"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/orm/zipball/121d2167566f71de96a299f56558e24ce1b706fb",
-                "reference": "121d2167566f71de96a299f56558e24ce1b706fb",
+                "url": "https://api.github.com/repos/ronanchilvers/orm/zipball/a574395b5e7225afd41aaf9dbb91b7a22bec9873",
+                "reference": "a574395b5e7225afd41aaf9dbb91b7a22bec9873",
                 "shasum": ""
             },
             "require": {
@@ -1434,7 +1434,7 @@
                 }
             ],
             "description": "Simple database ORM implementation",
-            "time": "2019-10-10T20:34:35+00:00"
+            "time": "2019-10-17T10:29:27+00:00"
         },
         {
             "name": "ronanchilvers/sessions",
@@ -2252,16 +2252,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.12.0",
+            "version": "v2.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "c7a85fd08348ca04b4d8f234f49583d9910906aa"
+                "reference": "ddd4134af9bfc6dba4eff7c8447444ecc45b9ee5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/c7a85fd08348ca04b4d8f234f49583d9910906aa",
-                "reference": "c7a85fd08348ca04b4d8f234f49583d9910906aa",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ddd4134af9bfc6dba4eff7c8447444ecc45b9ee5",
+                "reference": "ddd4134af9bfc6dba4eff7c8447444ecc45b9ee5",
                 "shasum": ""
             },
             "require": {
@@ -2315,7 +2315,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-10-05T16:42:38+00:00"
+            "time": "2019-10-17T07:34:53+00:00"
         }
     ],
     "packages-dev": [
