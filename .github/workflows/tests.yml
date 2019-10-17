@@ -25,7 +25,7 @@ jobs:
       run: composer --version
     - name: Composer Dependencies
       run: composer install --no-interaction --no-suggest --no-progress --prefer-dist --optimize-autoloader
-    - name: Lint PHP
-      uses: michaelw90/php-lint@master
+    #- name: Lint PHP
+    #  uses: michaelw90/php-lint@master
     - name: Run Testsuite
       run: vendor/bin/phpunit -c phpunit.xml.dist
