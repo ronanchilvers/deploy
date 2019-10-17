@@ -1,22 +1,27 @@
-name: test
+name: testsuite
 
 on: push
 
 jobs:
   phpunit:
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      max-parallel: 15
+      matrix:
+        # operating-system: [ubuntu-latest, windows-latest, macOS-latest]
+        operating-system: [ubuntu-latest]
+        php-versions: ['7.1', '7.2', '7.3']
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
     steps:
     - uses: actions/checkout@v1
       with:
         fetch-depth: 1
-
+    - name: Install PHP
+      uses: shivammathur/setup-php@master
+      with:
+        php-version: ${{ matrix.php-versions }}
+        coverage: xdebug #optional
     - name: Composer dependencies
-      run: composer install --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
-
-    # - name: Prepare Laravel Application
-    #   run: |
-    #     cp .env.example .env
-    #     php artisan key:generate
+      run: composer install --no-interaction --no-suggest --no-progress --prefer-dist --optimize-autoloader
     - name: Run Testsuite
       run: vendor/bin/phpunit -c phpunit.xml.dist
