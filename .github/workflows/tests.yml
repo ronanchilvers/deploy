@@ -1,15 +1,12 @@
-name: testsuite
-
+name: TestSuite
 on: push
-
 jobs:
   phpunit:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       max-parallel: 15
       matrix:
-        # operating-system: [ubuntu-latest, windows-latest, macOS-latest]
-        operating-system: [ubuntu-latest]
+        operating-system: [ubuntu-latest, windows-latest, macOS-latest]
         php-versions: ['7.1', '7.2', '7.3']
     name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
     steps:
@@ -20,8 +17,12 @@ jobs:
       uses: shivammathur/setup-php@master
       with:
         php-version: ${{ matrix.php-versions }}
-        coverage: xdebug #optional
-    - name: Composer dependencies
+        coverage: xdebug
+    - name: Check PHP Version
+      run: php --version
+    - name: Check Composer Version
+      run: composer --version
+    - name: Composer Dependencies
       run: composer install --no-interaction --no-suggest --no-progress --prefer-dist --optimize-autoloader
     - name: Run Testsuite
       run: vendor/bin/phpunit -c phpunit.xml.dist
