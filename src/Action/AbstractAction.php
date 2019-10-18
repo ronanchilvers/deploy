@@ -11,6 +11,7 @@ use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Foundation\Traits\Optionable;
 use Ronanchilvers\Utility\Str;
 use RuntimeException;
+use Symfony\Component\Process\Process;
 
 /**
  * Action to symlink the deployment in to the live location
