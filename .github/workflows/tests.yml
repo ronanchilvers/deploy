@@ -31,8 +31,8 @@ jobs:
       run: vendor/bin/parallel-lint src config resources/database web
     - name: Run Testsuite
       run: vendor/bin/phpunit -c phpunit.xml.dist
-    - name: Upload to CodeCov
-      uses: codecov/codecov-action@v1.0.3
-      with:
-        token: ${{secrets.CODECOV_TOKEN}}
-        file: ./build/logs/clover.xml
+    # - name: Upload to CodeCov
+    #   uses: codecov/codecov-action@v1.0.3
+    #   with:
+    #     token: ${{secrets.CODECOV_TOKEN}}
+    #     file: ./build/logs/clover.xml
