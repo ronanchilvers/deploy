@@ -32,12 +32,12 @@ class Github implements ProviderInterface
     /**
      * @var string
      */
-    protected $headUrl     = 'https://api.github.com/repos/{repository}/git/refs/heads/{branch}';
+    protected $headUrl = 'https://api.github.com/repos/{repository}/git/refs/heads/{branch}';
 
     /**
      * @var string
      */
-    protected $commitUrl   = 'https://api.github.com/repos/{repository}/commits/{sha}';
+    protected $commitUrl = 'https://api.github.com/repos/{repository}/commits/{sha}';
 
     /**
      * @var string
@@ -47,22 +47,22 @@ class Github implements ProviderInterface
     /**
      * @var string
      */
-    protected $configUrl   = 'https://api.github.com/repos/{repository}/contents/deploy.yaml?ref={sha}';
+    protected $configUrl = 'https://api.github.com/repos/{repository}/contents/deploy.yaml?ref={sha}';
 
     /**
      * @var string
      */
-    protected $repoUrl     = 'https://github.com/{repository}';
+    protected $repoUrl = 'https://github.com/{repository}';
 
     /**
      * @var string
      */
-    protected $branchUrl   = 'https://github.com/{repository}/tree/{branch}';
+    protected $branchUrl = 'https://github.com/{repository}/tree/{branch}';
 
     /**
      * @var string
      */
-    protected $shaUrl      = 'https://github.com/{repository}/commit/{sha}';
+    protected $shaUrl = 'https://github.com/{repository}/commit/{sha}';
 
     /**
      * Class constructor
@@ -172,15 +172,19 @@ class Github implements ProviderInterface
         }
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-        if($statusCode != 200){
-            $data = json_decode($data, true);
+        if ($statusCode != 200) {
+            $error = 'Unknown';
+            if (is_string($data)) {
+                $data  = json_decode($data, true);
+                $error = $data['message'];
+            }
             $closure(
                 'error',
                 'Error obtaining head info from Github',
                 implode("\n", [
                     "URL - {$url}",
                     "Status code - {$statusCode}",
-                    "Error - {$data['message']}"
+                    "Error - {$error}"
                 ])
             );
             throw new RuntimeException('Github request failed - ' . $data['message']);
@@ -280,7 +284,7 @@ class Github implements ProviderInterface
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
         fclose($handle);
-        if($statusCode != 200){
+        if ($statusCode != 200) {
             $closure(
                 'error',
                 'Error downloading codebase',
@@ -380,7 +384,8 @@ class Github implements ProviderInterface
             ])
         );
         $curl = $this->getCurlHandle($url);
-        if (false === ($json = curl_exec($curl))) {
+        $json = curl_exec($curl);
+        if (false === $json || !is_string($json)) {
             $closure(
                 'error',
                 'Github API request failed',
@@ -456,7 +461,9 @@ class Github implements ProviderInterface
      */
     protected function getCurlHandle($url)
     {
-        $curl = curl_init($url);
+        if (!$curl = curl_init($url)) {
+            throw new RuntimeException('Unable to initialise CURL Github API request');
+        }
         curl_setopt_array($curl, [
             CURLOPT_USERAGENT      => 'ronanchilvers/deploy - curl ' . curl_version()['version'],
             CURLOPT_FOLLOWLOCATION => false,

@@ -32,7 +32,7 @@ class Gitlab implements ProviderInterface
     /**
      * @var string
      */
-    protected $headUrl     = 'https://gitlab.com/api/v4/projects/{repository}/repository/commits/{branch}';
+    protected $headUrl = 'https://gitlab.com/api/v4/projects/{repository}/repository/commits/{branch}';
 
     /**
      * @var string
@@ -42,22 +42,22 @@ class Gitlab implements ProviderInterface
     /**
      * @var string
      */
-    protected $configUrl   = 'https://gitlab.com/api/v4/projects/{repository}/repository/files/deploy.yaml?ref={sha}';
+    protected $configUrl = 'https://gitlab.com/api/v4/projects/{repository}/repository/files/deploy.yaml?ref={sha}';
 
     /**
      * @var string
      */
-    protected $repoUrl     = 'https://gitlab.com/{repository}';
+    protected $repoUrl = 'https://gitlab.com/{repository}';
 
     /**
      * @var string
      */
-    protected $branchUrl   = 'https://gitlab.com/{repository}/tree/{branch}';
+    protected $branchUrl = 'https://gitlab.com/{repository}/tree/{branch}';
 
     /**
      * @var string
      */
-    protected $shaUrl      = 'https://gitlab.com/{repository}/commit/{sha}';
+    protected $shaUrl = 'https://gitlab.com/{repository}/commit/{sha}';
 
     /**
      * Class constructor
@@ -234,7 +234,7 @@ class Gitlab implements ProviderInterface
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
         fclose($handle);
-        if($statusCode != 200){
+        if ($statusCode != 200) {
             $closure(
                 'error',
                 'Error downloading codebase',
@@ -335,7 +335,8 @@ class Gitlab implements ProviderInterface
             ])
         );
         $curl = $this->getCurlHandle($url);
-        if (false === ($json = curl_exec($curl))) {
+        $json = curl_exec($curl);
+        if (false === $json || !is_string($json)) {
             $closure(
                 'error',
                 'Gitlab API request failed',
@@ -411,7 +412,9 @@ class Gitlab implements ProviderInterface
      */
     protected function getCurlHandle($url)
     {
-        $curl = curl_init($url);
+        if (!$curl = curl_init($url)) {
+            throw new RuntimeException('Unable to initialise CURL Gitlab API request');
+        }
         curl_setopt_array($curl, [
             CURLOPT_USERAGENT      => 'ronanchilvers/deploy - curl ' . curl_version()['version'],
             CURLOPT_FOLLOWLOCATION => false,

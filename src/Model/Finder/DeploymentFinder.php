@@ -29,19 +29,6 @@ class DeploymentFinder extends Finder
     }
 
     /**
-     * Get the latest deployment
-     *
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function lastForProject()
-    {
-        return $this->select()
-            ->where(Deployment::prefix('project'), $project->id)
-            ->orderBy(Deployment::prefix('number'), 'desc')
-            ->one();
-    }
-
-    /**
      * Get the next deployment for a project
      *
      * This method returns a new unsaved deployment with the correct deployment number.

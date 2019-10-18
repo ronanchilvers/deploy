@@ -54,7 +54,7 @@ class SharedAction extends AbstractAction
         }
         $deploymentDir = $context->getOrThrow('deployment_dir', 'Invalid or missing deployment directory');
         // Get the shared items from the configuration object
-        $shared     = $configuration->get('shared', []);
+        $shared = $configuration->get('shared', []);
         if (0 == count($shared)) {
             $this->info(
                 $deployment,
@@ -77,7 +77,7 @@ class SharedAction extends AbstractAction
                 ]
             );
             foreach ($shared['folders'] as $folder) {
-                $sharedDir      = File::join($sharedBaseDir, $folder);
+                $sharedDir = File::join($sharedBaseDir, $folder);
                 $thisDeploymentDir = File::join($deploymentDir, $folder);
 
                 // Create the shared directory if needed

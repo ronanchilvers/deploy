@@ -4,13 +4,10 @@ namespace App;
 
 use App\Provider\Factory;
 use App\Provider\Github;
-use App\Provider\StrategyFactory;
 use App\Security\Manager;
 use App\Twig\GlobalsExtension;
 use App\Twig\ProjectExtension;
 use App\Twig\UserExtension;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Registry;

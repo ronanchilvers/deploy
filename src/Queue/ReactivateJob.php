@@ -63,31 +63,29 @@ class ReactivateJob extends Job
      */
     public function execute()
     {
+        $project       = $this->deployment->project;
+        $data          = Yaml::parse($this->deployment->configuration);
+        $configuration = new Config($data);
+        $builder       = new Builder(
+            $project,
+            $this->deployment
+        );
+        $baseDir    = Settings::get('build.base_dir');
+        $key        = $project->key;
+        $projectDir = File::join(
+            $baseDir,
+            $key
+        );
+        // We set the deployment_dir to the original one, not the new one!!
+        $deploymentBaseDir = File::join(
+            $projectDir,
+            'deployments'
+        );
+        $deploymentDir = File::join(
+            $deploymentBaseDir,
+            $this->original->number
+        );
         try {
-            $project       = $this->deployment->project;
-            $data          = Yaml::parse($this->deployment->configuration);
-            $configuration = new Config($data);
-            $builder       = new Builder(
-                $project,
-                $this->deployment,
-                $configuration
-            );
-            $baseDir    = Settings::get('build.base_dir');
-            $key        = $project->key;
-            $projectDir = File::join(
-                $baseDir,
-                $key
-            );
-            // We set the deployment_dir to the original one, not the new one!!
-            $deploymentBaseDir = File::join(
-                $projectDir,
-                'deployments'
-            );
-            $deploymentDir = File::join(
-                $deploymentBaseDir,
-                $this->original->number
-            );
-
             $context = new Context;
             $context->set('project_base_dir', $projectDir);
             $context->set('deployment_base_dir', $deploymentBaseDir);

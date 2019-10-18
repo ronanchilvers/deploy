@@ -53,7 +53,6 @@ class StatusCommand extends Command
 
         $output->writeln('Email : ' . $email);
         $output->writeln('Action : ' . $action);
-        $helper = $this->getHelper('question');
 
         $user = Orm::finder(User::class)->select()
             ->where(User::prefix('email'), $email)

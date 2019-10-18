@@ -54,6 +54,6 @@ class ProjectFinder extends Finder
             ->where(Project::prefix('key'), $key)
             ->one();
 
-        return ! $existing instanceof Project;
+        return !$existing instanceof Project;
     }
 }

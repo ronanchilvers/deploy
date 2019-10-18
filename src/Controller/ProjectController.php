@@ -77,14 +77,14 @@ class ProjectController
             );
         }
 
-        $finder   = Orm::finder(Deployment::class);
+        $finder = Orm::finder(Deployment::class);
         $deployments = $finder->forProject($project);
 
         $selected_number = $request->getQueryParam(
             'deployment',
             (0 < count($deployments)) ? $deployments[0]->number : false
         );
-        $selectedDeployment = (0 < count($deployments)) ? $deployments[0] : false ;
+        $selectedDeployment = (0 < count($deployments)) ? $deployments[0] : false;
         foreach ($deployments as $deployment) {
             if ($deployment->number == $selected_number) {
                 $selectedDeployment = $deployment;
@@ -115,8 +115,7 @@ class ProjectController
      */
     public function add(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        $args
+        ResponseInterface $response
     ) {
         $project = new Project;
         if ($request->isMethod('POST')) {
@@ -127,7 +126,7 @@ class ProjectController
                     'heading' => 'Project added'
                 ], 'success');
                 return $response->withRedirect(
-                    Router::pathFor('project.view', [ 'key' => $project->key ])
+                    Router::pathFor('project.view', ['key' => $project->key])
                 );
             }
             Log::debug('Project add failed', [
@@ -229,7 +228,7 @@ class ProjectController
             $provider = Provider::forProject(
                 $project
             );
-            Orm::transaction(function () use ($project, $provider, $branch) {
+            Orm::transaction(function() use ($project, $provider, $branch, $response) {
                 $deployment = Orm::finder(Deployment::class)->nextForProject(
                     $project
                 );
@@ -244,7 +243,7 @@ class ProjectController
                 $head = $provider->getHeadInfo(
                     $project->repository,
                     $branch,
-                    function ($type, $header, $detail = '') use ($finder, $deployment) {
+                    function($type, $header, $detail = '') use ($finder, $deployment) {
                         $finder->event(
                             $type,
                             $deployment,
@@ -317,7 +316,7 @@ class ProjectController
                     Router::pathFor('project.index')
                 );
             }
-            Orm::transaction(function () use ($project, $args) {
+            Orm::transaction(function() use ($project, $args) {
                 $dummy = Orm::finder(Deployment::class)->nextForProject(
                     $project
                 );

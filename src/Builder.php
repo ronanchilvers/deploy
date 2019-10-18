@@ -40,7 +40,7 @@ class Builder
     protected $deployment;
 
     /**
-     * @var array<Action>
+     * @var \SplQueue
      */
     protected $actions = null;
 
@@ -54,8 +54,7 @@ class Builder
      */
     public function __construct(
         Project $project,
-        Deployment $deployment,
-        Config $configuration
+        Deployment $deployment
     ) {
         $this->project    = $project;
         $this->deployment = $deployment;
@@ -82,7 +81,7 @@ class Builder
     public function run(Config $configuration, Context $context = null, Closure $closure = null)
     {
         if (is_null($closure)) {
-            $closure = function ($string) {
+            $closure = function($string) {
                 Log::debug($string);
             };
         }

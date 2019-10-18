@@ -16,7 +16,7 @@ class Manager
     const SESSION_KEY = 'security.session';
 
     /**
-     * @var Ronanchilvers\Sessions\Session
+     * @var \Ronanchilvers\Sessions\Session
      */
     protected $session;
 
@@ -110,7 +110,7 @@ class Manager
             return false;
         }
         $session['name'] = $user->name;
-        $session['email']= $user->email;
+        $session['email'] = $user->email;
         $this->session->set(
             static::SESSION_KEY,
             $session

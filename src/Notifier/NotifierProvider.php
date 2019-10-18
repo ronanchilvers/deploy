@@ -26,11 +26,11 @@ class NotifierProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container->share(SlackAdaptor::class, function () {
+        $container->share(SlackAdaptor::class, function() {
             return new SlackAdaptor();
         });
 
-        $container->share(Manager::class, function ($c) {
+        $container->share(Manager::class, function($c) {
             $manager = new Manager();
             $manager->registerAdaptor($c->get(SlackAdaptor::class));
 

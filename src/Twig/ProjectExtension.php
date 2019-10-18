@@ -179,7 +179,7 @@ class ProjectExtension extends AbstractExtension
     /**
      * Generate a human readable datetime string from a Carbon object
      *
-     * @param Carbon\Carbon $carbon
+     * @param \Carbon\Carbon $carbon
      * @return string
      * @author Ronan Chilvers <ronan@d3r.com>
      */

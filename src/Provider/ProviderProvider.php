@@ -23,19 +23,19 @@ class ProviderProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         // Github
-        $container->share(Github::class, function ($c){
+        $container->share(Github::class, function($c) {
             $token = Settings::get('providers.github.token');
 
             return new Github($token);
         });
         // Gitlab
-        $container->share(Gitlab::class, function ($c){
+        $container->share(Gitlab::class, function($c) {
             $token = Settings::get('providers.gitlab.token');
 
             return new Gitlab($token);
         });
 
-        $container->share(Factory::class, function ($c) {
+        $container->share(Factory::class, function($c) {
             $factory = new Factory();
             $factory->addProvider($c->get(Github::class));
             $factory->addProvider($c->get(Gitlab::class));

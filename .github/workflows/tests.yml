@@ -21,6 +21,8 @@ jobs:
         php-version: ${{ matrix.php-versions }}
         extension-csv: mbstring, xdebug
         coverage: xdebug
+    - name: Download scrutinizer ocular
+      run: wget -O ocular.phar https://scrutinizer-ci.com/ocular.phar
     - name: Check PHP Version
       run: php --version
     - name: Check Composer Version
@@ -31,6 +33,8 @@ jobs:
       run: vendor/bin/parallel-lint src config resources/database web
     - name: Run Testsuite
       run: vendor/bin/phpunit -c phpunit.xml.dist
+    - name: Upload code coverage to scrutinizer
+      run: php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml
     # - name: Upload to CodeCov
     #   uses: codecov/codecov-action@v1.0.3
     #   with:
