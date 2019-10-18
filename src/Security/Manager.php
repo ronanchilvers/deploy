@@ -16,7 +16,7 @@ class Manager
     const SESSION_KEY = 'security.session';
 
     /**
-     * @var Ronanchilvers\Sessions\Session
+     * @var \Ronanchilvers\Sessions\Session
      */
     protected $session;
 

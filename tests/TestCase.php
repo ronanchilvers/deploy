@@ -71,7 +71,7 @@ class TestCase extends BaseTestCase
     /**
      * Get a mock config object
      *
-     * @return Ronanchilvers\Foundation\Config
+     * @return \Ronanchilvers\Foundation\Config
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function mockConfig()

@@ -335,7 +335,8 @@ class Gitlab implements ProviderInterface
             ])
         );
         $curl = $this->getCurlHandle($url);
-        if (false === ($json = curl_exec($curl))) {
+        $json = curl_exec($curl);
+        if (false === $json || !is_string($json)) {
             $closure(
                 'error',
                 'Gitlab API request failed',
@@ -411,7 +412,9 @@ class Gitlab implements ProviderInterface
      */
     protected function getCurlHandle($url)
     {
-        $curl = curl_init($url);
+        if (!$curl = curl_init($url)) {
+            throw new RuntimeException('Unable to initialise CURL Gitlab API request');
+        }
         curl_setopt_array($curl, [
             CURLOPT_USERAGENT      => 'ronanchilvers/deploy - curl ' . curl_version()['version'],
             CURLOPT_FOLLOWLOCATION => false,

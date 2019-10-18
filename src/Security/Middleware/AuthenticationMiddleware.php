@@ -5,9 +5,9 @@ namespace App\Security\Middleware;
 use App\Facades\Router;
 use App\Facades\Security;
 use App\Facades\Session;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Ronanchilvers\Foundation\Traits\Optionable;
+use Slim\Http\Response;
 
 /**
  * Authentication middleware responsible for managing access to protected routes
@@ -41,7 +41,7 @@ class AuthenticationMiddleware
         $this->setOptions($options);
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
+    public function __invoke(ServerRequestInterface $request, Response $response, $next)
     {
         $anonymousRoutes = $this->getOption('anonymous_routes', []);
         if (!in_array($request->getAttribute('route')->getName(), $anonymousRoutes)) {

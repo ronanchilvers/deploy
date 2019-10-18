@@ -77,7 +77,7 @@ interface ProviderInterface
      *
      * @param \App\Model\Project $project
      * @param Closure $closure Callback for progress feedback - is passed $header and $detail strings
-     * @return Ronanchilvers\Foundation\Config
+     * @return \Ronanchilvers\Foundation\Config
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function scanConfiguration(Project $project, Deployment $deployment, Closure $closure = null);
