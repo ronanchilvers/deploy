@@ -21,7 +21,7 @@ class Manager
     protected $session;
 
     /**
-     * @var \App\Model\User
+     * @var null|\App\Model\User
      */
     protected $user;
 

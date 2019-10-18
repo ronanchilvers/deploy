@@ -21,12 +21,12 @@ use Ronanchilvers\Utility\Str;
  * @property string branch
  * @property string status
  * @property int last_number
- * @property \Carbon\Carbon last_deployment
+ * @property null|\Carbon\Carbon last_deployment
  * @property string last_author
  * @property string last_sha
  * @property string last_status
- * @property \Carbon\Carbon created
- * @property \Carbon\Carbon updated
+ * @property null|\Carbon\Carbon created
+ * @property null|\Carbon\Carbon updated
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Project extends Model

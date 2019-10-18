@@ -16,17 +16,17 @@ use Ronanchilvers\Orm\Traits\HasValidationTrait;
  * @property int id
  * @property \App\Model\Project project
  * @property int number
- * @property \App\Model\Deployment original
+ * @property null|\App\Model\Deployment original
  * @property string sha
  * @property string author
  * @property string message
  * @property string configuration
  * @property string status
- * @property \Carbon\Carbon started
- * @property \Carbon\Carbon finished
- * @property \Carbon\Carbon failed
- * @property \Carbon\Carbon created
- * @property \Carbon\Carbon updated
+ * @property null|\Carbon\Carbon started
+ * @property null|\Carbon\Carbon finished
+ * @property null|\Carbon\Carbon failed
+ * @property null|\Carbon\Carbon created
+ * @property null|\Carbon\Carbon updated
  * @property string source
  * @property string committer
  * @author Ronan Chilvers <ronan@d3r.com>

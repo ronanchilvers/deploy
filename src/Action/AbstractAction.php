@@ -124,7 +124,7 @@ abstract class AbstractAction implements ActionInterface
      * @param \App\Model\Deployment $deployment
      * @param string $header
      * @param mixed $detail
-     * @return \App\Model\Event
+     * @return bool|\App\Model\Event
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function info(Deployment $deployment, string $header, $detail = '')
@@ -146,7 +146,7 @@ abstract class AbstractAction implements ActionInterface
      * @param \App\Model\Deployment $deployment
      * @param string $header
      * @param mixed $detail
-     * @return \App\Model\Event
+     * @return bool|\App\Model\Event
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function error(Deployment $deployment, string $header, $detail = '')

@@ -16,9 +16,9 @@ use Ronanchilvers\Utility\Str;
  * @property string email
  * @property string password
  * @property string status
- * @property string preferences
- * @property \Carbon\Carbon created
- * @property \Carbon\Carbon updated
+ * @property null|string preferences
+ * @property null|\Carbon\Carbon created
+ * @property null|\Carbon\Carbon updated
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class User extends Model
