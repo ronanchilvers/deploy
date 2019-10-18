@@ -8,14 +8,14 @@ use Ronanchilvers\Foundation\Facade\Facade;
 /**
  * Security manager facade class
  *
- * @method static login(string $email, string $password)
- * @method static logout()
- * @method static hasLogin()
- * @method static refresh(User $user)
- * @method static id()
- * @method static name()
- * @method static email()
- * @method static user()
+ * @method static bool |\App\Model\User login(string $email, string $password)
+ * @method static void logout()
+ * @method static bool hasLogin()
+ * @method static void refresh(User $user)
+ * @method static int id()
+ * @method static string name()
+ * @method static string email()
+ * @method static string user()
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Security extends Facade

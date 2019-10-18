@@ -9,12 +9,12 @@ use Slim\Views\Twig as TwigView;
 /**
  * Settings facade class
  *
- * @method static set(string $key, mixed $value)
- * @method static has(string $key)
- * @method static get(string $key, mixed $default = null)
- * @method static getOrThrow(string $key, string $message = null)
- * @method static getAll()
- * @method static merge(\Ronanchilvers\Foundation\Config $config)
+ * @method static void set(string $key, mixed $value)
+ * @method static bool has(string $key)
+ * @method static mixed get(string $key, mixed $default = null)
+ * @method static mixed getOrThrow(string $key, string $message = null)
+ * @method static array getAll()
+ * @method static void merge(\Ronanchilvers\Foundation\Config $config)
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Settings extends Facade
