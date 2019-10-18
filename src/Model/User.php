@@ -54,6 +54,9 @@ class User extends Model
             'password' => Validator::notEmpty(),
             'status'   => Validator::notEmpty()->in([static::STATUS_INACTIVE, static::STATUS_ACTIVE]),
         ]);
+        $this->registerRules([
+            'password' => Validator::notEmpty(),
+        ], 'security');
     }
 
     /**
@@ -106,5 +109,36 @@ class User extends Model
         }
 
         return password_verify($password, $this->password);
+    }
+
+    /**
+     * Verify and set a new password
+     *
+     * @param string $old
+     * @param string $new
+     * @param string $confirm
+     * @return bool
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function setNewPassword(string $old, string $new, string $confirm)
+    {
+        foreach (['old', 'new', 'confirm'] as $var) {
+            $$var = trim($$var);
+        }
+        if (!$this->verify($old)) {
+            return false;
+        }
+
+        if (empty($new)) {
+            return false;
+        }
+
+        if ($new !== $confirm) {
+            return false;
+        }
+
+        $this->password = password_hash($new, PASSWORD_DEFAULT);
+
+        return true;
     }
 }

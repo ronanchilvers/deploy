@@ -181,22 +181,10 @@ class UserController
         try {
             if ($request->isMethod('POST')) {
                 $data = $request->getParsedBody()['user'];
-
-                if (empty($data['password']) || empty($data['password_new']) || empty($data['password_confirm'])) {
-                    throw new RuntimeException('Invalid or missing input');
+                if (!$user->setNewPassword($data['password'], $data['password_new'], $data['password_confirm'])) {
+                    throw new RuntimeException('Invalid input');
                 }
-
-                if (!$user->verify($data['password'])) {
-                    throw new RuntimeException('Current password was incorrect');
-                }
-
-                if (trim($data['password_new']) != trim($data['password_confirm'])) {
-                    throw new RuntimeException('New password does not match confirmation');
-                }
-
-                $user->password = password_hash($data['password_new'], PASSWORD_DEFAULT);
-
-                if (!$user->saveWithValidation()) {
+                if (!$user->saveWithValidation('password')) {
                     throw new RuntimeException('Unable to save new password');
                 }
                 Session::flash([
