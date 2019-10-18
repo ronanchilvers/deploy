@@ -229,7 +229,7 @@ class ProjectController
             $provider = Provider::forProject(
                 $project
             );
-            Orm::transaction(function () use ($project, $provider, $branch) {
+            Orm::transaction(function () use ($project, $provider, $branch, $response) {
                 $deployment = Orm::finder(Deployment::class)->nextForProject(
                     $project
                 );

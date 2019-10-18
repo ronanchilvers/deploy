@@ -40,7 +40,7 @@ class Builder
     protected $deployment;
 
     /**
-     * @var array<Action>
+     * @var \SplQueue
      */
     protected $actions = null;
 
