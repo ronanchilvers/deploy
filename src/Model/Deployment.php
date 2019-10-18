@@ -90,13 +90,12 @@ class Deployment extends Model
      * @return \App\Model\Project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function relateProject()
-    {
-        return $this->belongsTo(
-            Project::class
-
-        );
-    }
+    // protected function relateProject()
+    // {
+    //     return $this->belongsTo(
+    //         Project::class
+    //     );
+    // }
 
     /**
      * Relate events to this deployment
