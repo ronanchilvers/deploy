@@ -23,9 +23,9 @@ jobs:
       run: php --version
     - name: Check Composer Version
       run: composer --version
-    - name: Lint PHP Files
-      run: vendor/bin/parallel-lint src config resources/database web
     - name: Composer Dependencies
       run: composer install --no-interaction --no-suggest --no-progress --prefer-dist --optimize-autoloader
+    - name: Lint PHP Files
+      run: vendor/bin/parallel-lint src config resources/database web
     - name: Run Testsuite
       run: vendor/bin/phpunit -c phpunit.xml.dist
