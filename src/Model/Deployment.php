@@ -13,6 +13,22 @@ use Ronanchilvers\Orm\Traits\HasValidationTrait;
 /**
  * Model representing a project deployment
  *
+ * @property int id
+ * @property \App\Model\Project project
+ * @property int number
+ * @property \App\Model\Deployment|null original
+ * @property string sha
+ * @property string author
+ * @property string message
+ * @property string configuration
+ * @property string status
+ * @property \Carbon\Carbon|null started
+ * @property \Carbon\Carbon|null finished
+ * @property \Carbon\Carbon|null failed
+ * @property \Carbon\Carbon|null created
+ * @property \Carbon\Carbon|null updated
+ * @property string source
+ * @property string committer
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Deployment extends Model
@@ -35,6 +51,13 @@ class Deployment extends Model
     {
         $this->addType('datetime', 'started');
         $this->addType('datetime', 'finished');
+        $this->addType('datetime', 'failed');
+        $this->addType('model', 'project', [
+            'class' => Project::class
+        ]);
+        $this->addType('model', 'original', [
+            'class' => static::class
+        ]);
     }
 
     /**
@@ -64,16 +87,15 @@ class Deployment extends Model
     /**
      * Relationship with project
      *
-     * @return App\Model\Project
+     * @return \App\Model\Project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function relateProject()
-    {
-        return $this->belongsTo(
-            Project::class
-
-        );
-    }
+    // protected function relateProject()
+    // {
+    //     return $this->belongsTo(
+    //         Project::class
+    //     );
+    // }
 
     /**
      * Relate events to this deployment
@@ -91,16 +113,16 @@ class Deployment extends Model
     /**
      * Relate original deployment to this one for reactivations
      *
-     * @return App\Model\Deployment|null
+     * @return \App\Model\Deployment|null
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function relateOriginal()
-    {
-        return $this->belongsTo(
-            Deployment::class,
-            'original'
-        );
-    }
+    // protected function relateOriginal()
+    // {
+    //     return $this->belongsTo(
+    //         Deployment::class,
+    //         'original'
+    //     );
+    // }
 
     /**
      * Start the deployment

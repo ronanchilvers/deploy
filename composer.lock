@@ -1394,16 +1394,16 @@
         },
         {
             "name": "ronanchilvers/orm",
-            "version": "1.7.1",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/orm.git",
-                "reference": "a574395b5e7225afd41aaf9dbb91b7a22bec9873"
+                "reference": "a1818bc76bfa8a446211e3397021a3d65472ef66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/orm/zipball/a574395b5e7225afd41aaf9dbb91b7a22bec9873",
-                "reference": "a574395b5e7225afd41aaf9dbb91b7a22bec9873",
+                "url": "https://api.github.com/repos/ronanchilvers/orm/zipball/a1818bc76bfa8a446211e3397021a3d65472ef66",
+                "reference": "a1818bc76bfa8a446211e3397021a3d65472ef66",
                 "shasum": ""
             },
             "require": {
@@ -1434,7 +1434,7 @@
                 }
             ],
             "description": "Simple database ORM implementation",
-            "time": "2019-10-17T10:29:27+00:00"
+            "time": "2019-10-18T14:49:36+00:00"
         },
         {
             "name": "ronanchilvers/sessions",

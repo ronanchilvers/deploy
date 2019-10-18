@@ -17,7 +17,7 @@ use Ronanchilvers\Utility\File;
 class CheckoutAction extends AbstractAction
 {
     /**
-     * @var App\Provider\ProviderInterface
+     * @var \App\Provider\ProviderInterface
      */
     protected $provider;
 
@@ -32,7 +32,7 @@ class CheckoutAction extends AbstractAction
     }
 
     /**
-     * @see App\Action\ActionInterface::run()
+     * @see \App\Action\ActionInterface::run()
      */
     public function run(Config $configuration, Context $context)
     {

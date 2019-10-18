@@ -35,19 +35,19 @@ class ReactivateJob extends Job
     protected $queue = 'deploy';
 
     /**
-     * @var App\Model\deployment
+     * @var \App\Model\deployment
      */
     protected $original;
 
     /**
-     * @var App\Model\deployment
+     * @var \App\Model\deployment
      */
     protected $deployment;
 
     /**
      * Class constructor
      *
-     * @param App\Model\Deployment $project
+     * @param \App\Model\Deployment $project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function __construct(Deployment $original, Deployment $deployment)

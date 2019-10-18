@@ -8,6 +8,7 @@ use Ronanchilvers\Foundation\Facade\Facade;
 /**
  * Provider factory facade class
  *
+ * @method static \App\Provider\ProviderInterface forProject(\App\Model\Project $project)
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Provider extends Facade

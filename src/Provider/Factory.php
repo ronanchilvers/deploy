@@ -21,7 +21,7 @@ class Factory
     /**
      * Add a provider instance
      *
-     * @param App\Provider\ProviderInterface
+     * @param \App\Provider\ProviderInterface
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function addProvider(ProviderInterface $instance)
@@ -32,8 +32,8 @@ class Factory
     /**
      * Get a suitable instance for a given project
      *
-     * @param App\Model\Project $project
-     * @return App\Provider\ProviderInterface
+     * @param \App\Model\Project $project
+     * @return \App\Provider\ProviderInterface
      * @throws RuntimeException If a suitable provider is not found
      * @author Ronan Chilvers <ronan@d3r.com>
      */

@@ -21,7 +21,7 @@ class Manager
     protected $session;
 
     /**
-     * @var App\Model\User
+     * @var null|\App\Model\User
      */
     protected $user;
 
@@ -40,7 +40,7 @@ class Manager
      *
      * @param string $email
      * @param string $password
-     * @return boolean|App\Model\User $user
+     * @return boolean|\App\Model\User $user
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function login($email, $password)
@@ -95,7 +95,7 @@ class Manager
     /**
      * Refresh the session data
      *
-     * @param App\Model\User $user
+     * @param \App\Model\User $user
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function refresh(User $user)
@@ -176,7 +176,7 @@ class Manager
     /**
      * Get the currently logged in user
      *
-     * @return null|App\Model\User
+     * @return null|\App\Model\User
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function user()

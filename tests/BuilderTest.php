@@ -16,7 +16,7 @@ class BuilderTest extends TestCase
     /**
      * Get a builder instance to test against
      *
-     * @return App\Builder
+     * @return \App\Builder
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function newInstance()
@@ -33,7 +33,7 @@ class BuilderTest extends TestCase
     /**
      * Get a mock action object
      *
-     * @return App\Action\ActionInterface
+     * @return \App\Action\ActionInterface
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function mockAction()

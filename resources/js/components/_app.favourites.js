@@ -1,3 +1,4 @@
+/** global: App **/
 var App = App || {};
 
 App.Favourites = {
@@ -43,7 +44,7 @@ App.Favourites = {
                     .addClass(iClass);
             })
             .fail(function () {
-                console.log('fail', data);
+                alert('Unable to mark item as a favourite');
             });
     }
 }

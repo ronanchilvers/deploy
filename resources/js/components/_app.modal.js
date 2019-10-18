@@ -1,3 +1,4 @@
+/** global: App **/
 var App = App || {};
 
 App.Modal = {
@@ -36,7 +37,7 @@ App.Modal = {
         );
     },
 
-    _hide: function ($node) {
+    _hide: function () {
         $(this.options.modal).removeClass('is-active');
     }
 }

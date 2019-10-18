@@ -4,14 +4,14 @@ namespace App\Action;
 
 use App\Action\ActionInterface;
 use App\Action\Context;
-use App\Action\HookableInterface;
-use App\Action\Traits\Hookable;
 use App\Model\Deployment;
 use App\Model\Finder\EventFinder;
 use ReflectionClass;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Foundation\Traits\Optionable;
 use Ronanchilvers\Utility\Str;
+use RuntimeException;
+use Symfony\Component\Process\Process;
 
 /**
  * Action to symlink the deployment in to the live location
@@ -23,7 +23,7 @@ abstract class AbstractAction implements ActionInterface
     use Optionable;
 
     /**
-     * @var App\Model\Finder\EventFinder
+     * @var \App\Model\Finder\EventFinder
      */
     protected $eventFinder = null;
 
@@ -33,7 +33,7 @@ abstract class AbstractAction implements ActionInterface
     protected $hookable = true;
 
     /**
-     * @see App\Action\ActionInterface::getKey()
+     * @see \App\Action\ActionInterface::getKey()
      */
     public function getKey()
     {
@@ -91,17 +91,17 @@ abstract class AbstractAction implements ActionInterface
             );
             return;
         }
-        foreach ($hooks as $hook) {
+        foreach ($hooks as $command) {
             $this->info(
                 $deployment,
-                sprintf('%s hook running - %s', $key, $hook)
+                sprintf('%s hook running - %s', $key, $command)
             );
-            $process = new Process($hook, $deploymentDir);
+            $process = new Process($command, $deploymentDir);
             $process->run();
             if (!$process->isSuccessful()) {
                 $this->error(
                     $deployment,
-                    sprintf('%s hook failed to run : %s', $key, $hook),
+                    sprintf('%s hook failed to run : %s', $key, $command),
                     [$process->getOutput, $process->getErrorOutput()]
                 );
                 throw new RuntimeException('Unable to run deployment hook');
@@ -115,17 +115,17 @@ abstract class AbstractAction implements ActionInterface
     }
 
     /**
-     * @see App\Action\ActionInterface::run()
+     * @see \App\Action\ActionInterface::run()
      */
     abstract public function run(Config $configuration, Context $context);
 
     /**
      * Log an info event
      *
-     * @param App\Model\Deployment $deployment
+     * @param \App\Model\Deployment $deployment
      * @param string $header
      * @param mixed $detail
-     * @return App\Model\Event
+     * @return bool|\App\Model\Event
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function info(Deployment $deployment, string $header, $detail = '')
@@ -144,10 +144,10 @@ abstract class AbstractAction implements ActionInterface
     /**
      * Log an error event
      *
-     * @param App\Model\Deployment $deployment
+     * @param \App\Model\Deployment $deployment
      * @param string $header
      * @param mixed $detail
-     * @return App\Model\Event
+     * @return bool|\App\Model\Event
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function error(Deployment $deployment, string $header, $detail = '')

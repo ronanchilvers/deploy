@@ -21,16 +21,16 @@ class EventFinder extends Finder
      * Create an event for a deployment
      *
      * @param string $type
-     * @param App\Model\Deployment $deployment
+     * @param \App\Model\Deployment $deployment
      * @param string $header
      * @param string $detail
-     * @return App\Model\Event
+     * @return bool|\App\Model\Event
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function event(string $type, Deployment $deployment, string $header, string $detail = '')
     {
         $event = new Event;
-        $event->deployment = $deployment->id;
+        $event->deployment = $deployment;
         $event->type = $type;
         $event->header = $header;
         $event->detail = $detail;

@@ -36,7 +36,7 @@ class UserExtension extends AbstractExtension
     /**
      * Is a given project in a user's favourites?
      *
-     * @param App\Model\Project $project
+     * @param \App\Model\Project $project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function isFavourite(Project $project)

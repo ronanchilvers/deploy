@@ -23,7 +23,7 @@ interface AdaptorInterface
     /**
      * Send a notification
      *
-     * @param App\Notifier\Notification
+     * @param \App\Notifier\Notification
      * @param array $options
      * @author Ronan Chilvers <ronan@d3r.com>
      */

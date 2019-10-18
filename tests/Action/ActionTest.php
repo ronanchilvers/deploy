@@ -16,7 +16,7 @@ class ActionTest extends TestCase
     /**
      * Get a mock action object to test
      *
-     * @return App\Action\AbstractAction
+     * @return \App\Action\AbstractAction
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function newInstance()
@@ -27,7 +27,7 @@ class ActionTest extends TestCase
     /**
      * Get a mock event finder object
      *
-     * @return App\Model\Finder\EventFinder
+     * @return \App\Model\Finder\EventFinder
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function mockEventFinder()

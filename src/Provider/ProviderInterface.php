@@ -16,7 +16,7 @@ interface ProviderInterface
     /**
      * Does this provider handle a given project?
      *
-     * @param App\Model\Project $project
+     * @param \App\Model\Project $project
      * @return boolean
      * @author Ronan Chilvers <ronan@d3r.com>
      */
@@ -75,7 +75,7 @@ interface ProviderInterface
     /**
      * Scan the remote repository for configuration information
      *
-     * @param App\Model\Project $project
+     * @param \App\Model\Project $project
      * @param Closure $closure Callback for progress feedback - is passed $header and $detail strings
      * @return Ronanchilvers\Foundation\Config
      * @author Ronan Chilvers <ronan@d3r.com>

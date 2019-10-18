@@ -11,6 +11,13 @@ use Ronanchilvers\Orm\Traits\HasValidationTrait;
 /**
  * Model representing a deployment event
  *
+ * @property int id
+ * @property null|\App\Model\Deployment deployment
+ * @property string type
+ * @property string header
+ * @property string detail
+ * @property null|\Carbon\Carbon created
+ * @property null|\Carbon\Carbon updated
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Event extends Model
@@ -19,6 +26,18 @@ class Event extends Model
 
     static protected $finder       = EventFinder::class;
     static protected $columnPrefix = 'event';
+
+    /**
+     * Boot the model
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function boot()
+    {
+        $this->addType('model', 'deployment', [
+            'class' => Deployment::class
+        ]);
+    }
 
     /**
      * @author Ronan Chilvers <ronan@d3r.com>
@@ -35,7 +54,7 @@ class Event extends Model
     /**
      * Relationship with project
      *
-     * @return App\Model\Deployment
+     * @return \App\Model\Deployment
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function relateDeployment()

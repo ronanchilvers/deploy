@@ -11,6 +11,14 @@ use Ronanchilvers\Utility\Str;
 /**
  * Model representing a project
  *
+ * @property int id
+ * @property string name
+ * @property string email
+ * @property string password
+ * @property string status
+ * @property null|string preferences
+ * @property null|\Carbon\Carbon created
+ * @property null|\Carbon\Carbon updated
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class User extends Model

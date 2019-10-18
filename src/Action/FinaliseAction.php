@@ -16,10 +16,8 @@ use RuntimeException;
  */
 class FinaliseAction extends AbstractAction
 {
-    use Hookable;
-
     /**
-     * @see App\Action\ActionInterface::run()
+     * @see \App\Action\ActionInterface::run()
      */
     public function run(Config $configuration, Context $context)
     {
