@@ -23,8 +23,7 @@ class BuilderTest extends TestCase
     {
         $builder = new Builder(
             $this->mockProject(),
-            $this->mockDeployment(),
-            $this->mockConfig()
+            $this->mockDeployment()
         );
 
         return $builder;

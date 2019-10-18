@@ -115,8 +115,7 @@ class ProjectController
      */
     public function add(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        $args
+        ResponseInterface $response
     ) {
         $project = new Project;
         if ($request->isMethod('POST')) {

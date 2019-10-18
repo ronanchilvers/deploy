@@ -68,8 +68,7 @@ class ReactivateJob extends Job
         $configuration = new Config($data);
         $builder       = new Builder(
             $project,
-            $this->deployment,
-            $configuration
+            $this->deployment
         );
         $baseDir    = Settings::get('build.base_dir');
         $key        = $project->key;

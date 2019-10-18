@@ -54,8 +54,7 @@ class Builder
      */
     public function __construct(
         Project $project,
-        Deployment $deployment,
-        Config $configuration
+        Deployment $deployment
     ) {
         $this->project    = $project;
         $this->deployment = $deployment;
