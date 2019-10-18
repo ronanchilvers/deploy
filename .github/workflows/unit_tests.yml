@@ -1,4 +1,4 @@
-name: TestSuite
+name: Unit Tests
 on: push
 jobs:
   phpunit:
@@ -22,7 +22,7 @@ jobs:
         extension-csv: mbstring, xdebug
         coverage: xdebug
     - name: Download scrutinizer ocular
-      run: wget -O ocular.phar https://scrutinizer-ci.com/ocular.phar
+      run: wget -q -O ocular.phar https://scrutinizer-ci.com/ocular.phar
     - name: Check PHP Version
       run: php --version
     - name: Check Composer Version
