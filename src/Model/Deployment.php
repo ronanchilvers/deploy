@@ -13,6 +13,22 @@ use Ronanchilvers\Orm\Traits\HasValidationTrait;
 /**
  * Model representing a project deployment
  *
+ * @property int id
+ * @property \App\Model\Project project
+ * @property int number
+ * @property \App\Model\Deployment original
+ * @property string sha
+ * @property string author
+ * @property string message
+ * @property string configuration
+ * @property string status
+ * @property \Carbon\Carbon started
+ * @property \Carbon\Carbon finished
+ * @property \Carbon\Carbon failed
+ * @property \Carbon\Carbon created
+ * @property \Carbon\Carbon updated
+ * @property string source
+ * @property string committer
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Deployment extends Model

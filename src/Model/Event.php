@@ -11,6 +11,13 @@ use Ronanchilvers\Orm\Traits\HasValidationTrait;
 /**
  * Model representing a deployment event
  *
+ * @property int id
+ * @property \App\Model\Deployment deployment
+ * @property string type
+ * @property string header
+ * @property string detail
+ * @property \Carbon\Carbon created
+ * @property \Carbon\Carbon updated
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Event extends Model

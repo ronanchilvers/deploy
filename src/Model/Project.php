@@ -12,6 +12,21 @@ use Ronanchilvers\Utility\Str;
 /**
  * Model representing a project
  *
+ * @property int id
+ * @property string name
+ * @property string token
+ * @property string key
+ * @property string provider
+ * @property string repository
+ * @property string branch
+ * @property string status
+ * @property int last_number
+ * @property \Carbon\Carbon last_deployment
+ * @property string last_author
+ * @property string last_sha
+ * @property string last_status
+ * @property \Carbon\Carbon created
+ * @property \Carbon\Carbon updated
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Project extends Model
