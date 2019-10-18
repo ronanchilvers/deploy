@@ -92,7 +92,7 @@ class ProjectExtension extends AbstractExtension
      * @return string
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function repositoryLink(Project $project = null, $userOnly = false)
+    public function repositoryLink(Project $project)
     {
         $provider = $this->factory->forProject(
             $project
@@ -125,7 +125,7 @@ class ProjectExtension extends AbstractExtension
      * @return string
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function branchLink(Project $project = null)
+    public function branchLink(Project $project)
     {
         $provider = $this->factory->forProject(
             $project

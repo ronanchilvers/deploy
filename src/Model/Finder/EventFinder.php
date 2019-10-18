@@ -24,7 +24,7 @@ class EventFinder extends Finder
      * @param \App\Model\Deployment $deployment
      * @param string $header
      * @param string $detail
-     * @return \App\Model\Event
+     * @return bool|\App\Model\Event
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function event(string $type, Deployment $deployment, string $header, string $detail = '')

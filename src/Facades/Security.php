@@ -15,7 +15,7 @@ use Ronanchilvers\Foundation\Facade\Facade;
  * @method static int id()
  * @method static string name()
  * @method static string email()
- * @method static string user()
+ * @method \App\Model\User string user()
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Security extends Facade
