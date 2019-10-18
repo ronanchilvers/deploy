@@ -6,7 +6,8 @@ jobs:
     strategy:
       max-parallel: 15
       matrix:
-        operating-system: [ubuntu-latest, windows-latest, macOS-latest]
+        # operating-system: [ubuntu-latest, windows-latest, macOS-latest]
+        operating-system: [ubuntu-latest]
         php-versions: ['7.1', '7.2', '7.3']
     name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
     steps:
@@ -30,3 +31,8 @@ jobs:
       run: vendor/bin/parallel-lint src config resources/database web
     - name: Run Testsuite
       run: vendor/bin/phpunit -c phpunit.xml.dist
+    - name: Upload to CodeCov
+      uses: codecov/codecov-action@v1.0.3
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        file: ./build/logs/clover.xml
