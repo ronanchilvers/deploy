@@ -15,14 +15,10 @@ use RuntimeException;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class ActivateAction extends AbstractAction implements
-    ActionInterface,
-    HookableInterface
+class ActivateAction extends AbstractAction implements ActionInterface
 {
-    use Hookable;
-
     /**
-     * @see App\Action\ActionInterface::run()
+     * @see \App\Action\ActionInterface::run()
      */
     public function run(Config $configuration, Context $context)
     {

@@ -42,14 +42,14 @@ class DeployJob extends Job
     protected $queue = 'deploy';
 
     /**
-     * @var App\Model\deployment
+     * @var \App\Model\deployment
      */
     protected $deployment;
 
     /**
      * Class constructor
      *
-     * @param App\Model\Deployment $project
+     * @param \App\Model\Deployment $project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function __construct(Deployment $deployment)

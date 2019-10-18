@@ -20,7 +20,7 @@ use Twig\TwigFunction;
 class ProjectExtension extends AbstractExtension
 {
     /**
-     * @var App\Provider\Factory
+     * @var \App\Provider\Factory
      */
     protected $factory;
 
@@ -43,7 +43,7 @@ class ProjectExtension extends AbstractExtension
     /**
      * Class constructor
      *
-     * @param App\Provider\Factory $factory
+     * @param \App\Provider\Factory $factory
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function __construct(Factory $factory)

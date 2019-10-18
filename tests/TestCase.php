@@ -45,7 +45,7 @@ class TestCase extends BaseTestCase
     /**
      * Get a mock project
      *
-     * @return App\Model\Project
+     * @return \App\Model\Project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function mockProject()
@@ -58,7 +58,7 @@ class TestCase extends BaseTestCase
     /**
      * Get a mock deployment
      *
-     * @return App\Model\Deployment
+     * @return \App\Model\Deployment
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function mockDeployment()
@@ -84,7 +84,7 @@ class TestCase extends BaseTestCase
     /**
      * Get a mock context object
      *
-     * @return App\Action\Context
+     * @return \App\Action\Context
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function mockContext()

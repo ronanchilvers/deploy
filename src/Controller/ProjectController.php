@@ -370,7 +370,7 @@ class ProjectController
      * Get a project from an args array
      *
      * @param array $args
-     * @return App\Model\Project|null
+     * @return \App\Model\Project|null
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function projectFromArgs($args)

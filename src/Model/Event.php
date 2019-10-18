@@ -35,7 +35,7 @@ class Event extends Model
     /**
      * Relationship with project
      *
-     * @return App\Model\Deployment
+     * @return \App\Model\Deployment
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function relateDeployment()

@@ -19,7 +19,7 @@ use Symfony\Component\Yaml\Yaml;
 class ScanConfigurationAction extends AbstractAction
 {
     /**
-     * @var App\Provider\ProviderInterface
+     * @var \App\Provider\ProviderInterface
      */
     protected $provider;
 
@@ -34,7 +34,7 @@ class ScanConfigurationAction extends AbstractAction
     }
 
     /**
-     * @see App\Action\ActionInterface::run()
+     * @see \App\Action\ActionInterface::run()
      */
     public function run(Config $configuration, Context $context)
     {

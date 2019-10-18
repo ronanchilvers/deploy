@@ -21,7 +21,7 @@ class Manager
     protected $session;
 
     /**
-     * @var App\Model\User
+     * @var \App\Model\User
      */
     protected $user;
 
@@ -95,7 +95,7 @@ class Manager
     /**
      * Refresh the session data
      *
-     * @param App\Model\User $user
+     * @param \App\Model\User $user
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function refresh(User $user)

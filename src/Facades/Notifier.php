@@ -8,6 +8,8 @@ use Ronanchilvers\Foundation\Facade\Facade;
 /**
  * Notification manager facade class
  *
+ * @method sendNotification(Notification $notification, array $options)
+ * @method send(string $message, array $options)
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Notifier extends Facade

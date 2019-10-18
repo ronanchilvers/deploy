@@ -20,7 +20,7 @@ class Manager
     /**
      * Register a notifier with the manager
      *
-     * @param App\Notifier\AdaptorInterface
+     * @param \App\Notifier\AdaptorInterface
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function registerAdaptor(AdaptorInterface $adaptor)
@@ -31,7 +31,7 @@ class Manager
     /**
      * Send a notification through all adaptors
      *
-     * @param App\Notifier\Notification $notification
+     * @param \App\Notifier\Notification $notification
      * @param array $options An array of options for all notifiers, keyed by notifier key
      * @author Ronan Chilvers <ronan@d3r.com>
      */

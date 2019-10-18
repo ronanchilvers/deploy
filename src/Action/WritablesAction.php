@@ -19,7 +19,7 @@ use RuntimeException;
 class WritablesAction extends AbstractAction
 {
     /**
-     * @see App\Action\ActionInterface::run()
+     * @see \App\Action\ActionInterface::run()
      */
     public function run(Config $configuration, Context $context)
     {

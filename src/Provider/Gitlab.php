@@ -71,7 +71,7 @@ class Gitlab implements ProviderInterface
     }
 
     /**
-     * @see App\Provider\ProviderInterface::handles()
+     * @see \App\Provider\ProviderInterface::handles()
      */
     public function handles(Project $project)
     {
@@ -140,7 +140,7 @@ class Gitlab implements ProviderInterface
     }
 
     /**
-     * @see App\Provider\ProviderInterface::getHeadInfo()
+     * @see \App\Provider\ProviderInterface::getHeadInfo()
      */
     public function getHeadInfo(string $repository, string $branch, Closure $closure = null)
     {
@@ -186,7 +186,7 @@ class Gitlab implements ProviderInterface
     }
 
     /**
-     * @see App\Provider\ProviderInterface::download()
+     * @see \App\Provider\ProviderInterface::download()
      */
     public function download(Project $project, Deployment $deployment, $directory, Closure $closure = null)
     {
@@ -315,7 +315,7 @@ class Gitlab implements ProviderInterface
     }
 
     /**
-     * @see App\Provider\ProviderInterface::scanConfiguration()
+     * @see \App\Provider\ProviderInterface::scanConfiguration()
      */
     public function scanConfiguration(Project $project, Deployment $deployment, Closure $closure = null)
     {

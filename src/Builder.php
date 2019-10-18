@@ -4,7 +4,6 @@ namespace App;
 
 use App\Action\ActionInterface;
 use App\Action\Context;
-use App\Action\HookableInterface;
 use App\Facades\Log;
 use App\Model\Deployment;
 use App\Model\Event;
@@ -31,12 +30,12 @@ class Builder
     const MODE_WRITABLE_DIR  = 0770;
 
     /**
-     * @var App\Model\Project
+     * @var \App\Model\Project
      */
     protected $project;
 
     /**
-     * @var App\Model\Deployment
+     * @var \App\Model\Deployment
      */
     protected $deployment;
 
@@ -48,9 +47,9 @@ class Builder
     /**
      * Class constructor
      *
-     * @param App\Model\Project $project
-     * @param App\Model\Deployment $deployment
-     * @param Ronanchilvers\Foundation\Config $configuration
+     * @param \App\Model\Project $project
+     * @param \App\Model\Deployment $deployment
+     * @param \Ronanchilvers\Foundation\Config $configuration
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function __construct(
@@ -67,7 +66,7 @@ class Builder
     /**
      * Add an action to the builder
      *
-     * @param App\Action\ActionInterface
+     * @param \App\Action\ActionInterface
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function addAction(ActionInterface $action)

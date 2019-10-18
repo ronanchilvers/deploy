@@ -46,8 +46,8 @@ class DeploymentFinder extends Finder
      *
      * This method returns a new unsaved deployment with the correct deployment number.
      *
-     * @param App\Model\Project $project
-     * @return App\Model\deployment
+     * @param \App\Model\Project $project
+     * @return \App\Model\deployment
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function nextForProject(Project $project)
@@ -71,7 +71,7 @@ class DeploymentFinder extends Finder
     /**
      * Get an array of deployments with a number lower than a specified one
      *
-     * @param App\Model\Project $project
+     * @param \App\Model\Project $project
      * @param int $number
      * @author Ronan Chilvers <ronan@d3r.com>
      */

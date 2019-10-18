@@ -64,7 +64,7 @@ class Deployment extends Model
     /**
      * Relationship with project
      *
-     * @return App\Model\Project
+     * @return \App\Model\Project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function relateProject()
@@ -91,7 +91,7 @@ class Deployment extends Model
     /**
      * Relate original deployment to this one for reactivations
      *
-     * @return App\Model\Deployment|null
+     * @return \App\Model\Deployment|null
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function relateOriginal()

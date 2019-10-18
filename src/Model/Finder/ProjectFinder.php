@@ -31,7 +31,7 @@ class ProjectFinder extends Finder
      * Get a project by project key
      *
      * @param string $key
-     * @return App\Model\Project
+     * @return \App\Model\Project
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function forKey($key)
