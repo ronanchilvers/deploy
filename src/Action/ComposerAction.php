@@ -53,7 +53,7 @@ class ComposerAction extends AbstractAction
                 "Command - {$command}",
             ]
         );
-        $process      = new Process(
+        $process = new Process(
             explode(' ', $command),
             $deploymentDir,
             [

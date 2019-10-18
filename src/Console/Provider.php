@@ -26,7 +26,7 @@ class Provider implements ServiceProviderInterface
     public function register(Container $container)
     {
         // Logger
-        $container->extend(LoggerInterface::class, function ($logger) {
+        $container->extend(LoggerInterface::class, function($logger) {
             $logger->pushHandler(
                 new StreamHandler(
                     'php://stdout',

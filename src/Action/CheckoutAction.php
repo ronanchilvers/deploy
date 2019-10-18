@@ -63,7 +63,7 @@ class CheckoutAction extends AbstractAction
             $project,
             $deployment,
             $deploymentDir,
-            function ($type, $header, $detail = '') use ($deployment) {
+            function($type, $header, $detail = '') use ($deployment) {
                 $this->eventFinder->event(
                     $type,
                     $deployment,
