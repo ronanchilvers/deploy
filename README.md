@@ -1,5 +1,7 @@
 # deploy
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ronanchilvers/deploy/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ronanchilvers/deploy/?branch=master)
+
 A tool for simple deployments to a single server (for now) from common source control providers.
 
 * Github and Gitlab support (Bitbucket planned)
