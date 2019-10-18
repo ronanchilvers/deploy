@@ -28,6 +28,18 @@ class Event extends Model
     static protected $columnPrefix = 'event';
 
     /**
+     * Boot the model
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function boot()
+    {
+        $this->addType('model', 'deployment', [
+            'class' => Deployment::class
+        ]);
+    }
+
+    /**
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     protected function setupValidation()

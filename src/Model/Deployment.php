@@ -16,17 +16,17 @@ use Ronanchilvers\Orm\Traits\HasValidationTrait;
  * @property int id
  * @property \App\Model\Project project
  * @property int number
- * @property null|\App\Model\Deployment original
+ * @property \App\Model\Deployment|null original
  * @property string sha
  * @property string author
  * @property string message
  * @property string configuration
  * @property string status
- * @property null|\Carbon\Carbon started
- * @property null|\Carbon\Carbon finished
- * @property null|\Carbon\Carbon failed
- * @property null|\Carbon\Carbon created
- * @property null|\Carbon\Carbon updated
+ * @property \Carbon\Carbon|null started
+ * @property \Carbon\Carbon|null finished
+ * @property \Carbon\Carbon|null failed
+ * @property \Carbon\Carbon|null created
+ * @property \Carbon\Carbon|null updated
  * @property string source
  * @property string committer
  * @author Ronan Chilvers <ronan@d3r.com>
@@ -51,6 +51,13 @@ class Deployment extends Model
     {
         $this->addType('datetime', 'started');
         $this->addType('datetime', 'finished');
+        $this->addType('datetime', 'failed');
+        $this->addType('model', 'project', [
+            'class' => Project::class
+        ]);
+        $this->addType('model', 'original', [
+            'class' => static::class
+        ]);
     }
 
     /**

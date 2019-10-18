@@ -30,7 +30,7 @@ class EventFinder extends Finder
     public function event(string $type, Deployment $deployment, string $header, string $detail = '')
     {
         $event = new Event;
-        $event->deployment = $deployment->id;
+        $event->deployment = $deployment;
         $event->type = $type;
         $event->header = $header;
         $event->detail = $detail;

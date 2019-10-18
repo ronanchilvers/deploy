@@ -328,7 +328,7 @@ class ProjectController
                     throw new RuntimeException('Invalid attempt to re-deploy non-existant deployment');
                 }
                 $deployment           = clone $original;
-                $deployment->original = $original->id;
+                $deployment->original = $original;
                 $deployment->number   = $dummy->number;
                 if (!$deployment->save()) {
                     Log::debug('Unable to create deployment object', [
