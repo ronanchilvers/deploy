@@ -117,13 +117,13 @@ class Deployment extends Model
      * @return \App\Model\Deployment|null
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function relateOriginal()
-    {
-        return $this->belongsTo(
-            Deployment::class,
-            'original'
-        );
-    }
+    // protected function relateOriginal()
+    // {
+    //     return $this->belongsTo(
+    //         Deployment::class,
+    //         'original'
+    //     );
+    // }
 
     /**
      * Start the deployment
