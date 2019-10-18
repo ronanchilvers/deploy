@@ -42,8 +42,8 @@ App.Favourites = {
                     .removeClass('far, fas')
                     .addClass(iClass);
             })
-            .fail(function () {
-                console.log('fail', data);
+            .fail(function (data) {
+                alert('Unable to mark item as a favourite');
             });
     }
 }

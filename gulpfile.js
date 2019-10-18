@@ -1,8 +1,8 @@
 // Include gulp
 var gulp = require('gulp');
-var hub = require('gulp-hub');
+var Hub = require('gulp-hub');
 
-gulp.registry(new hub(['./resources/tasks/*.js']));
+gulp.registry(new Hub(['./resources/tasks/*.js']));
 
 // Watch Files For Changes
 gulp.task('watch', function() {

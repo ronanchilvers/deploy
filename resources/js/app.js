@@ -16,7 +16,7 @@ $(function () {
     $('[disabled]').on('click', function (e) {
         e.preventDefault();
     });
-    $(".button.is-once").click(function (e) {
+    $(".button.is-once").click(function () {
         $(this).addClass('is-loading');
     });
     $('.confirm').on('click', function (e) {
@@ -27,12 +27,12 @@ $(function () {
     });
     $('.modal-trigger').on('click', function (e) {
         e.preventDefault();
-        $modal = $($(this).data('modal'));
+        var $modal = $($(this).data('modal'));
         $modal.addClass('is-active');
     });
     $('.tabs').on('click', '.tab', function (e) {
         e.preventDefault();
-        $pane = $($(this).data('target'));
+        var $pane = $($(this).data('target'));
         if (0 < $pane.length) {
             $('.js-tabs li').removeClass('is-active');
             $(this).closest('li').addClass('is-active');
@@ -45,6 +45,7 @@ $(function () {
         $(this).next('.detail').toggleClass('is-active');
     });
 
+    /** global: App **/
     App.Favourites.init();
     App.Modal.init();
 });
