@@ -81,7 +81,7 @@ class Builder
     public function run(Config $configuration, Context $context = null, Closure $closure = null)
     {
         if (is_null($closure)) {
-            $closure = function ($string) {
+            $closure = function($string) {
                 Log::debug($string);
             };
         }

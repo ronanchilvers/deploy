@@ -25,7 +25,7 @@ trait BootTrait
         // Configure facades
         Facade::setContainer($container);
         Orm::setConnection($container->get(PDO::class));
-        Orm::getEmitter()->on('query.init', function ($sql, $params) {
+        Orm::getEmitter()->on('query.init', function($sql, $params) {
             Log::debug('Query init', [
                 'sql'    => $sql,
                 'params' => $params,

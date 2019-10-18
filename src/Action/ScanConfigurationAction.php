@@ -43,7 +43,7 @@ class ScanConfigurationAction extends AbstractAction
         $remoteConfiguration = $this->provider->scanConfiguration(
             $project,
             $deployment,
-            function ($type, $header, $detail = '') use ($deployment) {
+            function($type, $header, $detail = '') use ($deployment) {
                 $this->eventFinder->event(
                     $type,
                     $deployment,

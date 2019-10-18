@@ -104,7 +104,7 @@ class UserController
                 // Not in favourites
                 case false:
                     $favourites[$project] = $project;
-                    $selected         = true;
+                    $selected = true;
                     break;
 
                 // In favourites
