@@ -8,14 +8,14 @@ use Slim\Views\Twig as TwigView;
 /**
  * Router facade class
  *
- * @method @method map(array $methods, string $pattern, callable $handler)
- * @method dispatch(\Psr\Http\Message\ServerRequestInterface $request)
- * @method pushGroup(string $pattern, callable $callable)
- * @method popGroup()
- * @method getNamedRoute(string $name)
- * @method lookupRoute(string $identifier)
- * @method relativePathFor(string $name, array $data = [], array $queryParams = [])
- * @method pathFor(string $name, array $data = [], array $queryParams = [])
+ * @method static map(array $methods, string $pattern, callable $handler)
+ * @method static dispatch(\Psr\Http\Message\ServerRequestInterface $request)
+ * @method static pushGroup(string $pattern, callable $callable)
+ * @method static popGroup()
+ * @method static getNamedRoute(string $name)
+ * @method static lookupRoute(string $identifier)
+ * @method static relativePathFor(string $name, array $data = [], array $queryParams = [])
+ * @method static pathFor(string $name, array $data = [], array $queryParams = [])
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class Router extends Facade
