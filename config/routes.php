@@ -25,7 +25,7 @@ $app->map(['POST'], '/deploy/{key}', ProjectController::class . ':deploy')
 $app->map(['GET', 'POST'], '/deploy/{key}/{deployment}', ProjectController::class . ':redeploy')
     ->setName('project.redeploy');
 
-$app->group('/user', function (App $app) {
+$app->group('/user', function(App $app) {
     $app->map(['GET', 'POST'], '/login', UserController::class . ':login')
         ->setName('user.login');
     $app->map(['GET'], '/logout', UserController::class . ':logout')

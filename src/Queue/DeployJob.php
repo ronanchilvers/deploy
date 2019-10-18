@@ -107,7 +107,7 @@ class DeployJob extends Job
             $builder->run(
                 $configuration,
                 $context,
-                function ($data) use ($project) {
+                function($data) use ($project) {
                     Log::debug($data, [
                         'project' => $project->toArray(),
                     ]);
