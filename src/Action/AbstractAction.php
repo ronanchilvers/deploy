@@ -4,6 +4,7 @@ namespace App\Action;
 
 use App\Action\ActionInterface;
 use App\Action\Context;
+use App\Facades\Log;
 use App\Model\Deployment;
 use App\Model\Finder\EventFinder;
 use ReflectionClass;
@@ -85,10 +86,9 @@ abstract class AbstractAction implements ActionInterface
         $key   = $this->getKey() . '.' . $hook;
         $hooks = $configuration->get($key);
         if (!is_array($hooks) || empty($hooks)) {
-            $this->info(
-                $deployment,
-                sprintf('%s hooks not defined', $key)
-            );
+            Log::debug('No hooks defined', $key), [
+                'key' => $key
+            ]);
             return;
         }
         foreach ($hooks as $command) {
