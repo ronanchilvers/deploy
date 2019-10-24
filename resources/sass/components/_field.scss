@@ -3,9 +3,10 @@
         position: relative;
     }
     &.required label:after {
-        content: "Required";
+        content: "This field is required";
         position: absolute;
         right: 0;
+        top: 4px;
         color: $orange;
         font-weight: 400;
         font-size: 0.8rem;

@@ -29,9 +29,9 @@
         <p class="help is-danger" id="project_repository_error">{{ project.getError('repository')|join(', ') }}</p>
     </div>
 
-    <div class="field {% if project.hasError('branch') %}errored{% endif %}">
+    <div class="field required {% if project.hasError('branch') %}errored{% endif %}">
         <label class="label" for="project_branch">Branch</label>
-        <div class="control"><input class="input{% if project.hasError('branch') %} is-danger{% endif %}" type="text" placeholder="vendor/project" value="{{ project.branch}}" id="project_branch" name="project[branch]"></div>
+        <div class="control"><input class="input{% if project.hasError('branch') %} is-danger{% endif %}" type="text" placeholder="master" value="{{ project.branch}}" id="project_branch" name="project[branch]"></div>
         <p class="help is-danger" id="project_branch_error">{{ project.getError('branch')|join(', ') }}</p>
     </div>
 
