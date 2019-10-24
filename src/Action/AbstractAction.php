@@ -86,7 +86,7 @@ abstract class AbstractAction implements ActionInterface
         $key   = $this->getKey() . '.' . $hook;
         $hooks = $configuration->get($key);
         if (!is_array($hooks) || empty($hooks)) {
-            Log::debug('No hooks defined', $key), [
+            Log::debug('No hooks defined', [
                 'key' => $key
             ]);
             return;
