@@ -71,8 +71,8 @@
         {% if not selected_deployment.reactivation %}
         {% if selected_deployment.id != first and selected_deployment.deployed %}
             <a class="button is-once is-block-mobile is-pulled-right confirm{% if not project.deployable %} tooltip is-tooltip-bottom{% endif %}>"
-               href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}"
-               {% if not project.deployable %}disabled data-tooltip="Project is not currently deployable"{% endif %}>
+               {% if project.deployable %}href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}"{% endif %}
+               {% if not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}>
                 <span class="icon"><i class="fas fa-redo-alt"></i></span>
                 <span>Re-Activate</span>
             </a>
