@@ -139,6 +139,7 @@ class ProjectController
             'project/add.html.twig',
             [
                 'project' => $project,
+                'providers' => Provider::getOptions(),
             ]
         );
     }
@@ -177,7 +178,8 @@ class ProjectController
             $response,
             'project/edit.html.twig',
             [
-                'project' => $project
+                'project' => $project,
+                'providers' => Provider::getOptions(),
             ]
         );
     }

@@ -76,6 +76,14 @@ class Github implements ProviderInterface
     }
 
     /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getLabel()
+    {
+        return 'Github';
+    }
+
+    /**
      * @see \App\Provider\ProviderInterface::handles()
      */
     public function handles(Project $project)

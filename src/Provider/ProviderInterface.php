@@ -14,6 +14,14 @@ use Closure;
 interface ProviderInterface
 {
     /**
+     * Get the label for this provider
+     *
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getLabel();
+
+    /**
      * Does this provider handle a given project?
      *
      * @param \App\Model\Project $project

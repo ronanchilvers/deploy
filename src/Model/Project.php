@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Facades\Provider;
 use App\Model\Finder\ProjectFinder;
 use Respect\Validation\Validator;
 use Ronanchilvers\Orm\Model;
@@ -36,11 +37,6 @@ class Project extends Model
     static protected $finder       = ProjectFinder::class;
     static protected $columnPrefix = 'project';
 
-    protected $providers = [
-        'github' => 'Github',
-        'gitlab' => 'Gitlab',
-    ];
-
     protected $data = [
         'project_branch' => 'master',
     ];
@@ -60,7 +56,7 @@ class Project extends Model
      */
     protected function setupValidation()
     {
-        $providerKeys = array_keys($this->providers);
+        $providerKeys = array_keys(Provider::getOptions());
         $this->registerRules([
             'name'       => Validator::notEmpty(),
             'provider'   => Validator::notEmpty()->in($providerKeys),
@@ -86,17 +82,6 @@ class Project extends Model
             return false;
         }
         $this->key = $key;
-    }
-
-    /**
-     * Get the list of valid providers
-     *
-     * @return array
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function getProviderOptions()
-    {
-        return $this->providers;
     }
 
     /**

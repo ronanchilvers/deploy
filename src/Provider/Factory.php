@@ -47,4 +47,21 @@ class Factory
 
         throw new RuntimeException('No suitable instance found for project provider ' . $project->provider);
     }
+
+    /**
+     * Get the project provider options as an array
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getOptions()
+    {
+        $options = [];
+        foreach ($this->instances as $instance) {
+            $label = $instance->getLabel();
+            $options[strtolower($label)] = $label;
+        }
+
+        return $options;
+    }
 }

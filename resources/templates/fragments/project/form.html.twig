@@ -14,21 +14,19 @@
                 {% if not project.loaded %}
                     <option value="">Select&hellip;</option>
                 {% endif %}
-                {% for key,name in project.getProviderOptions() %}
-                    <option value="{{ key }}" {% if key == project.provider %}selected="selected"{% endif %}>{{ name }}</option>
+                {% for key,label in providers %}
+                    <option value="{{ key }}" {% if key == project.provider %}selected="selected"{% endif %}>{{ label }}</option>
                 {% endfor %}
                 </select>
             </div>
         </div>
         <p class="help is-danger" id="project_provider_error">{{ project.getError('provider')|join(', ') }}</p>
-        <p class="help"><strong>Please note: </strong>This field can't be changed once your project is added</p>
     </div>
 
     <div class="field required{% if project.hasError('repository') %} errored{% endif %}">
         <label class="label" for="project_repository">Repository</label>
         <div class="control"><input class="input{% if project.hasError('repository') %} is-danger{% endif %}" type="text" placeholder="vendor/project" value="{{ project.repository }}" id="project_repository" name="project[repository]"></div>
         <p class="help is-danger" id="project_repository_error">{{ project.getError('repository')|join(', ') }}</p>
-        <p class="help"><strong>Please note: </strong>This field can't be changed once your project is added</p>
     </div>
 
     <div class="field {% if project.hasError('branch') %}errored{% endif %}">

@@ -71,6 +71,14 @@ class Gitlab implements ProviderInterface
     }
 
     /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getLabel()
+    {
+        return 'Gitlab';
+    }
+
+    /**
      * @see \App\Provider\ProviderInterface::handles()
      */
     public function handles(Project $project)
