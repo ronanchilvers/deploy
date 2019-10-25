@@ -97,6 +97,9 @@ class Provider implements ServiceProviderInterface
                             'route' => 'project.add',
                         ],
                     ],
+                    'php' => [
+                        'version' => phpversion(),
+                    ],
                 ])
             );
             $view->addExtension(
