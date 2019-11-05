@@ -82,6 +82,7 @@ class Project extends Model
             return false;
         }
         $this->key = $key;
+        $this->status = 'active';
     }
 
     /**
