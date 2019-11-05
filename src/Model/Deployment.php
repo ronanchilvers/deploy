@@ -39,7 +39,11 @@ class Deployment extends Model
     static protected $columnPrefix = 'deployment';
 
     protected $data = [
-        'deployment_status' => 'pending'
+        'deployment_author'        => '',
+        'deployment_configuration' => '',
+        'deployment_message'       => '',
+        'deployment_sha'           => '',
+        'deployment_status'        => 'pending',
     ];
 
     /**
