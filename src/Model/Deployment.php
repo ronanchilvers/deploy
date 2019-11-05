@@ -40,7 +40,7 @@ class Deployment extends Model
 
     protected $data = [
         'deployment_author'        => '',
-        'deployment_comitter'      => '',
+        'deployment_committer'     => '',
         'deployment_configuration' => '',
         'deployment_message'       => '',
         'deployment_sha'           => '',
