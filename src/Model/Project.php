@@ -39,6 +39,7 @@ class Project extends Model
 
     protected $data = [
         'project_branch' => 'master',
+        'project_status' => 'active',
     ];
 
     /**
