@@ -1,7 +1,11 @@
 {% extends 'page.html.twig' %}
 
+{% block javascripts %}
+<script type="text/javascript" src="/js/project.js"></script>
+{% endblock %}
+
 {% block body %}
-<div class="project">
+<div class="project status-{{ project.status }}">
     {{ include('fragments/project/header.html.twig', { project: project } )}}
 
     <section class="section">
