@@ -54,6 +54,18 @@ cp local.yaml.dist local.yaml
 php vendor/bin/phinx migrate
 ```
 
+* Create a user.
+```bash
+php bin/console user:create "Fred Bloggs" fred@foobar.com
+```
+
+* Make sure the log and twig directories are writable by the web server. I'm assuming here that your web server runs as www-data group and that you've checked out the codebase with that group set.
+```bash
+chmod g+w var/log var/twig
+```
+
+* You should now be able to navigate to the URL you've installed `deploy` under and login.
+
 ### Queue worker setup
 
 We assume here that you're using supervisord to run the queue worker. You'll find a sample supervisord program configuration file in the `docs/` subdirectory. One point to note - in order to run correctly composer requires that either the `HOME` or `COMPOSER_HOME` environment variables are set. You can (read more about it here)[https://getcomposer.org/doc/03-cli.md#composer-home].
