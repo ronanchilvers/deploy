@@ -141,6 +141,41 @@ clear_paths:
     - deploy.yaml
 ```
 
+- `cleanup` - Control how old releases are cleaned up after the deployment is completed. Currently the only key here is `keep_deployments` which allows you to set the number of old deployments to keep. This is limited only by disk space! The default is 5.
+```yaml
+cleanup:
+  keep_deployments: 10
+```
+
+### Hooks
+
+`deploy` supports running arbitrary hooks before and after each deployment action. You can specify any CLI command and it will run using the permissions of the user your queue worker runs as via supervisor. The deployment actions are:
+
+- `create_workspace`
+- `checkout`
+- `composer`
+- `shared`
+- `writables`
+- `clear_paths`
+- `activate`
+- `finalise`
+- `cleanup`
+
+You can define `before` or `after` hooks for any of these actions by adding a new list to your `deploy.yaml` file. For example:
+```yaml
+composer:
+  after:
+    - /usr/bin/php scripts/post_dependency_script.php
+    - /bin/bash scripts/my_bash_script.sh arg1 arg2
+activate:
+  before:
+    - /usr/bin/php vendor/bin/phinx migrate
+shared:
+  after:
+    - /usr/bin/php scripts/make_sure_shared_files_are_populated.php
+```
+Obviously all of the above scripts are made up to illustrate the point - you could run anything you need to make your deployment work. The `activate.before` hook shows an example of running the `phinx` database migrations tool to automatically update the database schema prior to activation.
+
 ## Example deploy.yaml
 
 ```yaml
@@ -151,7 +186,7 @@ notify:
 composer:
   install: install --no-dev -o
   after:
-    - {php} scripts/myscript.php
+    - /usr/bin/php scripts/myscript.php
 shared:
   files:
     - ".env.config.ini"
@@ -169,7 +204,7 @@ clear_paths:
     - package.json
     - deploy.yaml
   after:
-    - {php} vendor/bin/phinx migrate
+    - /usr/bin/php vendor/bin/phinx migrate
 cleanup:
   keep_deployments: 10
 ```
