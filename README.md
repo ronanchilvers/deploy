@@ -76,6 +76,7 @@ chmod g+w var/log var/twig
 We assume here that you're using supervisord to run the queue worker. You'll find a sample supervisord program configuration file in the `docs/` subdirectory. One point to note - in order to run correctly composer requires that either the `HOME` or `COMPOSER_HOME` environment variables are set. You can [read more about it here](https://getcomposer.org/doc/03-cli.md#composer-home).
 
 * Copy the sample config file into supervisor's program directory (usually something like `/etc/supervisor/conf.d`) or include the contents in supervisor's main configuration file.
+* Update the supervisor configuration appropriately for your environment.
 * Ask supervisor to update it's configuration
 ```bash
 sudo supervisorctl update
