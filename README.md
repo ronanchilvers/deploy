@@ -85,32 +85,61 @@ sudo supervisorctl update
 sudo supervisorctl status
 ```
 
-## Roadmap (sort of!)
+## Controlling deployments
 
-### Things to do
+`deploy` can be customised per project by using directives in a file named `deploy.yaml` placed in the root of the project working copy. Using this file you can assign paths that should be writable (folders only), define shared paths (files or folders), assign hooks to run before or after specific stages, define specific paths that should be removed when deploying (files or folders) and several other things.
 
-* [ ] Unit tests!
-* [ ] Ability to trigger a deployment using a webhook
-* [ ] Bitbucket support
+### Directives
 
-### Things that are done
+- `notify` - This directive controls notifications when deploying code. Currently only slack is implemented but support is planned for other services.
+```yaml
+notify:
+  slack:
+    webhook: https://hooks.slack.com/services/12345679/ABCDE/FGHIJK
+```
 
-* [x] Implement re-activation rather than deployment for old releases (change of symlink)
-* [x] Block deployments for a project when one is queued or in progress
-* [x] Better user account support
-* [x] User accounts
-* [x] Hooks
-* [x] Notifications
-* [x] Ability to deploy a specific branch
-* [x] Associate deployments with users
-* [x] Make sure project keys are unique
+- `composer` - This directive allows you to control the behaviour of the composer dependency manager, assuming that it is used in your project. If `deploy` doesn't find a `composer.json` file in the root of your working copy, composer support is disabled and this directive has no effect.
+  - `install` - Define the command composer will install dependencies with. The default is `install --no-interaction --prefer-dist --no-dev --optimize-autoloader`
+```yaml
+composer:
+  install: install --no-dev -o
+```
 
-## Things to think about
+- `shared` - Define shared folders or files. These are locations that persist between deployments, for example a cache directory or configuration file. The `files` and `folders` subkeys can be used to define a list or files or folders that should be shared. Paths are always relative to the root of the deployment working copy.
+```yaml
+shared:
+  files:
+    - config.php
+    - .env
+  folders:
+    - var/cache
+    - var/uploads
+```
 
-* [ ] Environment variable support
-* [ ] Ability to keep specific releases
-* [ ] Allow different / extended defaults for specific frameworks
-* [ ] Multi-server support
+- `writables` - Define writable folders. These locations will be configured to be writable by the using a `chmod` command. The default mode for writable folders is '0770' (user and group readable / writable). Note it is possible for a folder to be both shared *and* writable.
+```yaml
+writables:
+  paths:
+    - var/cache
+    - var/uploads
+```
+NB: Changing the writable mode used cannot be done via `deploy.yaml` but can be done in your local.yaml file with the following keys. Note that using '0777' is *never* recommended - if you need it, you should that that as a sign that your permission structure is wrong.
+```yaml
+build:
+  chmod:
+    writable_folder: '0777'
+```
+
+* `clear_paths` - Define a list of files or folders that should be removed on deployment. This action happens right before activation (switching the new deployment live) and therefore its safe to delete files like composer.json / composer.lock / package.json, etc (unless you have a hook that needs them of course - see below). You can also remove the `deploy.yaml` file if you want to - its not required to be on disk.
+```yaml
+clear_paths:
+  paths:
+    - README.md
+    - package.json
+    - composer.json
+    - composer.lock
+    - deploy.yaml
+```
 
 ## Example deploy.yaml
 
@@ -144,6 +173,33 @@ clear_paths:
 cleanup:
   keep_deployments: 10
 ```
+
+## Roadmap (sort of!)
+
+### Things to do
+
+* [ ] Unit tests!
+* [ ] Ability to trigger a deployment using a webhook
+* [ ] Bitbucket support
+
+### Things that are done
+
+* [x] Implement re-activation rather than deployment for old releases (change of symlink)
+* [x] Block deployments for a project when one is queued or in progress
+* [x] Better user account support
+* [x] User accounts
+* [x] Hooks
+* [x] Notifications
+* [x] Ability to deploy a specific branch
+* [x] Associate deployments with users
+* [x] Make sure project keys are unique
+
+## Things to think about
+
+* [ ] Environment variable support
+* [ ] Ability to keep specific releases
+* [ ] Allow different / extended defaults for specific frameworks
+* [ ] Multi-server support
 
 ## Useful notes (for development)
 
