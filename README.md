@@ -20,7 +20,7 @@ A tool for simple deployments to a single server (for now) from common source co
 
 * PHP 7.1.8+
 * Beanstalkd work queue (available as standard in most linux distributions)
-* A backend database supported by PDO and [phinx]
+* A backend database supported by [PDO] and [phinx]
 * [composer] for `deploy` dependency installation
 
 In addition it is *strongly* recommended that you use a proper RDBMS like MySQL, MariaDB or PostgreSQL to host the database. The default SQLite database is suitable for development but you will almost certainly run into database contention locks if you use it in production.
@@ -242,5 +242,6 @@ cleanup:
 * https://mattstauffer.com/blog/introducing-envoyer.io/
 * https://docs.gitlab.com/ee/api/repositories.html#get-file-archive
 
+- PDO: https://www.php.net/pdo
 - phinx: https://github.com/cakephp/phinx
 - composer: https://getcomposer.org/
