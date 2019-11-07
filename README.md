@@ -31,7 +31,12 @@ Once you have the required software installed on the host you can then get on wi
 
 ### Codebase setup
 
-* Create a database and database user in your chosen DBMS. `deploy` needs CREATE, DROP, ALTER, SELECT, INSERT, UPDATE, DELETE, INDEX permissions. We will leave this step to you as it's implementation depends on your chosen RDBMS backend.
+* Create a database and database user in your chosen DBMS. `deploy` needs CREATE, DROP, ALTER, SELECT, INSERT, UPDATE, DELETE, INDEX permissions. For MariaDB / MySQL it's likely to be something like this:
+```sql
+CREATE DATABASE `deploy`;
+CREATE USER `deploy`@`localhost` IDENTIFIED BY `verystrongpassword`;
+GRANT CREATE, DROP, ALTER, SELECT, INSERT, UPDATE, DELETE, INDEX ON `deploy`.* TO `deploy`@`localhost`;
+```
 
 * Clone this repository into an appropriate place on your server
 ```bash
