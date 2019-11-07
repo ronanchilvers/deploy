@@ -20,8 +20,8 @@ A tool for simple deployments to a single server (for now) from common source co
 
 * PHP 7.1.8+
 * Beanstalkd work queue (available as standard in most linux distributions)
-* A backend database supported by PDO and (Phinx)[https://github.com/cakephp/phinx]
-* (Composer)[https://getcomposer.org/] for `deploy` dependency installation
+* A backend database supported by PDO and [phinx]
+* [composer] for `deploy` dependency installation
 
 In addition it is *strongly* recommended that you use a proper RDBMS like MySQL, MariaDB or PostgreSQL to host the database. The default SQLite database is suitable for development but you will almost certainly run into database contention locks if you use it in production.
 
@@ -73,7 +73,7 @@ chmod g+w var/log var/twig
 
 ### Queue worker setup
 
-We assume here that you're using supervisord to run the queue worker. You'll find a sample supervisord program configuration file in the `docs/` subdirectory. One point to note - in order to run correctly composer requires that either the `HOME` or `COMPOSER_HOME` environment variables are set. You can (read more about it here)[https://getcomposer.org/doc/03-cli.md#composer-home].
+We assume here that you're using supervisord to run the queue worker. You'll find a sample supervisord program configuration file in the `docs/` subdirectory. One point to note - in order to run correctly composer requires that either the `HOME` or `COMPOSER_HOME` environment variables are set. You can [read more about it here](https://getcomposer.org/doc/03-cli.md#composer-home).
 
 * Copy the sample config file into supervisor's program directory (usually something like `/etc/supervisor/conf.d`) or include the contents in supervisor's main configuration file.
 * Ask supervisor to update it's configuration
@@ -174,7 +174,7 @@ shared:
   after:
     - /usr/bin/php scripts/make_sure_shared_files_are_populated.php
 ```
-Obviously the above configuration is made up to illustrate the point - you can run anything you need to make your deployment work. The `activate.before` hook shows an example of running the `phinx` database migrations tool to automatically update the database schema prior to activation.
+Obviously the above configuration is made up to illustrate the point - you can run anything you need to make your deployment work. The `activate.before` hook shows an example of running the [phinx] database migrations tool to automatically update the database schema prior to activation.
 
 ## Example deploy.yaml
 
@@ -241,3 +241,6 @@ cleanup:
 * https://developer.github.com/v3/repos/contents/#get-contents
 * https://mattstauffer.com/blog/introducing-envoyer.io/
 * https://docs.gitlab.com/ee/api/repositories.html#get-file-archive
+
+- phinx: https://github.com/cakephp/phinx
+- composer: https://getcomposer.org/
