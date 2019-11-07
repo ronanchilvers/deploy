@@ -174,7 +174,7 @@ shared:
   after:
     - /usr/bin/php scripts/make_sure_shared_files_are_populated.php
 ```
-Obviously all of the above scripts are made up to illustrate the point - you could run anything you need to make your deployment work. The `activate.before` hook shows an example of running the `phinx` database migrations tool to automatically update the database schema prior to activation.
+Obviously the above configuration is made up to illustrate the point - you can run anything you need to make your deployment work. The `activate.before` hook shows an example of running the `phinx` database migrations tool to automatically update the database schema prior to activation.
 
 ## Example deploy.yaml
 
