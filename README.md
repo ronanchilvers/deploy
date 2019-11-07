@@ -20,8 +20,8 @@ A tool for simple deployments to a single server (for now) from common source co
 
 * PHP 7.1.8+
 * Beanstalkd work queue (available as standard in most linux distributions)
-* A backend database supported by [PDO] and [phinx]
-* [composer] for `deploy` dependency installation
+* A backend database supported by [PDO](https://www.php.net/pdo) and [phinx](https://github.com/cakephp/phinx)
+* [composer](https://getcomposer.org/) for `deploy` dependency installation
 
 In addition it is *strongly* recommended that you use a proper RDBMS like MySQL, MariaDB or PostgreSQL to host the database. The default SQLite database is suitable for development but you will almost certainly run into database contention locks if you use it in production.
 
@@ -174,7 +174,7 @@ shared:
   after:
     - /usr/bin/php scripts/make_sure_shared_files_are_populated.php
 ```
-Obviously the above configuration is made up to illustrate the point - you can run anything you need to make your deployment work. The `activate.before` hook shows an example of running the [phinx] database migrations tool to automatically update the database schema prior to activation.
+Obviously the above configuration is made up to illustrate the point - you can run anything you need to make your deployment work. The `activate.before` hook shows an example of running the [phinx](https://github.com/cakephp/phinx) database migrations tool to automatically update the database schema prior to activation.
 
 ## Example deploy.yaml
 
@@ -241,7 +241,3 @@ cleanup:
 * https://developer.github.com/v3/repos/contents/#get-contents
 * https://mattstauffer.com/blog/introducing-envoyer.io/
 * https://docs.gitlab.com/ee/api/repositories.html#get-file-archive
-
-- PDO: https://www.php.net/pdo
-- phinx: https://github.com/cakephp/phinx
-- composer: https://getcomposer.org/
