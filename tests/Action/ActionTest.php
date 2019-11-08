@@ -84,7 +84,7 @@ class ActionTest extends TestCase
     public function testAnActionCanLogAnEvent($method, $level)
     {
         $mockDeployment = $this->mockDeployment();
-        $header = 'test-header';
+        $header = 'Test Abstract';
         $detail = 'test-detail';
         $mockEventFinder = $this->mockEventFinder();
         $mockEventFinder
@@ -100,7 +100,6 @@ class ActionTest extends TestCase
             $instance,
             $method,
             $mockDeployment,
-            $header,
             $detail
         );
     }
