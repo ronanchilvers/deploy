@@ -47,8 +47,8 @@ class ComposerAction extends AbstractAction
         ]);
         $this->info(
             $deployment,
-            'Running composer to install dependencies',
             [
+                'Running composer to install dependencies',
                 "Directory - {$deploymentDir}",
                 "Command - {$command}",
             ]
@@ -64,15 +64,17 @@ class ComposerAction extends AbstractAction
         if (!$process->isSuccessful()) {
             $this->error(
                 $deployment,
-                'Composer run failed',
-                $process->getErrorOutput()
+                [
+                    'Composer run failed',
+                    $process->getErrorOutput()
+                ]
             );
             throw new ProcessFailedException($process);
         }
         $this->info(
             $deployment,
-            'Composer run completed',
             [
+                'Composer run completed',
                 $process->getOutput(),
                 $process->getErrorOutput(),
             ]
@@ -119,8 +121,11 @@ class ComposerAction extends AbstractAction
             if (!$process->isSuccessful()) {
                 $this->error(
                     $deployment,
-                    'Failed downloading composer.phar',
-                    [$process->getOutput(), $process->getErrorOutput()]
+                    [
+                        'Failed downloading composer.phar',
+                        $process->getOutput(),
+                        $process->getErrorOutput()
+                    ]
                 );
                 throw new RuntimeException('Failed to run composer installer');
             }

@@ -33,8 +33,8 @@ class ActivateAction extends AbstractAction implements ActionInterface
         if (file_exists($linkFilename)) {
             $this->info(
                 $deployment,
-                'Removing existing symlink',
                 [
+                    'Removing existing symlink',
                     'Link Name - ' . $linkFilename,
                 ]
             );
@@ -45,8 +45,8 @@ class ActivateAction extends AbstractAction implements ActionInterface
             if (!unlink($linkFilename)) {
                 $this->error(
                     $deployment,
-                    'Unable to remove existing symlink',
                     [
+                        'Unable to remove existing symlink',
                         'Link Name - ' . $linkFilename,
                     ]
                 );
@@ -64,8 +64,8 @@ class ActivateAction extends AbstractAction implements ActionInterface
         if (!symlink($deploymentDir, $linkFilename)) {
             $this->error(
                 $deployment,
-                'Unable to create deployment symlink',
                 [
+                    'Unable to create deployment symlink',
                     'Deployment Folder - ' . $deploymentDir,
                     'Link Name - ' . $linkFilename,
                 ]
@@ -78,8 +78,8 @@ class ActivateAction extends AbstractAction implements ActionInterface
         }
         $this->info(
             $deployment,
-            'Symlinked deployment successfully',
             [
+                'Symlinked deployment successfully',
                 'Deployment Folder - ' . $deploymentDir,
                 'Link Name - ' . $linkFilename,
             ]

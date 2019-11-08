@@ -160,7 +160,7 @@ class Gitlab implements ProviderInterface
             $this->headUrl,
             $params
         );
-        $closure('info', 'Querying Gitlab API for head commit data', "API URL : {$url}");
+        $closure('info', "Querying Gitlab API for head commit data\nAPI URL : {$url}");
         $curl = $this->getCurlHandle($url);
         $data = curl_exec($curl);
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -168,8 +168,8 @@ class Gitlab implements ProviderInterface
         if (200 != $statusCode) {
             $closure(
                 'error',
-                'Gitlab API request failed',
                 implode("\n", [
+                    'Gitlab API request failed',
                     "API URL - {$url}",
                     "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
                 ])
@@ -179,8 +179,7 @@ class Gitlab implements ProviderInterface
         if (!$data = json_decode($data, true)) {
             $closure(
                 'error',
-                'Unable to parse Gitlab response JSON',
-                "API URL : {$url}"
+                "Unable to parse Gitlab response JSON\nAPI URL : {$url}"
             );
             throw new RuntimeException('Invalid commit data for head');
         }
@@ -216,8 +215,8 @@ class Gitlab implements ProviderInterface
         if (!$handle = fopen($filename, "w")) {
             $closure(
                 'error',
-                'Unable to open temporary download file',
                 implode("\n", [
+                    'Unable to open temporary download file',
                     "Temporary filename - {$filename}"
                 ])
             );
@@ -231,8 +230,8 @@ class Gitlab implements ProviderInterface
         if (false === curl_exec($curl)) {
             $closure(
                 'error',
-                'Error downloading codebase',
                 implode("\n", [
+                    'Error downloading codebase',
                     "Filename - {$filename}",
                     "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl),
                 ])
@@ -245,8 +244,8 @@ class Gitlab implements ProviderInterface
         if ($statusCode != 200) {
             $closure(
                 'error',
-                'Error downloading codebase',
                 implode("\n", [
+                    'Error downloading codebase',
                     "Filename - {$filename}",
                     "Status code - {$statusCode}",
                 ])
@@ -259,8 +258,8 @@ class Gitlab implements ProviderInterface
             $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
             $closure(
                 'info',
-                'Creating deployment directory',
                 implode("\n", [
+                    'Creating deployment directory',
                     "Directory - {$directory}",
                 ])
             );
@@ -268,8 +267,8 @@ class Gitlab implements ProviderInterface
             if (!mkdir($directory, $mode, true)) {
                 $closure(
                     'error',
-                    'Failed to create deployment directory',
                     implode("\n", [
+                        'Failed to create deployment directory',
                         "Directory - {$directory}",
                     ])
                 );
@@ -284,8 +283,8 @@ class Gitlab implements ProviderInterface
         $command = "{$tar} --strip-components=1 -xzf {$filename} -C {$directory}";
         $closure(
             'info',
-            'Unpacking codebase tarball',
             implode("\n", [
+                'Unpacking codebase tarball',
                 "Command - {$command}",
             ])
         );
@@ -294,8 +293,8 @@ class Gitlab implements ProviderInterface
         if (!$process->isSuccessful()) {
             $closure(
                 'error',
-                'Failed to unpack codebase tarball',
                 implode("\n", [
+                    'Failed to unpack codebase tarball',
                     "Command - {$command}",
                     $process->getErrorOutput(),
                 ])
@@ -307,8 +306,8 @@ class Gitlab implements ProviderInterface
         if (!unlink($filename)) {
             $closure(
                 'error',
-                'Codebase tarball unpacked',
                 implode("\n", [
+                    'Codebase tarball unpacked',
                     $process->getOutput(),
                 ])
             );
@@ -337,8 +336,8 @@ class Gitlab implements ProviderInterface
         );
         $closure(
             'info',
-            'Querying Gitlab API for deployment configuration',
             implode("\n", [
+                'Querying Gitlab API for deployment configuration',
                 "API URL - {$url}"
             ])
         );
@@ -347,8 +346,8 @@ class Gitlab implements ProviderInterface
         if (false === $json || !is_string($json)) {
             $closure(
                 'error',
-                'Gitlab API request failed',
                 implode("\n", [
+                    'Gitlab API request failed',
                     "API URL - {$url}",
                     "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
                 ])
@@ -370,8 +369,8 @@ class Gitlab implements ProviderInterface
         if (!$data || !isset($data['content'])) {
             $closure(
                 'error',
-                'Failed to parse Gitlab response json',
                 implode("\n", [
+                    'Failed to parse Gitlab response json',
                     "API URL - {$url}",
                     "JSON - " . $json
                 ])
@@ -386,8 +385,8 @@ class Gitlab implements ProviderInterface
             $yaml = Yaml::parse($yaml);
             $closure(
                 'info',
-                'Parsed YAML deployment configuration successfully',
                 implode("\n", [
+                    'Parsed YAML deployment configuration successfully',
                     "API URL - {$url}",
                     "JSON - " . $json
                 ])
@@ -395,8 +394,8 @@ class Gitlab implements ProviderInterface
         } catch (Exception $ex) {
             $closure(
                 'info',
-                'Unable to parse YAML deployment configuration',
                 implode("\n", [
+                    'Unable to parse YAML deployment configuration',
                     "API URL - {$url}",
                     "Exception - " . $ex->getMessage(),
                 ])

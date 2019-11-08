@@ -42,8 +42,8 @@ class ClearPathsAction extends AbstractAction
             if (!is_readable($fullPath)) {
                 $this->info(
                     $deployment,
-                    'Path to clear was not found when clearing - ' . $path,
                     [
+                        'Path to clear was not found when clearing - ' . $path,
                         'Full path - ' . $fullPath,
                     ]
                 );
@@ -52,8 +52,8 @@ class ClearPathsAction extends AbstractAction
             if (!File::rm($fullPath)) {
                 $this->error(
                     $deployment,
-                    'Path to clear couldn\'t be removed',
                     [
+                        'Path to clear couldn\'t be removed',
                         'Full path - ' . $fullPath,
                     ]
                 );
@@ -61,8 +61,8 @@ class ClearPathsAction extends AbstractAction
             }
             $this->info(
                 $deployment,
-                'Cleared path - ' . $path,
                 [
+                    'Cleared path - ' . $path,
                     'Full path - ' . $fullPath,
                 ]
             );

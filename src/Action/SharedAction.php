@@ -32,8 +32,8 @@ class SharedAction extends AbstractAction
         if (!is_dir($sharedBaseDir)) {
             $this->info(
                 $deployment,
-                'Creating base shared directory',
                 [
+                    'Creating base shared directory',
                     "Directory - {$sharedBaseDir}",
                 ]
             );
@@ -43,8 +43,8 @@ class SharedAction extends AbstractAction
             if (!mkdir($sharedBaseDir, $folderMode, true)) {
                 $this->error(
                     $deployment,
-                    'Failed creating base shared directory',
                     [
+                        'Failed creating base shared directory',
                         "Directory - {$sharedBaseDir}",
                         "Mode - {$folderMode}",
                     ]
@@ -71,8 +71,8 @@ class SharedAction extends AbstractAction
         ) {
             $this->info(
                 $deployment,
-                'Verifying shared folders',
                 [
+                    'Verifying shared folders',
                     "Shared folders - " . implode(", ", $shared['folders']),
                 ]
             );
@@ -82,18 +82,11 @@ class SharedAction extends AbstractAction
 
                 // Create the shared directory if needed
                 if (!is_dir($sharedDir)) {
-                    // $this->info(
-                    //     $deployment,
-                    //     'Creating shared folder',
-                    //     [
-                    //         "Folder - {$sharedDir}",
-                    //     ]
-                    // );
                     if (is_dir($thisDeploymentDir)) {
                         $this->info(
                             $deployment,
-                            'Copying shared folder from deployment',
                             [
+                                'Copying shared folder from deployment',
                                 "Deployment folder - {$thisDeploymentDir}",
                                 "Shared folder - {$sharedDir}",
                             ]
@@ -101,8 +94,8 @@ class SharedAction extends AbstractAction
                         if (!File::cp($thisDeploymentDir, $sharedDir)) {
                             $this->error(
                                 $deployment,
-                                'Failed copying shared folder from deployment',
                                 [
+                                    'Failed copying shared folder from deployment',
                                     "Deployment folder - {$thisDeploymentDir}",
                                     "Shared folder - {$sharedDir}",
                                 ]
@@ -116,8 +109,8 @@ class SharedAction extends AbstractAction
                     } elseif (!mkdir($sharedDir, $folderMode, true)) {
                         $this->error(
                             $deployment,
-                            'Unable to create shared folder',
                             [
+                                'Unable to create shared folder',
                                 "Shared folder - {$sharedDir}",
                                 "Mode - {$folderMode}",
                             ]
@@ -133,16 +126,16 @@ class SharedAction extends AbstractAction
                 // Remove the shared folder from the deployment if it exists
                 $this->info(
                     $deployment,
-                    'Removing shared folder from deployment directory',
                     [
+                        'Removing shared folder from deployment directory',
                         "Deployment folder - {$thisDeploymentDir}",
                     ]
                 );
                 if (!File::rm($thisDeploymentDir)) {
                     $this->info(
                         $deployment,
-                        'Shared folder not found in deployment directory',
                         [
+                            'Shared folder not found in deployment directory',
                             "Deployment folder - {$thisDeploymentDir}",
                         ]
                     );
@@ -157,8 +150,8 @@ class SharedAction extends AbstractAction
                 if (!is_dir($parentDir) && !mkdir($parentDir, $folderMode, true)) {
                     $this->error(
                         $deployment,
-                        'Unable to create parent directory for symlinking',
                         [
+                            'Unable to create parent directory for symlinking',
                             "Parent shared folder - {$parentDir}",
                             "Mode - {$folderMode}",
                         ]
@@ -173,8 +166,8 @@ class SharedAction extends AbstractAction
                 if (!symlink($sharedDir, $thisDeploymentDir)) {
                     $this->error(
                         $deployment,
-                        'Unable to symlink shared folder',
                         [
+                            'Unable to symlink shared folder',
                             "Deployment link - {$thisDeploymentDir}",
                             "Shared folder - {$sharedDir}",
                         ]
@@ -200,8 +193,8 @@ class SharedAction extends AbstractAction
         ) {
             $this->info(
                 $deployment,
-                'Verifying shared files',
                 [
+                    'Verifying shared files',
                     "Shared files - " . implode(", ", $shared['files']),
                 ]
             );
@@ -215,8 +208,8 @@ class SharedAction extends AbstractAction
                 if (isset($sharedFolders[$sharedDir])) {
                     $this->error(
                         $deployment,
-                        'Shared file parent folder is already shared',
                         [
+                            'Shared file parent folder is already shared',
                             "Shared file - {$sharedFilename}",
                             "Shared folder - {$sharedDir}",
                         ]
@@ -232,8 +225,8 @@ class SharedAction extends AbstractAction
                 if (!is_dir($sharedDir)) {
                     $this->info(
                         $deployment,
-                        'Creating parent folder for shared file',
                         [
+                            'Creating parent folder for shared file',
                             "Shared file - {$sharedFilename}",
                             "Shared folder - {$sharedDir}",
                         ]
@@ -241,8 +234,8 @@ class SharedAction extends AbstractAction
                     if (!mkdir($sharedDir, $folderMode, true)) {
                         $this->error(
                             $deployment,
-                            'Unable to create parent folder for shared file',
                             [
+                                'Unable to create parent folder for shared file',
                                 "Shared file - {$sharedFilename}",
                                 "Shared folder - {$sharedDir}",
                             ]
@@ -258,8 +251,8 @@ class SharedAction extends AbstractAction
                 if (file_exists($thisDeploymentFile)) {
                     $this->info(
                         $deployment,
-                        'Copying shared file from deployment into shared folder',
                         [
+                            'Copying shared file from deployment into shared folder',
                             "Deployment file - {$thisDeploymentFile}",
                             "Shared file - {$sharedFilename}",
                             "Shared folder - {$sharedDir}",
@@ -272,8 +265,8 @@ class SharedAction extends AbstractAction
                     if (!file_exists($sharedFilename) && !File::cp($thisDeploymentFile, $sharedFilename)) {
                         $this->error(
                             $deployment,
-                            'Unable to copy shared file from deployment',
                             [
+                                'Unable to copy shared file from deployment',
                                 "Deployment file - {$thisDeploymentFile}",
                                 "Shared file - {$sharedFilename}",
                                 "Shared folder - {$sharedDir}",
@@ -288,8 +281,8 @@ class SharedAction extends AbstractAction
                     }
                     $this->info(
                         $deployment,
-                        'Removing shared file from deployment',
                         [
+                            'Removing shared file from deployment',
                             "Deployment file - {$thisDeploymentFile}",
                             "Shared file - {$sharedFilename}",
                             "Shared folder - {$sharedDir}",
@@ -302,8 +295,8 @@ class SharedAction extends AbstractAction
                     if (!File::rm($thisDeploymentFile)) {
                         $this->error(
                             $deployment,
-                            'Unable to remove shared file from deployment',
                             [
+                                'Unable to remove shared file from deployment',
                                 "Deployment file - {$thisDeploymentFile}",
                                 "Shared file - {$sharedFilename}",
                                 "Shared folder - {$sharedDir}",
@@ -322,8 +315,8 @@ class SharedAction extends AbstractAction
                 if (!is_dir($thisDeploymentDir)) {
                     $this->info(
                         $deployment,
-                        'Creating parent folder for deployment link',
                         [
+                            'Creating parent folder for deployment link',
                             "Deployment file - {$thisDeploymentFile}",
                             "Mode - {$folderMode}",
                         ]
@@ -331,8 +324,8 @@ class SharedAction extends AbstractAction
                     if (!mkdir($thisDeploymentDir, $folderMode, true)) {
                         $this->info(
                             $deployment,
-                            'Unable to create parent folder for shared file in deployment',
                             [
+                                'Unable to create parent folder for shared file in deployment',
                                 "Deployment file - {$thisDeploymentFile}",
                                 "Mode - {$folderMode}",
                             ]
@@ -351,16 +344,16 @@ class SharedAction extends AbstractAction
                 if (!file_exists($sharedFilename)) {
                     $this->info(
                         $deployment,
-                        'Creating empty shared file for symlinking',
                         [
+                            'Creating empty shared file for symlinking',
                             "Shared file - {$sharedFilename}",
                         ]
                     );
                     if (!touch($sharedFilename)) {
                         $this->error(
                             $deployment,
-                            'Unable to create shared file for symlinking',
                             [
+                                'Unable to create shared file for symlinking',
                                 "Shared file - {$sharedFilename}",
                             ]
                         );
@@ -375,8 +368,8 @@ class SharedAction extends AbstractAction
                     if (!chmod($sharedFilename, $fileMode)) {
                         $this->error(
                             $deployment,
-                            'Unable to chmod shared file',
                             [
+                                'Unable to chmod shared file',
                                 "Shared file - {$sharedFilename}",
                                 "Mode - {$fileMode}",
                             ]
@@ -396,8 +389,8 @@ class SharedAction extends AbstractAction
                 if (!symlink($sharedFilename, $thisDeploymentFile)) {
                     $this->error(
                         $deployment,
-                        'Unable to symlink shared file',
                         [
+                            'Unable to symlink shared file',
                             "Shared file - {$sharedFilename}",
                             "Deployment link - {$thisDeploymentFile}",
                         ]
@@ -412,8 +405,8 @@ class SharedAction extends AbstractAction
                 }
                 $this->info(
                     $deployment,
-                    'Symlinked shared file into deployment',
                     [
+                        'Symlinked shared file into deployment',
                         "Shared file - {$sharedFilename}",
                         "Deployment link - {$thisDeploymentFile}",
                     ]

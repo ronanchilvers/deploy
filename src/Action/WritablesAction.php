@@ -47,8 +47,8 @@ class WritablesAction extends AbstractAction
             if (!is_dir($dir)) {
                 $this->error(
                     $deployment,
-                    'Writable path does not exist',
                     [
+                        'Writable path does not exist',
                         'Writable - ' . $writable,
                         'Writable Folder - ' . $dir,
                     ]
@@ -62,8 +62,8 @@ class WritablesAction extends AbstractAction
             if (!chmod($dir, $writableMode)) {
                 $this->error(
                     $deployment,
-                    'Unable to chmod writable',
                     [
+                        'Unable to chmod writable',
                         'Writable - ' . $writable,
                         'Writable Folder - ' . $dir,
                     ]
@@ -76,8 +76,8 @@ class WritablesAction extends AbstractAction
             }
             $this->info(
                 $deployment,
-                'Writable ' . $writable . ' verified',
                 [
+                    'Writable ' . $writable . ' verified',
                     'Writable - ' . $writable,
                     'Writable Folder - ' . $dir,
                 ]

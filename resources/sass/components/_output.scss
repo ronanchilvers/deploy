@@ -2,53 +2,61 @@
     color: $white;
     background-color: $black;
     border-radius: $radius;
-    padding: 1.5rem 0;
+    padding: 5px 0;
     font-family: monospace;
     overflow: scroll;
 
-    p {
-        padding: 0;
-        margin: 0;
+    .summary {
+        display: block;
+        padding: 10px 15px 10px 55px;
+        font-weight: bold;
+        position: relative;
     }
-    .header, .detail {
-        font-size: 1.1rem;
-        padding: 0 1.5rem;
-    }
-    .header {
-        font-weight: 600;
-    }
-    .header.has-detail {
-        cursor: pointer;
-    }
-    .header:before {
-        display: inline-block;
+    .summary:before {
+        position: absolute;
+        left: 13px;
+        top: 16px;
         content: " ";
-        padding-right: 1rem;
+        color: $grey;
     }
-    .header.has-detail:before {
+    .summary.has-events:before {
         content: "\25BA";
         font-size: 0.7rem;
-        padding-right: 0.3rem;
     }
-    .header.is-active.has-detail:before {
+    .summary.is-active.has-events:before {
         content: "\25BC";
     }
-    .header.is-type-error {
-        color: $red;
+    .summary:after {
+        position: absolute;
+        left: 36px;
+        top: 11px;
+        content: "-";
+        color: $grey;
     }
-    .detail {
+    .summary.is-type-info:after {
+        content: "\2713";
+        color: rgb(30,120,0);
+    }
+    .summary.is-type-error:after {
+        content: "\2715";
+        color: rgb(255,10,0);
+    }
+    .summary .duration {
+        float: right;
+        color: $grey;
+    }
+    .events {
         display: none;
-        font-weight: 300;
-        background-color: rgba(75,75,75,1);
-        padding-left: 2.5rem;
     }
-    .detail.is-active {
+    .events.is-active {
         display: block;
     }
-    pre {
-        background-color: transparent;
-        color: $white;
-        padding: 0;
-        overflow: visible;
+    .event {
+        padding: 10px 30px;
+        white-space: pre;
+        width: 100%;
+    }
+    .event:hover {
+        background-color: rgba(255,255,255,0.1);
     }
 }
