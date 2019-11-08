@@ -6,6 +6,7 @@
 
 use App\App;
 use App\Controller\ProjectController;
+use App\Controller\Project\ApiController;
 use App\Controller\UserController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -24,6 +25,10 @@ $app->map(['POST'], '/deploy/{key}', ProjectController::class . ':deploy')
     ->setName('project.deploy');
 $app->map(['GET', 'POST'], '/deploy/{key}/{deployment}', ProjectController::class . ':redeploy')
     ->setName('project.redeploy');
+
+$app->group('/api/project', function (App $app) {
+    $app->map(['GET'], '/{key}/events/{number}', ApiController::class . ':events');
+});
 
 $app->group('/user', function(App $app) {
     $app->map(['GET', 'POST'], '/login', UserController::class . ':login')

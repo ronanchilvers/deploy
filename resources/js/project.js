@@ -1,4 +1,4 @@
 $(function () {
-    App.Monitor.init();
+    // App.Monitor.init();
 });
 

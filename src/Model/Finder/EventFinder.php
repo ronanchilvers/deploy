@@ -55,6 +55,7 @@ class EventFinder extends Finder
             ->select()
             ->where('event_deployment', $deploymentId)
             ->orderby('event_created')
+            // ->limit(2)
             ->execute();
         if (empty($events)) {
             return [];
@@ -72,6 +73,7 @@ class EventFinder extends Finder
                     );
                 }
                 $header       = $event->header;
+                $arr[$header]['id'] = $event->id;
                 $arr[$header]['times'] = [
                     'start' => $event->created,
                 ];
@@ -89,8 +91,6 @@ class EventFinder extends Finder
         $arr[$header]['times']['duration'] = $arr[$header]['times']['end']->diffInSeconds(
             $arr[$header]['times']['start']
         );
-        // @TODO Remove var_dump
-        // echo '<pre>' . print_r($arr, true); exit();
 
         return $arr;
     }

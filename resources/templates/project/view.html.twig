@@ -2,6 +2,14 @@
 
 {% block javascripts %}
 <script type="text/javascript" src="/js/project.js"></script>
+{#% if not selected_deployment.deployed and not selected_deployment.failed %#}
+<script type="text/javascript">
+App.Monitor.init({
+    project: '{{ project.key }}',
+    number: {{ selected_deployment.number }}
+});
+</script>
+{#% endif %#}
 {% endblock %}
 
 {% block body %}
@@ -150,10 +158,10 @@
             </ul>
         </div>
         <div class="tab-pane is-active" id="js-output">
-            <div class="output">
+            <div class="output" id="log-output">
         {% if events|length %}
             {% for heading,data in events %}
-                <div class="details">
+                <div class="details" id="details-{{ data.id }}">
                     {% set type_class = 'is-type-' ~ data.type %}
                     {% set has_events = (0 < data.events|length) %}
                     <div class="summary has-events is-type-{{ data.type }}" >
@@ -161,7 +169,7 @@
                         <p {% if has_events %}data-events="events-{{ loop.index }}"{% endif %}>{{ heading }}</p>
                     </div>
                     {% if has_events %}
-                    <div class="events" id="events-{{ loop.index }}">
+                    <div class="events" id="events-{{ data.id }}">
                     {% for event in data.events %}
                         <div class="event">{{ event }}</div>
                     {% endfor %}

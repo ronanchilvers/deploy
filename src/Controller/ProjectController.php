@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\ProjectTrait;
 use App\Facades\Log;
 use App\Facades\Provider;
 use App\Facades\Router;
@@ -29,6 +30,8 @@ use RuntimeException;
  */
 class ProjectController
 {
+    use ProjectTrait;
+
     /**
      * Index action
      *
@@ -368,22 +371,5 @@ class ProjectController
                 'key' => $project->key
             ])
         );
-    }
-
-    /**
-     * Get a project from an args array
-     *
-     * @param array $args
-     * @return \App\Model\Project|null
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    protected function projectFromArgs($args)
-    {
-        $project = Orm::finder(Project::class)->forKey($args['key']);
-        if ($project instanceof Project) {
-            return $project;
-        }
-
-        return null;
     }
 }

@@ -1,6 +1,6 @@
 .output {
     color: $white;
-    background-color: $black;
+    background-color: rgb(50,50,50);
     border-radius: $radius;
     padding: 5px 0;
     font-family: monospace;
@@ -11,6 +11,7 @@
         padding: 10px 15px 10px 55px;
         font-weight: bold;
         position: relative;
+        cursor: pointer;
     }
     .summary:before {
         position: absolute;
