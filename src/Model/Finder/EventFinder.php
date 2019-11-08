@@ -76,7 +76,7 @@ class EventFinder extends Finder
                     'start' => $event->created,
                 ];
             }
-            if ('error' !== $arr[$header]['type']) {
+            if (!isset($arr[$header]['type']) || 'error' !== $arr[$header]['type']) {
                 $arr[$header]['type'] = $event->type;
             }
             if (!isset($arr[$header]['events'])) {
