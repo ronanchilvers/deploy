@@ -31,8 +31,10 @@ class CreateWorkspaceAction extends AbstractAction
         $locations     = [$projectDir, $deploymentDir];
         $this->info(
             $deployment,
-            'Checking workspace exists for project',
-            'Locations - ' . implode(', ', $locations)
+            [
+                'Checking workspace exists for project',
+                'Locations - ' . implode(', ', $locations),
+            ]
         );
         $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
         foreach ($locations as $location) {
@@ -53,8 +55,8 @@ class CreateWorkspaceAction extends AbstractAction
             if (!mkdir($location, $mode, true)) {
                 $this->error(
                     $deployment,
-                    'Failed creating location ' . $location,
                     [
+                        'Failed creating location ' . $location,
                         "Location - {$location}",
                         "Mode - {$mode}",
                     ]
@@ -69,8 +71,8 @@ class CreateWorkspaceAction extends AbstractAction
             }
             $this->info(
                 $deployment,
-                'Created missing location ' . $location,
                 [
+                    'Created missing location ' . $location,
                     "Location - {$location}",
                     "Mode - {$mode}",
                 ]

@@ -44,14 +44,14 @@ class FinaliseAction extends AbstractAction
             return;
         }
         $info = [
-            'SHA : ' . $deployment->sha,
-            'Deployed : ' . $deployment->started->format('Y-m-d H:i:s'),
-            'Author : ' . $deployment->author,
-            'Committer : ' . $deployment->committer,
+            'sha'       => $deployment->sha,
+            'deployed'  => $deployment->started->format('Y-m-d H:i:s'),
+            'author'    => $deployment->author,
+            'committer' => $deployment->committer,
         ];
         file_put_contents(
             $filename,
-            implode("\n", $info) . "\n"
+            json_encode($info, JSON_PRETTY_PRINT) . "\n"
         );
     }
 }

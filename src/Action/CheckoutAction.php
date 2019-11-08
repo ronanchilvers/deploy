@@ -49,8 +49,8 @@ class CheckoutAction extends AbstractAction
         );
         $this->info(
             $deployment,
-            'Downloading codebase',
             [
+                'Downloading codebase',
                 "Repository - {$project->repository}",
                 "SHA - {$deployment->sha}",
             ]
@@ -63,11 +63,11 @@ class CheckoutAction extends AbstractAction
             $project,
             $deployment,
             $deploymentDir,
-            function($type, $header, $detail = '') use ($deployment) {
+            function($type, $detail = '') use ($deployment) {
                 $this->eventFinder->event(
                     $type,
                     $deployment,
-                    $header,
+                    'Checkout',
                     $detail
                 );
             }

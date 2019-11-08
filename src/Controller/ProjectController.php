@@ -93,7 +93,10 @@ class ProjectController
         }
         $events = [];
         if ($selectedDeployment) {
-            $events = $selectedDeployment->events;
+            $events = Orm::finder(Event::class)->arrayForDeploymentId(
+                $selectedDeployment->id
+            );
+            // $events = $selectedDeployment->events;
         }
 
         return View::render(
@@ -245,11 +248,11 @@ class ProjectController
                 $head = $provider->getHeadInfo(
                     $project->repository,
                     $branch,
-                    function($type, $header, $detail = '') use ($finder, $deployment) {
+                    function($type, $detail = '') use ($finder, $deployment) {
                         $finder->event(
                             $type,
                             $deployment,
-                            $header,
+                            'Initialise',
                             $detail
                         );
                     }

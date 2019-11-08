@@ -1,7 +1,11 @@
 {% extends 'page.html.twig' %}
 
+{% block javascripts %}
+<script type="text/javascript" src="/js/project.js"></script>
+{% endblock %}
+
 {% block body %}
-<div class="project">
+<div class="project status-{{ project.status }}">
     {{ include('fragments/project/header.html.twig', { project: project } )}}
 
     <section class="section">
@@ -148,13 +152,22 @@
         <div class="tab-pane is-active" id="js-output">
             <div class="output">
         {% if events|length %}
-            {% for event in events %}
-                {% set type_class = 'is-type-' ~ event.type %}
-                {% set has_detail = (0 < event.detail|length) %}
-                <p {% if has_detail %}class="header has-detail {{ type_class }}" data-detail="event-detail-{{ loop.index }}"{% else %}class="header {{ type_class }}"{% endif %}>{{ event.header }}</p>
-                {% if has_detail %}
-                <pre class="detail" id="event-detail-{{ loop.index }}">{{ event.detail }}</pre>
-                {% endif %}
+            {% for heading,data in events %}
+                <div class="details">
+                    {% set type_class = 'is-type-' ~ data.type %}
+                    {% set has_events = (0 < data.events|length) %}
+                    <div class="summary has-events is-type-{{ data.type }}" >
+                        <p class="duration">{% if 0 == data.times.duration %}&lt;1{% else %}{{ data.times.duration }}{% endif %}s</p>
+                        <p {% if has_events %}data-events="events-{{ loop.index }}"{% endif %}>{{ heading }}</p>
+                    </div>
+                    {% if has_events %}
+                    <div class="events" id="events-{{ loop.index }}">
+                    {% for event in data.events %}
+                        <div class="event">{{ event }}</div>
+                    {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
             {% endfor %}
         {% else %}
             <p class="header">No events found</p>

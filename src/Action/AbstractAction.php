@@ -128,15 +128,11 @@ abstract class AbstractAction implements ActionInterface
      * @return bool|\App\Model\Event
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function info(Deployment $deployment, string $header, $detail = '')
+    protected function info(Deployment $deployment, $detail = '')
     {
-        if (is_array($detail)) {
-            $detail = implode("\n", $detail);
-        }
-        return $this->eventFinder->event(
+        return $this->event(
             EventFinder::INFO,
             $deployment,
-            $header,
             $detail
         );
     }
@@ -150,13 +146,33 @@ abstract class AbstractAction implements ActionInterface
      * @return bool|\App\Model\Event
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function error(Deployment $deployment, string $header, $detail = '')
+    protected function error(Deployment $deployment, $detail = '')
+    {
+        return $this->event(
+            EventFinder::ERROR,
+            $deployment,
+            $detail
+        );
+    }
+
+    /**
+     * Log an event
+     *
+     * @param string $type
+     * @param \App\Model\Deployment $deployment
+     * @param string $header
+     * @param mixed $detail
+     * @return bool|\App\Model\Event
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function event(string $type, Deployment $deployment, $detail = '')
     {
         if (is_array($detail)) {
             $detail = implode("\n", $detail);
         }
+        $header = ucwords(str_replace('_', ' ', $this->getKey()));
         return $this->eventFinder->event(
-            EventFinder::ERROR,
+            $type,
             $deployment,
             $header,
             $detail

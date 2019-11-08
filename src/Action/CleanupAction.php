@@ -51,8 +51,8 @@ class CleanupAction extends AbstractAction
                 }
                 $this->$method(
                     $thisDeployment,
-                    $message,
                     [
+                        $message,
                         "Deployment Folder - " . $deploymentDir
                     ]
                 );
@@ -72,8 +72,8 @@ class CleanupAction extends AbstractAction
             }
             $this->info(
                 $thisDeployment,
-                'Cleaned deployment ' . $deployment->number,
                 [
+                    'Cleaned deployment ' . $deployment->number,
                     "Deployment Folder - " . $deploymentDir
                 ]
             );

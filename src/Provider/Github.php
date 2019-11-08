@@ -165,13 +165,13 @@ class Github implements ProviderInterface
             $this->headUrl,
             $params
         );
-        $closure('info', 'Querying Github API for head commit data', "API URL : {$url}");
+        $closure('info', "Querying Github API for head commit data\nAPI URL : {$url}");
         $curl = $this->getCurlHandle($url);
         if (false === ($data = curl_exec($curl))) {
             $closure(
                 'error',
-                'Github API request failed',
                 implode("\n", [
+                    'Github API request failed',
                     "API URL - {$url}",
                     "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
                 ])
@@ -188,8 +188,8 @@ class Github implements ProviderInterface
             }
             $closure(
                 'error',
-                'Error obtaining head info from Github',
                 implode("\n", [
+                    'Error obtaining head info from Github',
                     "URL - {$url}",
                     "Status code - {$statusCode}",
                     "Error - {$error}"
@@ -200,8 +200,7 @@ class Github implements ProviderInterface
         if (!$data = json_decode($data, true)) {
             $closure(
                 'error',
-                'Unable to parse Github response JSON',
-                "API URL : {$url}"
+                "Unable to parse Github response JSON\nAPI URL : {$url}"
             );
             throw new RuntimeException('Invalid commit data for head');
         }
@@ -210,13 +209,13 @@ class Github implements ProviderInterface
             $this->commitUrl,
             $params
         );
-        $closure('info', 'Querying Github API for commit detail', "API URL : {$url}");
+        $closure('info', "Querying Github API for commit detail\nAPI URL : {$url}");
         $curl = $this->getCurlHandle($url);
         if (false === ($data = curl_exec($curl))) {
             $closure(
                 'error',
-                'Github API request failed',
                 implode("\n", [
+                    'Github API request failed',
                     "API URL - {$url}",
                     "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
                 ])
@@ -227,8 +226,8 @@ class Github implements ProviderInterface
         if (!$data = json_decode($data, true)) {
             $closure(
                 'error',
-                'Unable to parse Github Response JSON',
                 implode("\n", [
+                    'Unable to parse Github Response JSON',
                     "API URL - {$url}"
                 ])
             );
@@ -266,8 +265,8 @@ class Github implements ProviderInterface
         if (!$handle = fopen($filename, "w")) {
             $closure(
                 'error',
-                'Unable to open temporary download file',
                 implode("\n", [
+                    'Unable to open temporary download file',
                     "Temporary filename - {$filename}"
                 ])
             );
@@ -281,8 +280,8 @@ class Github implements ProviderInterface
         if (false === curl_exec($curl)) {
             $closure(
                 'error',
-                'Error downloading codebase',
                 implode("\n", [
+                    'Error downloading codebase',
                     "Filename - {$filename}",
                     "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl),
                 ])
@@ -295,8 +294,8 @@ class Github implements ProviderInterface
         if ($statusCode != 200) {
             $closure(
                 'error',
-                'Error downloading codebase',
                 implode("\n", [
+                    'Error downloading codebase',
                     "Filename - {$filename}",
                     "Status code - {$statusCode}",
                 ])
@@ -309,16 +308,16 @@ class Github implements ProviderInterface
             $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
             $closure(
                 'info',
-                'Creating deployment directory',
                 implode("\n", [
+                    'Creating deployment directory',
                     "Directory - {$directory}",
                 ])
             );
             if (!mkdir($directory, $mode, true)) {
                 $closure(
                     'error',
-                    'Failed to create deployment directory',
                     implode("\n", [
+                        'Failed to create deployment directory',
                         "Directory - {$directory}",
                     ])
                 );
@@ -333,8 +332,8 @@ class Github implements ProviderInterface
         $command = "{$tar} --strip-components=1 -xzf {$filename} -C {$directory}";
         $closure(
             'info',
-            'Unpacking codebase tarball',
             implode("\n", [
+                'Unpacking codebase tarball',
                 "Command - {$command}",
             ])
         );
@@ -343,8 +342,8 @@ class Github implements ProviderInterface
         if (!$process->isSuccessful()) {
             $closure(
                 'error',
-                'Failed to unpack codebase tarball',
                 implode("\n", [
+                    'Failed to unpack codebase tarball',
                     "Command - {$command}",
                     $process->getErrorOutput(),
                 ])
@@ -356,8 +355,8 @@ class Github implements ProviderInterface
         if (!unlink($filename)) {
             $closure(
                 'error',
-                'Codebase tarball unpacked',
                 implode("\n", [
+                    'Codebase tarball unpacked',
                     $process->getOutput(),
                 ])
             );
@@ -386,8 +385,8 @@ class Github implements ProviderInterface
         );
         $closure(
             'info',
-            'Querying Github API for deployment configuration',
             implode("\n", [
+                'Querying Github API for deployment configuration',
                 "API URL - {$url}"
             ])
         );
@@ -396,8 +395,8 @@ class Github implements ProviderInterface
         if (false === $json || !is_string($json)) {
             $closure(
                 'error',
-                'Github API request failed',
                 implode("\n", [
+                    'Github API request failed',
                     "API URL - {$url}",
                     "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
                 ])
@@ -419,8 +418,8 @@ class Github implements ProviderInterface
         if (!$data || !isset($data['content'])) {
             $closure(
                 'error',
-                'Failed to parse Github response json',
                 implode("\n", [
+                    'Failed to parse Github response json',
                     "API URL - {$url}",
                     "JSON - " . $json
                 ])
@@ -435,8 +434,8 @@ class Github implements ProviderInterface
             $yaml = Yaml::parse($yaml);
             $closure(
                 'info',
-                'Parsed YAML deployment configuration successfully',
                 implode("\n", [
+                    'Parsed YAML deployment configuration successfully',
                     "API URL - {$url}",
                     "JSON - " . $json
                 ])
@@ -444,8 +443,8 @@ class Github implements ProviderInterface
         } catch (Exception $ex) {
             $closure(
                 'info',
-                'Unable to parse YAML deployment configuration',
                 implode("\n", [
+                    'Unable to parse YAML deployment configuration',
                     "API URL - {$url}",
                     "Exception - " . $ex->getMessage(),
                 ])

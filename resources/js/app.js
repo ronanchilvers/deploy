@@ -37,9 +37,9 @@ $(function () {
             $pane.addClass('is-active');
         }
     });
-    $('.output').on('click', '.has-detail', function () {
+    $('.output').on('click', '.has-events', function () {
         $(this).toggleClass('is-active');
-        $(this).next('.detail').toggleClass('is-active');
+        $(this).next('.events').toggleClass('is-active');
     });
 
     /** global: App **/
