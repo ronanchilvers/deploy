@@ -2,14 +2,14 @@
 
 {% block javascripts %}
 <script type="text/javascript" src="/js/project.js"></script>
-{#% if not selected_deployment.deployed and not selected_deployment.failed %#}
+{% if not selected_deployment.deployed and not selected_deployment.failed %}
 <script type="text/javascript">
 App.Monitor.init({
     project: '{{ project.key }}',
     number: {{ selected_deployment.number }}
 });
 </script>
-{#% endif %#}
+{% endif %}
 {% endblock %}
 
 {% block body %}
@@ -130,7 +130,7 @@ App.Monitor.init({
                             {% set icon="fas fa-spinner" %}
                             {% endif %}
                             <span class="icon is-inline-block"><i class="{{ icon }}"></i></span>
-                            <span class="is-inline-block">{{ selected_deployment.status|title }}</span>
+                            <span class="is-inline-block js-deployment-status">{{ selected_deployment.status|title }}</span>
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-stopwatch"></i></span>
@@ -142,7 +142,7 @@ App.Monitor.init({
                         </li>
                         <li>
                             <span class="icon is-inline-block"><i class="fas fa-user-cog"></i></span>
-                            <span class="is-inline-block tooltip" data-tooltip="Deployed by">{% if selected_deployment.deployed %}{{ selected_deployment.source }}{% else %}N/A{% endif %}</span>
+                            <span class="is-inline-block tooltip" data-tooltip="Deployed by">{% if selected_deployment.source %}{{ selected_deployment.source }}{% else %}N/A{% endif %}</span>
                         </li>
                     </ul>
                 </div>

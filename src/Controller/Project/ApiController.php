@@ -58,7 +58,8 @@ class ApiController
             );
         }
         $data = [
-            'project' => $project->toArray()
+            // 'project' => $project->toArray(),
+            'deployment' => $deployment->toArray(),
         ];
         $events = Orm::finder(Event::class)->arrayForDeploymentId(
             $deployment->id

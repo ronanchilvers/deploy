@@ -116,6 +116,7 @@ class DeployJob extends Job
             if (!$this->deployment->finish()) {
                 throw new RuntimeException('Unable to mark the deployment as finished');
             }
+
             Notifier::send(
                 sprintf(
                     "Deployment completed for <%s|%s>\nSHA: <%s|%s>\nAuthor: %s",
@@ -136,10 +137,6 @@ class DeployJob extends Job
             if (!$this->deployment->fail()) {
                 throw new RuntimeException('Unable to mark the deployment as failed');
             }
-            $project->last_status = $this->deployment->status;
-            if (!$project->save()) {
-                throw new RuntimeException('Unable to project as failed');
-            }
             Notifier::send(
                 sprintf(
                     "Deployment failed for <%s|%s>\nSHA: <%s|%s>\nAuthor: %s",
@@ -157,8 +154,9 @@ class DeployJob extends Job
                 $ex
             );
         } finally {
+            $project->updateFromDeployment($this->deployment);
             if (!$project->markActive()) {
-                throw new RuntimeException('Unable to mark project as deploying');
+                throw new RuntimeException('Unable to update project details');
             }
         }
     }
