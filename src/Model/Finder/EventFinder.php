@@ -72,7 +72,7 @@ class EventFinder extends Finder
                         $arr[$header]['times']['start']
                     );
                 }
-                $header       = $event->header;
+                $header = $event->header;
                 $arr[$header]['id'] = $event->id;
                 $arr[$header]['times'] = [
                     'start' => $event->created,
