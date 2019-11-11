@@ -181,6 +181,7 @@ App.Monitor.init({
             <p class="header">No events found</p>
         {% endif %}
             </div>
+            <div id="output-loader"><img src="/img/loader-bar.gif" width="16" height="11"></div>
         </div>
         <div class="tab-pane" id="js-configuration">
             <pre>{% if selected_deployment.configuration %}{{ selected_deployment.configuration }}{% else %}Configuration not yet available{% endif %}</pre>

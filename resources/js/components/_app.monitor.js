@@ -28,10 +28,12 @@ App.Monitor = {
         this.timer = setInterval(function () {
             that._update();
         }, this.options.interval);
+        $('#output-loader').show();
     },
     stop: function () {
         App.Debug.log('Stopping project monitor');
         clearInterval(this.timer);
+        $('#output-loader').hide();
     },
     _update: function () {
         var url = '/api/project/' +
