@@ -66,7 +66,7 @@ class EventFinder extends Finder
         $lastEvent = false;
         foreach ($events as $event) {
             if ($header !== $event->header) {
-                if (isset($arr[$header]['times'])) {
+                if (isset($arr[$header]['times']) && $lastEvent instanceof Event) {
                     $arr[$header]['times']['end'] = $lastEvent->created;
                     $arr[$header]['times']['duration'] = $arr[$header]['times']['end']->diffInSeconds(
                         $arr[$header]['times']['start']

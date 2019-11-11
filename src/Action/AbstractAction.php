@@ -101,15 +101,20 @@ abstract class AbstractAction implements ActionInterface
             if (!$process->isSuccessful()) {
                 $this->error(
                     $deployment,
-                    sprintf('%s hook failed to run : %s', $key, $command),
-                    [$process->getOutput, $process->getErrorOutput()]
+                    [
+                        sprintf('%s hook failed to run : %s', $key, $command),
+                        $process->getOutput,
+                        $process->getErrorOutput()
+                    ]
                 );
                 throw new RuntimeException('Unable to run deployment hook');
             }
             $this->info(
                 $deployment,
-                sprintf('%s hook ran successfully', $key),
-                $process->getOutput()
+                [
+                    sprintf('%s hook ran successfully', $key),
+                    $process->getOutput(),
+                ]
             );
         }
     }

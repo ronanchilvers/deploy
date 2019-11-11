@@ -13,7 +13,7 @@ $(function () {
             });
         }, 3000);
     }
-    $(".button.is-once").click(function () {
+    $(".button.is-once").on('click', function () {
         $(this).addClass('is-loading');
     });
     $('.confirm').on('click', function (e) {
@@ -44,5 +44,6 @@ $(function () {
 
     /** global: App **/
     App.Favourites.init();
+    /** global: App **/
     App.Modal.init();
 });

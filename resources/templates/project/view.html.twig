@@ -1,7 +1,6 @@
 {% extends 'page.html.twig' %}
 
 {% block javascripts %}
-<script type="text/javascript" src="/js/project.js"></script>
 {% if not selected_deployment.deployed and not selected_deployment.failed %}
 <script type="text/javascript">
 App.Monitor.init({
