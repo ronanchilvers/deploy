@@ -18,10 +18,17 @@ App.Modal = {
         var that = this;
         $(this.options.selector).on('click', function (e) {
             e.preventDefault();
-            that._show($(this));
+            $el = $(this);
+            if (!$el.attr('disabled')) {
+                App.Debug.log('Showing modal for trigger element:', $el);
+                that._show($el);
+            } else {
+                App.Debug.log('Not showing modal for disabled trigger element: ', $el);
+            }
         });
         $('body').on('click', this.options.close_selector, function (e) {
             e.preventDefault();
+            App.Debug.log('Hiding modal');
             that._hide($(this));
         });
     },

@@ -87,6 +87,24 @@ class Project extends Model
     }
 
     /**
+     * Update the project data from a deployment
+     *
+     * @param \App\Model\Deployment $deployment
+     * @return bool
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function updateFromDeployment(Deployment $deployment)
+    {
+        $this->last_status = $deployment->status;
+        if ($deployment->isDeployed()) {
+            $this->last_number     = $deployment->number;
+            $this->last_deployment = $deployment->finished;
+            $this->last_sha        = $deployment->sha;
+            $this->last_author     = $deployment->author;
+        }
+    }
+
+    /**
      * Mark this project as deploying
      *
      * @return boolean

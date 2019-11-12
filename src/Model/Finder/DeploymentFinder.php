@@ -81,4 +81,23 @@ class DeploymentFinder extends Finder
             ]
         );
     }
+
+    /**
+     * Get a deployment for a given project and deployment number
+     *
+     * @param int $projectId
+     * @param int $number
+     * @return Deployment|null
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function forProjectIdAndNumber(
+        int $projectId,
+        int $number
+    ) {
+        return $this
+            ->select()
+            ->where(Deployment::prefix('project'), $projectId)
+            ->where(Deployment::prefix('number'), $number)
+            ->one();
+    }
 }

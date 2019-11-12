@@ -1,1 +1,1 @@
-$(function(){App.Monitor.init()});
+$(function(){});

@@ -4,7 +4,6 @@ namespace App\Action;
 
 use App\Action\AbstractAction;
 use App\Action\ActionInterface;
-use App\Action\Traits\IsInitialiseStage;
 use App\Builder;
 use App\Facades\Log;
 use App\Facades\Settings;

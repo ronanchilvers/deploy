@@ -5,7 +5,7 @@
         <meta name="robots" content="noindex, nofollow, noodp" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Deploy{% endblock %}</title>
-        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
         <link rel="stylesheet" type="text/css" href="/css/app.css">
         {% block stylesheets %}{% endblock %}
     </head>
@@ -73,6 +73,9 @@
         </footer>
         <script type="text/javascript" src="/js/vendor.js"></script>
         <script type="text/javascript" src="/js/app.js"></script>
+        {#<script type="text/javascript">
+        App.Debug.init({ enabled: true });
+        </script>#}
         {% block javascripts %}{% endblock %}
     </body>
 </html>

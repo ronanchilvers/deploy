@@ -1,7 +1,7 @@
 .output {
     color: $white;
-    background-color: $black;
-    border-radius: $radius;
+    background-color: rgb(50,50,50);
+    // border-radius: $radius;
     padding: 5px 0;
     font-family: monospace;
     overflow: scroll;
@@ -11,6 +11,7 @@
         padding: 10px 15px 10px 55px;
         font-weight: bold;
         position: relative;
+        cursor: pointer;
     }
     .summary:before {
         position: absolute;
@@ -27,19 +28,23 @@
         content: "\25BC";
     }
     .summary:after {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
         position: absolute;
-        left: 36px;
+        left: 34px;
         top: 11px;
         content: "-";
         color: $grey;
+        font-size: 0.9rem;
     }
     .summary.is-type-info:after {
-        content: "\2713";
+        content: "\f00c";
         color: rgb(30,120,0);
     }
     .summary.is-type-error:after {
-        content: "\2715";
+        content: "\f00d";
         color: rgb(255,10,0);
+        left: 36px;
     }
     .summary .duration {
         float: right;
@@ -59,4 +64,9 @@
     .event:hover {
         background-color: rgba(255,255,255,0.1);
     }
+}
+#output-loader {
+    display: none;
+    padding: 0px 10px 5px 30px;
+    background-color: rgb(50,50,50);
 }
