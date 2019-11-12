@@ -31,22 +31,11 @@ App.Monitor.init({
                     <span class="is-inline-block">{{ branch_link(project) }}</span>
                 </p>
             </div>
-            <div class="column{% if project.last_status %} is-{{ project.last_status }}{% endif %}">
+            <div class="column status {% if project.last_status %}status--{{ project.last_status }}{% endif %}">
                 <p class="heading">Last Deployment</p>
                 <p>
-                {% if project.last_deployment %}
-                    {% if 'deployed' == project.last_status %}
-                    {% set icon="far fa-thumbs-up" %}
-                    {% elseif 'failed' == project.last_status %}
-                    {% set icon="far fa-thumbs-down" %}
-                    {% else %}
-                    {% set icon="fas fa-spinner" %}
-                    {% endif %}
-                    <span class="icon is-inline"><i class="{{ icon }}"></i></span>
-                    <span class="is-inline">{{ project.last_deployment|human_date }}</span>
-                {% else %}
-                    Not yet deployed
-                {% endif %}
+                    <span class="status__icon"></span>
+                    <span class="status__label is-inline">{% if project.last_deployment %}{{ project.last_deployment|human_date }}{% else %}Not yet deployed{% endif %}</span>
                 </p>
             </div>
             <div class="column">
@@ -77,115 +66,110 @@ App.Monitor.init({
         {% endfor %}
         </ul>
     </div>
-    <section class="section">
-        <div class="box is-border-left-{{ selected_deployment.status }}">
-        {% if not selected_deployment.reactivation %}
-        {% if selected_deployment.id != first and selected_deployment.deployed %}
-            <a class="button is-once is-block-mobile is-pulled-right confirm{% if not project.deployable %} tooltip is-tooltip-bottom{% endif %}>"
-               {% if project.deployable %}href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}"{% endif %}
-               {% if not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}>
-                <span class="icon"><i class="fas fa-redo-alt"></i></span>
-                <span>Re-Activate</span>
-            </a>
-        {% endif %}
-        {% elseif selected_deployment.original %}
-            <a class="is-text is-pulled-right" href="{{ path_for('project.view', { key: project.key }, { deployment: selected_deployment.original.number } ) }}">
-                <span>Reactivation of #{{ selected_deployment.original.number }}</span>
-            </a>
-        {% else %}
-            <a class="is-text is-pulled-right">
-                <span>Reactivation of previous deployment</span>
-            </a>
-        {% endif %}
-            <div class="columns">
-                <div class="column is-half">
-                    <ul class="content-list">
-                        <li>
-                            <span class="icon is-inline-block"><i class="fas fa-hashtag"></i></span>
-                            <span class="is-inline-block tooltip" data-tooltip="Commit SHA">{{ sha_link(project, selected_deployment.sha) }}</span>
-                        </li>
-                        <li>
-                            <span class="icon is-inline-block"><i class="fas fa-user-edit"></i></span>
-                            <span class="is-inline-block tooltip" data-tooltip="Author">{{ selected_deployment.author }}</span>
-                        </li>
-                        <li>
-                            <span class="icon is-inline-block"><i class="fas fa-user-shield"></i></span>
-                            <span class="is-inline-block tooltip" data-tooltip="Committer">{{ selected_deployment.committer }}</span>
-                        </li>
-                        <li>
-                            <span class="icon is-inline-block"><i class="fas fa-align-left"></i></span>
-                            <code class="is-inline-block tooltip" data-tooltip="Message">{{ selected_deployment.message }}</code>
-                        </li>
-                    </ul>
-                </div>
-                <div class="column is-narrow">
-                    <ul class="content-list">
-                        <li class="is-{{ selected_deployment.status }}">
-                            {% if selected_deployment.deployed %}
-                            {% set icon="far fa-thumbs-up" %}
-                            {% elseif selected_deployment.failed %}
-                            {% set icon="far fa-thumbs-down" %}
-                            {% else %}
-                            {% set icon="fas fa-spinner" %}
-                            {% endif %}
-                            <span class="icon is-inline-block"><i class="{{ icon }}"></i></span>
-                            <span class="is-inline-block js-deployment-status">{{ selected_deployment.status|title }}</span>
-                        </li>
-                        <li>
-                            <span class="icon is-inline-block"><i class="fas fa-stopwatch"></i></span>
-                            <span class="is-inline-block tooltip" data-tooltip="Duration">{% if selected_deployment.deployed %}{{ selected_deployment.duration }} seconds{% else %}N/A{% endif %}</span>
-                        </li>
-                        <li>
-                            <span class="icon is-inline-block"><i class="far fa-calendar-alt"></i></span>
-                            <span class="is-inline-block tooltip" data-tooltip="Deployed at {{ selected_deployment.finished }}">{{ selected_deployment.finished|human_date }}</span>
-                        </li>
-                        <li>
-                            <span class="icon is-inline-block"><i class="fas fa-user-cog"></i></span>
-                            <span class="is-inline-block tooltip" data-tooltip="Deployed by">{% if selected_deployment.source %}{{ selected_deployment.source }}{% else %}N/A{% endif %}</span>
-                        </li>
-                    </ul>
+    <div class="deployment is-{{ selected_deployment.status }}">
+        <section class="section">
+            <div class="box" id="container-overview">
+            {% if not selected_deployment.reactivation %}
+            {% if selected_deployment.id != first and selected_deployment.deployed %}
+                <a class="button is-once is-block-mobile is-pulled-right confirm{% if not project.deployable %} tooltip is-tooltip-bottom{% endif %}>"
+                   {% if project.deployable %}href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}"{% endif %}
+                   {% if not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}>
+                    <span class="icon"><i class="fas fa-redo-alt"></i></span>
+                    <span>Re-Activate</span>
+                </a>
+            {% endif %}
+            {% elseif selected_deployment.original %}
+                <a class="is-text is-pulled-right" href="{{ path_for('project.view', { key: project.key }, { deployment: selected_deployment.original.number } ) }}">
+                    <span>Reactivation of #{{ selected_deployment.original.number }}</span>
+                </a>
+            {% else %}
+                <a class="is-text is-pulled-right">
+                    <span>Reactivation of previous deployment</span>
+                </a>
+            {% endif %}
+                <div class="columns">
+                    <div class="column is-half">
+                        <ul class="content-list">
+                            <li>
+                                <span class="icon is-inline-block"><i class="fas fa-hashtag"></i></span>
+                                <span class="is-inline-block tooltip" data-tooltip="Commit SHA">{{ sha_link(project, selected_deployment.sha) }}</span>
+                            </li>
+                            <li>
+                                <span class="icon is-inline-block"><i class="fas fa-user-edit"></i></span>
+                                <span class="is-inline-block tooltip" data-tooltip="Author">{{ selected_deployment.author }}</span>
+                            </li>
+                            <li>
+                                <span class="icon is-inline-block"><i class="fas fa-user-shield"></i></span>
+                                <span class="is-inline-block tooltip" data-tooltip="Committer">{{ selected_deployment.committer }}</span>
+                            </li>
+                            <li>
+                                <span class="icon is-inline-block"><i class="fas fa-align-left"></i></span>
+                                <code class="is-inline-block tooltip" data-tooltip="Message">{{ selected_deployment.message }}</code>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="column is-narrow">
+                        <ul class="content-list">
+                            <li class="status">
+                                <span class="icon status__icon"></span>
+                                <span class="status__label"></span>
+                            </li>
+                            <li>
+                                <span class="icon is-inline-block"><i class="fas fa-stopwatch"></i></span>
+                                <span class="is-inline-block tooltip" data-tooltip="Duration">{% if selected_deployment.deployed %}{{ selected_deployment.duration }} seconds{% else %}N/A{% endif %}</span>
+                            </li>
+                            <li>
+                                <span class="icon is-inline-block"><i class="far fa-calendar-alt"></i></span>
+                                <span class="is-inline-block tooltip" data-tooltip="Deployed at {{ selected_deployment.finished }}">{{ selected_deployment.finished|human_date }}</span>
+                            </li>
+                            <li>
+                                <span class="icon is-inline-block"><i class="fas fa-user-cog"></i></span>
+                                <span class="is-inline-block tooltip" data-tooltip="Deployed by">{% if selected_deployment.source %}{{ selected_deployment.source }}{% else %}N/A{% endif %}</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="section">
-        <div class="tabs js-tabs">
-            <ul>
-                <li class="is-active"><a href="#" class="tab" data-target="#js-output">Output</a></li>
-                <li><a href="#" class="tab" data-target="#js-configuration">Configuration</a></li>
-            </ul>
-        </div>
-        <div class="tab-pane is-active" id="js-output">
-            <div class="output" id="log-output">
-        {% if events|length %}
-            {% for heading,data in events %}
-                <div class="details" id="details-{{ data.id }}">
-                    {% set type_class = 'is-type-' ~ data.type %}
-                    {% set has_events = (0 < data.events|length) %}
-                    <div class="summary has-events is-type-{{ data.type }}" >
-                        <p class="duration">{% if 0 == data.times.duration %}&lt;1{% else %}{{ data.times.duration }}{% endif %}s</p>
-                        <p {% if has_events %}data-events="events-{{ loop.index }}"{% endif %}>{{ heading }}</p>
-                    </div>
-                    {% if has_events %}
-                    <div class="events" id="events-{{ data.id }}">
-                    {% for event in data.events %}
-                        <div class="event">{{ event }}</div>
-                    {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        {% else %}
-            <p class="header">No events found</p>
-        {% endif %}
+        <section class="section">
+            <div class="tabs js-tabs">
+                <ul>
+                    <li class="is-active"><a href="#" class="tab" data-target="#js-output">Output</a></li>
+                    <li><a href="#" class="tab" data-target="#js-configuration">Configuration</a></li>
+                </ul>
             </div>
-            <div id="output-loader"><img src="/img/loader-bar.gif" width="16" height="11"></div>
-        </div>
-        <div class="tab-pane" id="js-configuration">
-            <pre>{% if selected_deployment.configuration %}{{ selected_deployment.configuration }}{% else %}Configuration not yet available{% endif %}</pre>
-        </div>
-    </section>
+            <div class="tab-pane is-active" id="js-output">
+                <div class="output" id="log-output">
+            {% if events|length %}
+                {% for heading,data in events %}
+                    <div class="details" id="details-{{ data.id }}">
+                        {% set type_class = 'is-type-' ~ data.type %}
+                        {% set has_events = (0 < data.events|length) %}
+                        <div class="summary has-events is-type-{{ data.type }}" >
+                            <p class="duration">{% if 0 == data.times.duration %}&lt;1{% else %}{{ data.times.duration }}{% endif %}s</p>
+                            <p {% if has_events %}data-events="events-{{ loop.index }}"{% endif %}>{{ heading }}</p>
+                        </div>
+                        {% if has_events %}
+                        <div class="events" id="events-{{ data.id }}">
+                        {% for event in data.events %}
+                            <div class="event">{{ event }}</div>
+                        {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="header">No events found</p>
+            {% endif %}
+                </div>
+                <div id="output-loader"><img src="/img/loader-bar.gif" width="16" height="11"></div>
+            </div>
+            <div class="tab-pane" id="js-configuration">
+                <pre>{% if selected_deployment.configuration %}{{ selected_deployment.configuration }}{% else %}Configuration not yet available{% endif %}</pre>
+            </div>
+        </section>
+    </div>
 
     {% else %}
     <section class="hero is-light has-text-centered">

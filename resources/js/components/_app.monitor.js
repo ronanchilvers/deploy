@@ -30,10 +30,15 @@ App.Monitor = {
         }, this.options.interval);
         $('#output-loader').show();
     },
-    stop: function () {
+    stop: function (deployment) {
         App.Debug.log('Stopping project monitor');
         clearInterval(this.timer);
         $('#output-loader').hide();
+        App.Debug.log('Updating project last status: ', deployment.status);
+        $('.project .status')
+            .removeClass('status--deployed status--failed')
+            .addClass('status--' + deployment.status);
+        $('.project .status .status__label').html('Just now');
     },
     _update: function () {
         var url = '/api/project/' +
@@ -44,7 +49,7 @@ App.Monitor = {
         App.Debug.log('Querying API for data: ', url);
         $.get(url, function(data) {
             if ('ok' != data.status || 'deployed' == data.data.deployment.status || 'failed' == data.data.deployment.status) {
-                that.stop();
+                that.stop(data.data.deployment);
             }
             that._updateStatus(data.data.deployment)
             that._updateConfiguration(data.data.deployment)
@@ -56,19 +61,9 @@ App.Monitor = {
         $('.tab-is-pending,.tab-is-deploying')
             .removeClass('tab-is-pending tab-is-deploying')
             .addClass('tab-is-' + deployment.status);
-        $('.is-deployed')
-            .removeClass('is-deployed')
+        $('.deployment')
+            .removeClass('is-pending is-deploying is-deployed is-failed')
             .addClass('is-' + deployment.status);
-        $('.is-pending,.is-deploying')
-            .removeClass('is-pending is-deploying')
-            .addClass('is-' + deployment.status);
-        $('.is-border-left-pending,.is-border-left-deploying')
-            .removeClass('is-border-left-pending is-border-left-deploying')
-            .addClass('is-border-left-' + deployment.status);
-        var statusLabel = deployment.status;
-        statusLabel = statusLabel.charAt(0).toUpperCase() + statusLabel.slice(1);
-        $('.js-deployment-status').html(statusLabel);
-
         if ('deployed' == deployment.status || 'failed' == deployment.status) {
             App.Debug.log('Enabling deployment UI actions');
             $('.button[disabled="disabled"]')

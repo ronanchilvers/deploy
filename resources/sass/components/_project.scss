@@ -11,3 +11,114 @@
         padding-top: 0;
     }
 }
+
+// thumbs-up - "\f164"
+// thumbs-down - "\f165"
+// spinner - "\f110" / weight 900
+
+.project {
+
+    .status {
+        &__icon {
+            width: auto;
+            margin-right: 5px;
+        }
+        &__icon:before {
+            font-family: "Font Awesome 5 Free";
+            font-weight: 400;
+            content: "\f254";
+        }
+    }
+
+    .status--deployed {
+        color: $green;
+        .status__icon:before {
+            content: "\f164";
+        }
+    }
+    .status--failed {
+        color: $red;
+        .status__icon:before {
+            content: "\f165";
+        }
+    }
+}
+
+/** Status colour control **/
+.deployment {
+
+    /** Overview box **/
+    #container-overview {
+        border-left: 6px solid rgba(0,0,0,0.25);
+    }
+    .status {
+
+        &__label:before {
+            content: "Pending";
+        }
+        &__icon {
+            width: auto;
+            margin-right: 5px;
+        }
+        &__icon:before {
+            font-family: "Font Awesome 5 Free";
+            font-weight: 400;
+        }
+    }
+
+    /** Status overrides **/
+    &.is-pending {
+        .status {
+            &__label:before {
+                content: "Pending";
+            }
+            &__icon:before {
+                content: "\f254";
+                // font-weight: 900;
+            }
+        }
+    }
+    &.is-deployed {
+        #container-overview {
+            border-left-color: $green;
+        }
+        .status {
+            color: $green;
+            &__label:before {
+                content: "Deployed";
+            }
+            &__icon:before {
+                content: "\f164";
+            }
+        }
+    }
+    &.is-deploying {
+        #container-overview {
+            border-left-color: $blue;
+        }
+        .status {
+            color: $blue;
+            &__label:before {
+                content: "Deploying";
+            }
+            &__icon:before {
+                content: "\f252";
+                font-weight: 900;
+            }
+        }
+    }
+    &.is-failed {
+        #container-overview {
+            border-left-color: $red;
+        }
+        .status {
+            color: $red;
+            &__label:before {
+                content: "Failed";
+            }
+            &__icon:before {
+                content: "\f165";
+            }
+        }
+    }
+}
