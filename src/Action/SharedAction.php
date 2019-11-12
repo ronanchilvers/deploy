@@ -29,13 +29,7 @@ class SharedAction extends AbstractAction
         $fileMode      = Settings::get('build.chmod.default_file', Builder::MODE_DEFAULT_FILE);
         $sharedBaseDir = File::join($baseDir, 'shared');
         if (!is_dir($sharedBaseDir)) {
-            $this->info(
-                $deployment,
-                [
-                    'Creating base shared directory',
-                    "Directory - {$sharedBaseDir}",
-                ]
-            );
+            $this->info($deployment, "Creating base shared directory: {$sharedBaseDir}");
             Log::debug('Creating shared base directory', [
                 'dir' => $sharedBaseDir,
             ]);
@@ -68,16 +62,18 @@ class SharedAction extends AbstractAction
             is_array($shared['folders']) &&
             0 < count($shared['folders'])
         ) {
-            $this->info(
-                $deployment,
-                [
-                    'Verifying shared folders',
-                    "Shared folders - " . implode(", ", $shared['folders']),
-                ]
-            );
+            // $this->info(
+            //     $deployment,
+            //     [
+            //         'Verifying shared folders',
+            //         "Shared folders - " . implode(", ", $shared['folders']),
+            //     ]
+            // );
             foreach ($shared['folders'] as $folder) {
                 $sharedDir = File::join($sharedBaseDir, $folder);
                 $thisDeploymentDir = File::join($deploymentDir, $folder);
+
+                $this->info($deployment, 'Folder: ' . $folder);
 
                 // Create the shared directory if needed
                 if (!is_dir($sharedDir)) {
@@ -125,18 +121,12 @@ class SharedAction extends AbstractAction
                 // Remove the shared folder from the deployment if it exists
                 $this->info(
                     $deployment,
-                    [
-                        'Removing shared folder from deployment directory',
-                        "Deployment folder - {$thisDeploymentDir}",
-                    ]
+                    "Removing shared folder from deployment directory:  {$thisDeploymentDir}"
                 );
                 if (!File::rm($thisDeploymentDir)) {
                     $this->info(
                         $deployment,
-                        [
-                            'Shared folder not found in deployment directory',
-                            "Deployment folder - {$thisDeploymentDir}",
-                        ]
+                        "Shared folder not found in deployment directory: {$thisDeploymentDir}"
                     );
                     Log::debug('Shared folder not found in deployment directory', [
                         'shared_dir'     => $sharedDir,
@@ -177,10 +167,6 @@ class SharedAction extends AbstractAction
                     ]);
                     throw new RuntimeException('Unable to symlink shared folder');
                 }
-                // $this->info(
-                //     $deployment,
-                //     'Shared folder verified - ' . $sharedDir
-                // );
                 $sharedFolders[$sharedDir] = $sharedDir;
             }
         }
@@ -190,18 +176,20 @@ class SharedAction extends AbstractAction
             is_array($shared['files']) &&
             0 < count($shared['files'])
         ) {
-            $this->info(
-                $deployment,
-                [
-                    'Verifying shared files',
-                    "Shared files - " . implode(", ", $shared['files']),
-                ]
-            );
+            // $this->info(
+            //     $deployment,
+            //     [
+            //         'Verifying shared files',
+            //         "Shared files - " . implode(", ", $shared['files']),
+            //     ]
+            // );
             foreach ($shared['files'] as $filename) {
                 $sharedFilename     = File::join($sharedBaseDir, $filename);
                 $sharedDir          = dirname($sharedFilename);
                 $thisDeploymentFile = File::join($deploymentDir, $filename);
                 $thisDeploymentDir  = dirname($thisDeploymentFile);
+
+                $this->info($deployment, 'File: ' . $folder);
 
                 // Check that we're not sharing the parent directory already
                 if (isset($sharedFolders[$sharedDir])) {

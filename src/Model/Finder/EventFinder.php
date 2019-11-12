@@ -84,7 +84,7 @@ class EventFinder extends Finder
             if (!isset($arr[$header]['events'])) {
                 $arr[$header]['events'] = [];
             }
-            $arr[$header]['events'][] = $event->detail . "\n";
+            $arr[$header]['events'][] = $event->detail;
             $lastEvent = $event;
         }
         $arr[$header]['times']['end'] = $lastEvent->created;

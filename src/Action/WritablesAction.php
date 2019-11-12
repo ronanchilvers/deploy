@@ -36,10 +36,10 @@ class WritablesAction extends AbstractAction
         }
         foreach ($writables as $writable) {
             $dir = realpath(File::join($deploymentDir, $writable));
-            $this->info(
-                $deployment,
-                'Verifying writable ' . $writable
-            );
+            // $this->info(
+            //     $deployment,
+            //     'Writable: ' . $writable
+            // );
             Log::debug("Working on writable", [
                 'writable' => $writable,
                 'writable_dir' => $dir,
@@ -76,11 +76,7 @@ class WritablesAction extends AbstractAction
             }
             $this->info(
                 $deployment,
-                [
-                    'Writable ' . $writable . ' verified',
-                    'Writable - ' . $writable,
-                    'Writable Folder - ' . $dir,
-                ]
+                "Writable verified: {$writable} @ {$dir}"
             );
         }
     }

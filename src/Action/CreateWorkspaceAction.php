@@ -29,25 +29,27 @@ class CreateWorkspaceAction extends AbstractAction
         $deploymentDir = $context->getOrThrow('deployment_base_dir', 'Invalid or missing deployment base directory');
         $deployment    = $context->getOrThrow('deployment', 'Invalid or missing deployment');
         $locations     = [$projectDir, $deploymentDir];
-        $this->info(
-            $deployment,
-            [
-                'Checking workspace exists for project',
-                'Locations - ' . implode(', ', $locations),
-            ]
-        );
+        // $this->info(
+        //     $deployment,
+        //     [
+        //         'Checking workspace exists for project',
+        //         'Locations - ' . implode(', ', $locations),
+        //     ]
+        // );
         $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
         foreach ($locations as $location) {
             if (is_dir($location)) {
+                $this->info(
+                    $deployment,
+                    [
+                        'Location exists: ' . $location,
+                    ]
+                );
                 Log::debug('Build directory exists', [
                     'location' => $location,
                 ]);
                 continue;
             }
-            $this->info(
-                $deployment,
-                'Creating missing location ' . $location
-            );
             Log::debug('Creating build directory', [
                 'location' => $location,
                 'mode' => $mode,
@@ -56,9 +58,7 @@ class CreateWorkspaceAction extends AbstractAction
                 $this->error(
                     $deployment,
                     [
-                        'Failed creating location ' . $location,
-                        "Location - {$location}",
-                        "Mode - {$mode}",
+                        "Failed to create location: {$location} (mode {$mode})",
                     ]
                 );
                 Log::error('Unable to create build directory', [
@@ -72,9 +72,7 @@ class CreateWorkspaceAction extends AbstractAction
             $this->info(
                 $deployment,
                 [
-                    'Created missing location ' . $location,
-                    "Location - {$location}",
-                    "Mode - {$mode}",
+                    "Created location: {$location} (mode {$mode})",
                 ]
             );
         }

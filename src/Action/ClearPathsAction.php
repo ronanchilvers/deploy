@@ -38,7 +38,7 @@ class ClearPathsAction extends AbstractAction
         }
         foreach ($clearPaths as $path) {
             $fullPath = File::join($deploymentDir, $path);
-            // Is readable works for both files and directories
+            // is_readable works for both files and directories
             if (!is_readable($fullPath)) {
                 $this->info(
                     $deployment,
@@ -61,10 +61,7 @@ class ClearPathsAction extends AbstractAction
             }
             $this->info(
                 $deployment,
-                [
-                    'Cleared path - ' . $path,
-                    'Full path - ' . $fullPath,
-                ]
+                "Cleared path: {$path} @ {$fullPath}"
             );
         }
     }

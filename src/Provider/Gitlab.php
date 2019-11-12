@@ -160,7 +160,7 @@ class Gitlab implements ProviderInterface
             $this->headUrl,
             $params
         );
-        $closure('info', "Querying Gitlab API for head commit data\nAPI URL : {$url}");
+        $closure('info', "Querying Gitlab API for head commit data: {$url}");
         $curl = $this->getCurlHandle($url);
         $data = curl_exec($curl);
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -205,21 +205,15 @@ class Gitlab implements ProviderInterface
             $this->downloadUrl,
             $params
         );
-        $closure(
-            'info',
-            'Initiating codebase download using Gitlab provider'
-        );
+        // $closure(
+        //     'info',
+        //     'Initiating codebase download using Gitlab provider'
+        // );
 
         // Download the code tarball
         $filename = tempnam('/tmp', 'deploy-' . $params['sha'] . '-');
         if (!$handle = fopen($filename, "w")) {
-            $closure(
-                'error',
-                implode("\n", [
-                    'Unable to open temporary download file',
-                    "Temporary filename - {$filename}"
-                ])
-            );
+            $closure('error', "Unable to open temporary download file: {$filename}");
             throw new RuntimeException('Unable to open temporary file');
         }
         $curl = $this->getCurlHandle($url);
@@ -256,22 +250,10 @@ class Gitlab implements ProviderInterface
         // Make sure the deployment download directory exists
         if (!is_dir($directory)) {
             $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
-            $closure(
-                'info',
-                implode("\n", [
-                    'Creating deployment directory',
-                    "Directory - {$directory}",
-                ])
-            );
+            $closure('info', "Creating deployment directory: {$directory}");
 
             if (!mkdir($directory, $mode, true)) {
-                $closure(
-                    'error',
-                    implode("\n", [
-                        'Failed to create deployment directory',
-                        "Directory - {$directory}",
-                    ])
-                );
+                $closure('error', "Failed to create deployment directory: {$directory}");
                 throw new RuntimeException(
                     'Unable to create build directory at ' . $directory
                 );
@@ -281,21 +263,14 @@ class Gitlab implements ProviderInterface
         // Decompress the archive into the download directory
         $tar     = Settings::get('binary.tar', '/bin/tar');
         $command = "{$tar} --strip-components=1 -xzf {$filename} -C {$directory}";
-        $closure(
-            'info',
-            implode("\n", [
-                'Unpacking codebase tarball',
-                "Command - {$command}",
-            ])
-        );
+        $closure('info', "Unpacking codebase tarball: {$command}");
         $process = new Process(explode(' ', $command));
         $process->run();
         if (!$process->isSuccessful()) {
             $closure(
                 'error',
                 implode("\n", [
-                    'Failed to unpack codebase tarball',
-                    "Command - {$command}",
+                    "Unpack failed: {$command}",
                     $process->getErrorOutput(),
                 ])
             );
@@ -307,16 +282,12 @@ class Gitlab implements ProviderInterface
             $closure(
                 'error',
                 implode("\n", [
-                    'Codebase tarball unpacked',
+                    'Unable to remove tarball after unpacking',
                     $process->getOutput(),
                 ])
             );
             throw new RuntimeException('Unable to remove local code archive');
         }
-        $closure(
-            'info',
-            'Codebase download completed'
-        );
 
         return true;
     }
@@ -334,13 +305,7 @@ class Gitlab implements ProviderInterface
             $this->configUrl,
             $params
         );
-        $closure(
-            'info',
-            implode("\n", [
-                'Querying Gitlab API for deployment configuration',
-                "API URL - {$url}"
-            ])
-        );
+        $closure('info', "Querying Gitlab API: {$url}");
         $curl = $this->getCurlHandle($url);
         $json = curl_exec($curl);
         if (false === $json || !is_string($json)) {
@@ -386,17 +351,15 @@ class Gitlab implements ProviderInterface
             $closure(
                 'info',
                 implode("\n", [
-                    'Parsed YAML deployment configuration successfully',
-                    "API URL - {$url}",
+                    'YAML deployment configuration read successfully',
                     "JSON - " . $json
                 ])
             );
         } catch (Exception $ex) {
             $closure(
-                'info',
+                'error',
                 implode("\n", [
                     'Unable to parse YAML deployment configuration',
-                    "API URL - {$url}",
                     "Exception - " . $ex->getMessage(),
                 ])
             );

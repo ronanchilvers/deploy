@@ -47,12 +47,11 @@ class CheckoutAction extends AbstractAction
             'deployment_dir',
             $deploymentDir
         );
+        $label = ($this->provider->getLabel());
         $this->info(
             $deployment,
             [
-                'Downloading codebase',
-                "Repository - {$project->repository}",
-                "SHA - {$deployment->sha}",
+                "Repository: {$label}://{$project->repository} @ {$deployment->sha}",
             ]
         );
         Log::debug('Downloading codebase', [

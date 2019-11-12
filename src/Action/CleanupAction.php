@@ -73,8 +73,7 @@ class CleanupAction extends AbstractAction
             $this->info(
                 $thisDeployment,
                 [
-                    'Cleaned deployment ' . $deployment->number,
-                    "Deployment Folder - " . $deploymentDir
+                    "Cleaned deployment {$deployment->number} @ {$deploymentDir}"
                 ]
             );
         }

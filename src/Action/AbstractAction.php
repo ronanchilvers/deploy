@@ -94,7 +94,7 @@ abstract class AbstractAction implements ActionInterface
         foreach ($hooks as $command) {
             $this->info(
                 $deployment,
-                sprintf('%s hook running - %s', $key, $command)
+                sprintf('Hook: %s hook running - %s', $key, $command)
             );
             $process = new Process($command, $deploymentDir);
             $process->run();
@@ -102,7 +102,7 @@ abstract class AbstractAction implements ActionInterface
                 $this->error(
                     $deployment,
                     [
-                        sprintf('%s hook failed to run : %s', $key, $command),
+                        sprintf('Hook: %s hook failed to run : %s', $key, $command),
                         $process->getOutput,
                         $process->getErrorOutput()
                     ]
@@ -112,7 +112,7 @@ abstract class AbstractAction implements ActionInterface
             $this->info(
                 $deployment,
                 [
-                    sprintf('%s hook ran successfully', $key),
+                    sprintf('Hook: %s hook ran successfully', $key),
                     $process->getOutput(),
                 ]
             );

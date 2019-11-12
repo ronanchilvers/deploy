@@ -48,7 +48,6 @@ class ComposerAction extends AbstractAction
         $this->info(
             $deployment,
             [
-                'Running composer to install dependencies',
                 "Directory - {$deploymentDir}",
                 "Command - {$command}",
             ]
@@ -74,7 +73,6 @@ class ComposerAction extends AbstractAction
         $this->info(
             $deployment,
             [
-                'Composer run completed',
                 $process->getOutput(),
                 $process->getErrorOutput(),
             ]
