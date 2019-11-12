@@ -12,10 +12,10 @@ App.Monitor.init({
 {% endblock %}
 
 {% block body %}
-<div class="project status-{{ project.status }}">
+<div class="status-{{ project.status }}">
     {{ include('fragments/project/header.html.twig', { project: project } )}}
 
-    <section class="section">
+    <section class="project section">
         <div class="columns">
             <div class="column">
                 <p class="heading">Repository</p>

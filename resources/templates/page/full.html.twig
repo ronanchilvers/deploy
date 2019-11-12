@@ -73,9 +73,8 @@
         </footer>
         <script type="text/javascript" src="/js/vendor.js"></script>
         <script type="text/javascript" src="/js/app.js"></script>
-        {#<script type="text/javascript">
-        App.Debug.init({ enabled: true });
-        </script>#}
+        {% if debug %}<script type="text/javascript">App.Debug.init({ enabled: true });</script>
+        {% endif %}
         {% block javascripts %}{% endblock %}
     </body>
 </html>

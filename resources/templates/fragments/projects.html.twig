@@ -5,7 +5,7 @@
                 <a href="{{ path_for('user.favourite', { project: project.id }) }}"
                    class="icon is-favourite is-favourite-{{ is_favourite(project) ? 'on' : 'off' }}"><i class="{{ is_favourite(project) ? 'fas' : 'far' }} fa-star"></i></a>
             </div>
-            <div class="column is-3">
+            <div class="column">
                 <span class="is-size-7">Name</span><br />
                 <a href="{{ path_for('project.view', { key: project.key }) }}" class="js-project-link">{{ project.name }}</a>
             </div>

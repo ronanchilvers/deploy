@@ -4,7 +4,8 @@
     // border-radius: $radius;
     padding: 5px 0;
     font-family: monospace;
-    overflow: scroll;
+    // overflow: scroll;
+    width: 100%;
 
     .summary {
         display: block;
@@ -58,8 +59,9 @@
     }
     .event {
         padding: 10px 30px;
-        white-space: pre;
         width: 100%;
+        word-wrap: break-word;
+        white-space: pre-wrap;
     }
     .event:hover {
         background-color: rgba(255,255,255,0.1);

@@ -85,11 +85,14 @@ App.Monitor = {
     _displayActions: function (events) {
         var that = this;
         $.each(events, function (label, action) {
-            var id = '#details-' + action.id;
-            if (0 < $(id).length) {
-                return;
+            var action_id = '#details-' + action.id;
+            var events_selector = action_id + ' .events .event';
+            if (0 == $(action_id).length) {
+                that._createAction(label, action);
             }
-            that._createAction(label, action);
+            if ($(events_selector).length < action.events.length) {
+                that._updateAction(label, action);
+            }
         });
     },
     _createAction: function (label, action) {
@@ -129,5 +132,21 @@ App.Monitor = {
             }
         );
         $('#log-output').append(html);
+    },
+    _updateAction: function (label, action) {
+        App.Debug.log('Updating action HTML: ', label, action)
+        var that = this;
+        var action_id = '#details-' + action.id;
+        var events = '';
+        $.each(action.events, function (idx, event) {
+            events = events + App.Template.render(
+                that.options.tpl_event,
+                {
+                    content: event
+                }
+            );
+        });
+        $(action_id + " .duration").html(((0 == action.times.duration) ? '&lt;1' : action.times.duration) + 's');
+        $(action_id + " .events").html(events);
     }
 }

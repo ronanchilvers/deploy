@@ -5,7 +5,7 @@ App.Favourites = {
 
     defaults: {
         container: '.projects',
-        selector: '.project .is-favourite',
+        selector: '.is-favourite',
         on: 'is-favourite-on',
         off: 'is-favourite-off',
     },

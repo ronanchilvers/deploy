@@ -84,6 +84,7 @@ class Provider implements ServiceProviderInterface
             );
             $view->addExtension(
                 new GlobalsExtension([
+                    'debug'    => $c->get('settings')['displayErrorDetails'],
                     'session'  => $c->get('session'),
                     'request'  => $c->get('request'),
                     'security' => $c->get(Manager::class),
