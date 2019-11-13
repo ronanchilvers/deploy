@@ -79,13 +79,13 @@ App.Monitor.init({
                 </a>
             {% endif %}
             {% elseif selected_deployment.original %}
-                <a class="is-text is-pulled-right" href="{{ path_for('project.view', { key: project.key }, { deployment: selected_deployment.original.number } ) }}">
+                <div class="is-text is-pulled-right">
                     <span>Reactivation of #{{ selected_deployment.original.number }}</span>
-                </a>
+                </div>
             {% else %}
-                <a class="is-text is-pulled-right">
+                <div class="is-text is-pulled-right">
                     <span>Reactivation of previous deployment</span>
-                </a>
+                </div>
             {% endif %}
                 <div class="columns">
                     <div class="column is-half">
@@ -159,8 +159,6 @@ App.Monitor.init({
                         {% endif %}
                     </div>
                 {% endfor %}
-            {% else %}
-                <p class="header">No events found</p>
             {% endif %}
                 </div>
                 <div id="output-loader"><img src="/img/loader-bar.gif" width="16" height="11"></div>

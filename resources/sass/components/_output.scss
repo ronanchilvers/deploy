@@ -2,10 +2,14 @@
     color: $white;
     background-color: rgb(50,50,50);
     // border-radius: $radius;
-    padding: 5px 0;
+    padding: 0;
     font-family: monospace;
     // overflow: scroll;
     width: 100%;
+
+    .details:last-child .events {
+        padding-bottom: 10px;
+    }
 
     .summary {
         display: block;
