@@ -242,3 +242,7 @@ cleanup:
 * https://developer.github.com/v3/repos/contents/#get-contents
 * https://mattstauffer.com/blog/introducing-envoyer.io/
 * https://docs.gitlab.com/ee/api/repositories.html#get-file-archive
+* https://stackoverflow.com/questions/35160169/bitbucket-how-to-download-latest-tar-gz-file-of-a-bitbucket-repo-programmatical
+* https://stackoverflow.com/questions/17682143/download-private-bitbucket-repository-zip-file-using-http-authentication
+* https://community.atlassian.com/t5/Bitbucket-questions/How-to-download-repository-as-zip-file-using-the-API/qaq-p/862113
+* https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html
