@@ -68,7 +68,7 @@ interface ProviderInterface
      * @return array
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getHeadInfo(string $repository, string $branch, Closure $closure = null);
+    public function getHeadInfo(string $repository, string $branch);
 
     /**
      * Download project code into a given directory

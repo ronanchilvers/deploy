@@ -68,7 +68,7 @@ class Gitlab extends AbstractProvider implements ProviderInterface
     /**
      * @see \App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(string $repository, string $branch, Closure $closure = null)
+    public function getHeadInfo(string $repository, string $branch)
     {
         $params = [
             'repository' => $this->encodeRepository($repository),
@@ -78,29 +78,7 @@ class Gitlab extends AbstractProvider implements ProviderInterface
             $this->headUrl,
             $params
         );
-        $closure('info', "Querying Gitlab API for head commit data: {$url}");
-        $curl = $this->getCurlHandle($url);
-        $data = curl_exec($curl);
-        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        if (200 != $statusCode) {
-            $closure(
-                'error',
-                implode("\n", [
-                    'Gitlab API request failed',
-                    "API URL - {$url}",
-                    "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
-                ])
-            );
-            throw new RuntimeException('Unable to query Gitlab API - ' . $statusCode . ' response code');
-        }
-        if (!$data = json_decode($data, true)) {
-            $closure(
-                'error',
-                "Unable to parse Gitlab response JSON\nAPI URL : {$url}"
-            );
-            throw new RuntimeException('Invalid commit data for head');
-        }
+        $data = $this->getJSON($url);
 
         return [
             'sha'       => $data['id'],

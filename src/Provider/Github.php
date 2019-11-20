@@ -11,6 +11,8 @@ use App\Provider\AbstractProvider;
 use App\Provider\ProviderInterface;
 use Closure;
 use Exception;
+use GuzzleHttp\ClientInterface;
+use Psr\Http\Message\StreamInterface;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\Str;
 use RuntimeException;
@@ -68,7 +70,7 @@ class Github extends AbstractProvider implements ProviderInterface
     /**
      * @see \App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(string $repository, string $branch, Closure $closure = null)
+    public function getHeadInfo(string $repository, string $branch)
     {
         $params = [
             'repository' => $repository,
@@ -78,65 +80,13 @@ class Github extends AbstractProvider implements ProviderInterface
             $this->headUrl,
             $params
         );
-        $closure('info', "Querying Github API for head commit data: {$url}");
-        $curl = $this->getCurlHandle($url);
-        if (false === ($data = curl_exec($curl))) {
-            $closure(
-                'error',
-                implode("\n", [
-                    'Github API request failed',
-                    "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
-                ])
-            );
-            throw new RuntimeException('CURL request failed - (' . curl_errno($curl) . ') ' . curl_error($curl));
-        }
-        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        if ($statusCode != 200) {
-            $error = 'Unknown';
-            if (is_string($data)) {
-                $data  = json_decode($data, true);
-                $error = $data['message'];
-            }
-            $closure(
-                'error',
-                implode("\n", [
-                    'Error obtaining head info from Github',
-                    "Status code - {$statusCode}",
-                    "Error - {$error}"
-                ])
-            );
-            throw new RuntimeException('Github request failed - ' . $data['message']);
-        }
-        if (!$data = json_decode($data, true)) {
-            $closure(
-                'error',
-                "Unable to parse Github response JSON"
-            );
-            throw new RuntimeException('Invalid commit data for head');
-        }
+        $data = $this->getJSON($url);
         $params['sha'] = $data['object']['sha'];
         $url = Str::moustaches(
             $this->commitUrl,
             $params
         );
-        $closure('info', "Querying Github API for commit detail: {$url}");
-        $curl = $this->getCurlHandle($url);
-        if (false === ($data = curl_exec($curl))) {
-            $closure(
-                'error',
-                implode("\n", [
-                    'Github API request failed',
-                    "CURL Error - (" . curl_errno($curl) . ') ' . curl_error($curl)
-                ])
-            );
-            throw new RuntimeException('CURL request failed - (' . curl_errno($curl) . ') ' . curl_error($curl));
-        }
-        curl_close($curl);
-        if (!$data = json_decode($data, true)) {
-            $closure('error', 'Unable to parse Github Response JSON');
-            throw new RuntimeException('Invalid commit data for ' . $params['sha']);
-        }
+        $data = $this->getJSON($url);
 
         return [
             'sha'       => $data['sha'],

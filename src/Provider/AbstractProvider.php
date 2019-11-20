@@ -3,8 +3,12 @@
 namespace App\Provider;
 
 use App\Model\Project;
+use GuzzleHttp\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use ReflectionClass;
 use Ronanchilvers\Utility\Str;
+use RuntimeException;
 
 /**
  * Base provider class
@@ -13,6 +17,11 @@ use Ronanchilvers\Utility\Str;
  */
 abstract class AbstractProvider
 {
+    /**
+     * @var ClientInterface
+     */
+    private $client;
+
     /**
      * @var string
      */
@@ -64,8 +73,9 @@ abstract class AbstractProvider
      * @param string $token
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function __construct(string $token)
+    public function __construct(ClientInterface $client, string $token)
     {
+        $this->client = $client;
         $this->token = $token;
     }
 
@@ -171,5 +181,52 @@ abstract class AbstractProvider
         ]);
 
         return $curl;
+    }
+
+    /**
+     * Send a GET request to a URL and get back a JSON array
+     *
+     * @return array
+     * @throws RuntimeException
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function getJSON($url, array $options = []): array
+    {
+        $response = $this->get($url, $options);
+        $body = $response->getBody();
+        if (!$body instanceof StreamInterface) {
+            throw new RuntimeException($this->getLabel() . ' : Unable to read response body');
+        }
+        if (!$data = json_decode($body->getContents(), true)) {
+            throw new RuntimeException($this->getLabel() . ' : Invalid JSON response for HEAD information request');
+        }
+
+        return $data;
+    }
+
+    /**
+     * Send a GET request to a URL
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function get($url, array $options = []): ResponseInterface
+    {
+        return $this->client()->request(
+            'GET',
+            $url,
+            $options
+        );
+    }
+
+    /**
+     * Get the HTTP client object
+     *
+     * @return \GuzzleHttp\ClientInterface
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function client(): ClientInterface
+    {
+        return $this->client;
     }
 }
