@@ -38,8 +38,8 @@ class SharedAction extends AbstractAction
                     $deployment,
                     [
                         'Failed creating base shared directory',
-                        "Directory - {$sharedBaseDir}",
-                        "Mode - {$folderMode}",
+                        "Directory: {$sharedBaseDir}",
+                        "Mode: {$folderMode}",
                     ]
                 );
                 throw new RuntimeException('Unable to create shared base directory');
@@ -82,8 +82,8 @@ class SharedAction extends AbstractAction
                             $deployment,
                             [
                                 'Copying shared folder from deployment',
-                                "Deployment folder - {$thisDeploymentDir}",
-                                "Shared folder - {$sharedDir}",
+                                "Deployment folder: {$thisDeploymentDir}",
+                                "Shared folder: {$sharedDir}",
                             ]
                         );
                         if (!File::cp($thisDeploymentDir, $sharedDir)) {
@@ -91,8 +91,8 @@ class SharedAction extends AbstractAction
                                 $deployment,
                                 [
                                     'Failed copying shared folder from deployment',
-                                    "Deployment folder - {$thisDeploymentDir}",
-                                    "Shared folder - {$sharedDir}",
+                                    "Deployment folder: {$thisDeploymentDir}",
+                                    "Shared folder: {$sharedDir}",
                                 ]
                             );
                             Log::debug('Unable to copy shared folder from deployment', [
@@ -106,8 +106,8 @@ class SharedAction extends AbstractAction
                             $deployment,
                             [
                                 'Unable to create shared folder',
-                                "Shared folder - {$sharedDir}",
-                                "Mode - {$folderMode}",
+                                "Shared folder: {$sharedDir}",
+                                "Mode: {$folderMode}",
                             ]
                         );
                         Log::debug('Unable to create shared folder', [
@@ -141,8 +141,8 @@ class SharedAction extends AbstractAction
                         $deployment,
                         [
                             'Unable to create parent directory for symlinking',
-                            "Parent shared folder - {$parentDir}",
-                            "Mode - {$folderMode}",
+                            "Parent shared folder: {$parentDir}",
+                            "Mode: {$folderMode}",
                         ]
                     );
                     Log::debug('Unable to create parent directory for symlinking', [
@@ -157,8 +157,8 @@ class SharedAction extends AbstractAction
                         $deployment,
                         [
                             'Unable to symlink shared folder',
-                            "Deployment link - {$thisDeploymentDir}",
-                            "Shared folder - {$sharedDir}",
+                            "Deployment link: {$thisDeploymentDir}",
+                            "Shared folder: {$sharedDir}",
                         ]
                     );
                     Log::debug('Unable to symlink shared folder', [
@@ -197,8 +197,8 @@ class SharedAction extends AbstractAction
                         $deployment,
                         [
                             'Shared file parent folder is already shared',
-                            "Shared file - {$sharedFilename}",
-                            "Shared folder - {$sharedDir}",
+                            "Shared file: {$sharedFilename}",
+                            "Shared folder: {$sharedDir}",
                         ]
                     );
                     Log::error('Parent folder is already shared', [
@@ -214,8 +214,8 @@ class SharedAction extends AbstractAction
                         $deployment,
                         [
                             'Creating parent folder for shared file',
-                            "Shared file - {$sharedFilename}",
-                            "Shared folder - {$sharedDir}",
+                            "Shared file: {$sharedFilename}",
+                            "Shared folder: {$sharedDir}",
                         ]
                     );
                     if (!mkdir($sharedDir, $folderMode, true)) {
@@ -223,8 +223,8 @@ class SharedAction extends AbstractAction
                             $deployment,
                             [
                                 'Unable to create parent folder for shared file',
-                                "Shared file - {$sharedFilename}",
-                                "Shared folder - {$sharedDir}",
+                                "Shared file: {$sharedFilename}",
+                                "Shared folder: {$sharedDir}",
                             ]
                         );
                         Log::debug('Unable to create parent folder for shared file', [
@@ -240,9 +240,9 @@ class SharedAction extends AbstractAction
                         $deployment,
                         [
                             'Copying shared file from deployment into shared folder',
-                            "Deployment file - {$thisDeploymentFile}",
-                            "Shared file - {$sharedFilename}",
-                            "Shared folder - {$sharedDir}",
+                            "Deployment file: {$thisDeploymentFile}",
+                            "Shared file: {$sharedFilename}",
+                            "Shared folder: {$sharedDir}",
                         ]
                     );
                     Log::debug('Shared file exists in deployment', [
@@ -254,9 +254,9 @@ class SharedAction extends AbstractAction
                             $deployment,
                             [
                                 'Unable to copy shared file from deployment',
-                                "Deployment file - {$thisDeploymentFile}",
-                                "Shared file - {$sharedFilename}",
-                                "Shared folder - {$sharedDir}",
+                                "Deployment file: {$thisDeploymentFile}",
+                                "Shared file: {$sharedFilename}",
+                                "Shared folder: {$sharedDir}",
                             ]
                         );
                         Log::debug('Unable to copy shared file from deployment', [
@@ -270,9 +270,9 @@ class SharedAction extends AbstractAction
                         $deployment,
                         [
                             'Removing shared file from deployment',
-                            "Deployment file - {$thisDeploymentFile}",
-                            "Shared file - {$sharedFilename}",
-                            "Shared folder - {$sharedDir}",
+                            "Deployment file: {$thisDeploymentFile}",
+                            "Shared file: {$sharedFilename}",
+                            "Shared folder: {$sharedDir}",
                         ]
                     );
                     Log::debug('Removing shared file from deployment', [
@@ -284,9 +284,9 @@ class SharedAction extends AbstractAction
                             $deployment,
                             [
                                 'Unable to remove shared file from deployment',
-                                "Deployment file - {$thisDeploymentFile}",
-                                "Shared file - {$sharedFilename}",
-                                "Shared folder - {$sharedDir}",
+                                "Deployment file: {$thisDeploymentFile}",
+                                "Shared file: {$sharedFilename}",
+                                "Shared folder: {$sharedDir}",
                             ]
                         );
                         Log::debug('Unable to remove shared file from deployment', [
@@ -304,8 +304,8 @@ class SharedAction extends AbstractAction
                         $deployment,
                         [
                             'Creating parent folder for deployment link',
-                            "Deployment file - {$thisDeploymentFile}",
-                            "Mode - {$folderMode}",
+                            "Deployment file: {$thisDeploymentFile}",
+                            "Mode: {$folderMode}",
                         ]
                     );
                     if (!mkdir($thisDeploymentDir, $folderMode, true)) {
@@ -313,8 +313,8 @@ class SharedAction extends AbstractAction
                             $deployment,
                             [
                                 'Unable to create parent folder for shared file in deployment',
-                                "Deployment file - {$thisDeploymentFile}",
-                                "Mode - {$folderMode}",
+                                "Deployment file: {$thisDeploymentFile}",
+                                "Mode: {$folderMode}",
                             ]
                         );
                         Log::debug('Unable to create parent directory for shared file in deployment', [
@@ -333,7 +333,7 @@ class SharedAction extends AbstractAction
                         $deployment,
                         [
                             'Creating empty shared file for symlinking',
-                            "Shared file - {$sharedFilename}",
+                            "Shared file: {$sharedFilename}",
                         ]
                     );
                     if (!touch($sharedFilename)) {
@@ -341,7 +341,7 @@ class SharedAction extends AbstractAction
                             $deployment,
                             [
                                 'Unable to create shared file for symlinking',
-                                "Shared file - {$sharedFilename}",
+                                "Shared file: {$sharedFilename}",
                             ]
                         );
                         Log::debug('Unable to touch shared file', [
@@ -357,8 +357,8 @@ class SharedAction extends AbstractAction
                             $deployment,
                             [
                                 'Unable to chmod shared file',
-                                "Shared file - {$sharedFilename}",
-                                "Mode - {$fileMode}",
+                                "Shared file: {$sharedFilename}",
+                                "Mode: {$fileMode}",
                             ]
                         );
                         Log::debug('Unable to chmod shared file', [
@@ -378,8 +378,8 @@ class SharedAction extends AbstractAction
                         $deployment,
                         [
                             'Unable to symlink shared file',
-                            "Shared file - {$sharedFilename}",
-                            "Deployment link - {$thisDeploymentFile}",
+                            "Shared file: {$sharedFilename}",
+                            "Deployment link: {$thisDeploymentFile}",
                         ]
                     );
                     Log::debug('Unable to symlink shared file', [
@@ -394,8 +394,8 @@ class SharedAction extends AbstractAction
                     $deployment,
                     [
                         'Symlinked shared file into deployment',
-                        "Shared file - {$sharedFilename}",
-                        "Deployment link - {$thisDeploymentFile}",
+                        "Shared file: {$sharedFilename}",
+                        "Deployment link: {$thisDeploymentFile}",
                     ]
                 );
             }
