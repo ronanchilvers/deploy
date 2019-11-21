@@ -103,7 +103,7 @@ abstract class AbstractAction implements ActionInterface
                     $deployment,
                     [
                         sprintf('Hook: %s hook failed to run : %s', $key, $command),
-                        $process->getOutput,
+                        $process->getOutput(),
                         $process->getErrorOutput()
                     ]
                 );

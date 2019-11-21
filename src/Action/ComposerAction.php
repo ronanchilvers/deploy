@@ -48,8 +48,8 @@ class ComposerAction extends AbstractAction
         $this->info(
             $deployment,
             [
-                "Directory - {$deploymentDir}",
-                "Command - {$command}",
+                "Directory: {$deploymentDir}",
+                "Command: {$command}",
             ]
         );
         $process = new Process(

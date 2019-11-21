@@ -5,6 +5,8 @@ namespace App\Provider;
 use App\Facades\Settings;
 use App\Provider\Github;
 use App\Provider\Gitlab;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Ronanchilvers\Container\Container;
 use Ronanchilvers\Container\ServiceProviderInterface;
 
@@ -37,11 +39,23 @@ class ProviderProvider implements ServiceProviderInterface
 
         $container->share(Factory::class, function($c) {
             $factory = new Factory();
+
             if ($token = Settings::get('providers.github.token', false)) {
-                $factory->addProvider(new Github($token));
+                $client = new Client([
+                    'headers' => [
+                        "Authorization" => "token {$token}",
+                    ]
+                ]);
+                $factory->addProvider(new Github($client, $token));
             }
+
             if ($token = Settings::get('providers.gitlab.token', false)) {
-                $factory->addProvider(new Gitlab($token));
+                $client = new Client([
+                    'headers' => [
+                        "Private-Token" => $token,
+                    ]
+                ]);
+                $factory->addProvider(new Gitlab($client, $token));
             }
 
             return $factory;

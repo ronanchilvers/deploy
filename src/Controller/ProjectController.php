@@ -236,48 +236,61 @@ class ProjectController
             $provider = Provider::forProject(
                 $project
             );
-            Orm::transaction(function() use ($project, $provider, $branch, $response) {
-                $deployment = Orm::finder(Deployment::class)->nextForProject(
-                    $project
-                );
-                $deployment->source = Security::email();
-                if (!$deployment->save()) {
-                    Log::debug('Unable to create new deployment object', [
-                        'project' => $project->toArray(),
-                    ]);
-                    throw new RuntimeException('Unable to create new deployment');
-                }
-                $finder = Orm::finder(Event::class);
-                $head = $provider->getHeadInfo(
-                    $project->repository,
-                    $branch,
-                    function($type, $detail = '') use ($finder, $deployment) {
-                        $finder->event(
-                            $type,
-                            $deployment,
-                            'Initialise',
-                            $detail
+            $finder = Orm::finder(Event::class);
+            Orm::transaction(function() use ($project, $provider, $branch, $response, $finder) {
+                try {
+                    $deployment = Orm::finder(Deployment::class)->nextForProject(
+                        $project
+                    );
+                    $deployment->source = Security::email();
+                    if (!$deployment->save()) {
+                        Log::debug('Unable to create new deployment object', [
+                            'project' => $project->toArray(),
+                        ]);
+                        throw new RuntimeException('Unable to create new deployment');
+                    }
+                    $finder->event(
+                        'info',
+                        $deployment,
+                        'Initialise',
+                        sprintf("Querying %s for head commit data", $provider->getLabel())
+                    );
+                    $head = $provider->getHeadInfo($project->repository, $branch);
+                    $finder->event(
+                        'info',
+                        $deployment,
+                        'Initialise',
+                        "Commit data : " . json_encode($head, JSON_PRETTY_PRINT)
+                    );
+                    Log::debug('Updating deployment commit information', $head);
+                    $deployment->sha       = $head['sha'];
+                    $deployment->author    = $head['author'];
+                    $deployment->committer = $head['committer'];
+                    $deployment->message   = $head['message'];
+                    if (!$deployment->save()) {
+                        return $response->withRedirect(
+                            Router::pathFor('project.view', [
+                                'key' => $project->key
+                            ])
                         );
                     }
-                );
-                Log::debug('Updating deployment commit information', $head);
-                $deployment->sha       = $head['sha'];
-                $deployment->author    = $head['author'];
-                $deployment->committer = $head['committer'];
-                $deployment->message   = $head['message'];
-                if (!$deployment->save()) {
-                    return $response->withRedirect(
-                        Router::pathFor('project.view', [
-                            'key' => $project->key
-                        ])
+                    if (!$project->markDeploying()) {
+                        throw new RuntimeException('Unable to mark project as deploying');
+                    }
+                    Queue::dispatch(
+                        new DeployJob($deployment)
                     );
+                } catch (Exception $ex) {
+                    if (isset($deployment) && $deployment instanceof Deployment) {
+                        $finder->event(
+                            'error',
+                            $deployment,
+                            'Initialise',
+                            $ex->getMessage()
+                        );
+                    }
+                    throw $ex;
                 }
-                if (!$project->markDeploying()) {
-                    throw new RuntimeException('Unable to mark project as deploying');
-                }
-                Queue::dispatch(
-                    new DeployJob($deployment)
-                );
             });
 
             Session::flash([
