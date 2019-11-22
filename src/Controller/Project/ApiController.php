@@ -71,4 +71,37 @@ class ApiController
             $data
         );
     }
+
+    /**
+     *
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function branchesAndTags(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ) {
+        if (!$project = $this->projectFromArgs($args)) {
+            return $this->apiError(
+                $response,
+                'Invalid project'
+            );
+        }
+        try {
+            $provider = \App\Facades\Provider::forProject($project);
+            $data = $provider->getTagsAndBranches($project->repository);
+
+            return $this->apiResponse(
+                $response,
+                $data
+            );
+        } catch (Exception $ex) {
+            return $this->apiError(
+                $response,
+                'Unable to query for branch / tag information',
+                500
+            );
+        }
+    }
 }

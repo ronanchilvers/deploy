@@ -71,6 +71,14 @@ interface ProviderInterface
     public function getHeadInfo(string $repository, string $branch);
 
     /**
+     * Get the tags and branches for a given repository from this provider
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getTagsAndBranches(string $repository);
+
+    /**
      * Download project code into a given directory
      *
      * @param array $params The parameters for the download - repository and ref (sha)

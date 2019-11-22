@@ -27,6 +27,7 @@ $app->map(['GET', 'POST'], '/deploy/{key}/{deployment}', ProjectController::clas
     ->setName('project.redeploy');
 
 $app->group('/api/project', function (App $app) {
+    $app->map(['GET'], '/{key}/branches-and-tags', ApiController::class . ':branchesAndTags');
     $app->map(['GET'], '/{key}/events/{number}', ApiController::class . ':events');
 });
 

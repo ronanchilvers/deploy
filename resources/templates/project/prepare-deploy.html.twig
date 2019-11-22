@@ -17,10 +17,41 @@
         </div>
     </header>
     <form method="POST" action="{{ path_for('project.deploy', { key: project.key } ) }}">
-        <div class="field {% if project.hasError('branch') %}errored{% endif %}">
-            <label class="label" for="project_branch">Branch</label>
-            <div class="control"><input class="input{% if project.hasError('branch') %} is-danger{% endif %}" type="text" placeholder="{{ project.branch }}" value="{{ project.branch}}" id="project_branch" name="project[branch]"></div>
-            <p class="help is-danger" id="project_branch_error">{{ project.getError('branch')|join(', ') }}</p>
+        <div class="field control">
+            <label class="radio is-full-width">
+                <input type="radio" name="project[branch]" value="{{ project.branch}}" checked="checked">
+                Default branch ({{ project.branch}})
+            </label>
+        </div>
+        <p>Or</p>
+        <div class="field control">
+            <!-- <label class="radio is-full-width">
+                <input type="radio" name="project[branch]" data-target="#project_choose_branch" value="{{ project.branch}}">
+                Choose a branch
+            </label> -->
+        <!-- </div>
+        <div class="field control select" id="project_choose_branch"> -->
+            <div class="select">
+                <select name="project[branch]">
+                    <option value="branch-1">branch-1</option>
+                    <option value="branch-2">branch-2</option>
+                </select>
+            </div>
+        </div>
+        <p>Or</p>
+        <div class="field control">
+            <!-- <label class="radio is-full-width">
+                <input type="radio" name="project[branch]" data-target="#project_choose_tag" value="{{ project.branch}}">
+                Choose a tag
+            </label> -->
+        <!-- </div>
+        <div class="field control select" id="project_choose_tag"> -->
+            <div class="select">
+                <select name="project[branch]">
+                    <option value="tag-1">tag-1</option>
+                    <option value="tag-2">tag-2</option>
+                </select>
+            </div>
         </div>
 
         <div class="field is-grouped is-both-sides">

@@ -41,6 +41,16 @@ class Github extends AbstractProvider implements ProviderInterface
     /**
      * @var string
      */
+    protected $branchesUrl = 'https://api.github.com/repos/{repository}/branches';
+
+    /**
+     * @var string
+     */
+    protected $tagsUrl = 'https://api.github.com/repos/{repository}/tags';
+
+    /**
+     * @var string
+     */
     protected $commitUrl = 'https://api.github.com/repos/{repository}/commits/{sha}';
 
     /**
@@ -95,5 +105,40 @@ class Github extends AbstractProvider implements ProviderInterface
             'committer' => $data['commit']['committer']['email'],
             'message'   => $data['commit']['message'],
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getTagsAndBranches(string $repository)
+    {
+        $params = [
+            'repository' => $repository,
+        ];
+        $url = Str::moustaches(
+            $this->branchesUrl,
+            $params
+        );
+        $data = $this->getJSON($url);
+        $url = Str::moustaches(
+            $this->tagsUrl,
+            $params
+        );
+        $tags = $this->getJSON($url);
+        $data = array_merge($data, $tags);
+
+        $output = [
+            'branches' => [],
+            'tags' => [],
+        ];
+        foreach ($data as $datum) {
+            $type = isset($datum['protection']) ? 'branches' : 'tags';
+            $output[$type][$datum['commit']['sha']] = $datum['name'];
+        }
+
+        return $output;
     }
 }

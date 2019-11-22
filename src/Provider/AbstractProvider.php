@@ -50,6 +50,11 @@ abstract class AbstractProvider
     /**
      * @var string
      */
+    protected $branchAndTagUrl = null;
+
+    /**
+     * @var string
+     */
     protected $commitUrl = null;
 
     /**
@@ -169,6 +174,10 @@ abstract class AbstractProvider
             $this->shaUrl,
             $params
         );
+    }
+
+    public function getTagsAndBranches(string $repository)
+    {
     }
 
     /**
