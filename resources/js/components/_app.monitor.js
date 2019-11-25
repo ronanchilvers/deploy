@@ -87,7 +87,7 @@ App.Monitor = {
         $.each(events, function (label, action) {
             var action_id = '#details-' + action.id;
             var events_selector = action_id + ' .events .event';
-            if (0 == $(action_id).length) {
+            if (0 === $(action_id).length) {
                 that._createAction(label, action);
             }
             if ($(events_selector).length < action.events.length) {
@@ -104,7 +104,7 @@ App.Monitor = {
             this.options.tpl_summary,
             {
                 type: action.type,
-                duration: (0 == action.times.duration) ? '&lt;1' : action.times.duration,
+                duration: (0 === action.times.duration) ? '&lt;1' : action.times.duration,
                 id: action.id,
                 label: label
             }
@@ -146,7 +146,7 @@ App.Monitor = {
                 }
             );
         });
-        $(action_id + " .duration").html(((0 == action.times.duration) ? '&lt;1' : action.times.duration) + 's');
+        $(action_id + " .duration").html(((0 === action.times.duration) ? '&lt;1' : action.times.duration) + 's');
         $(action_id + " .events").html(events);
     }
 }

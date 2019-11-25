@@ -44,9 +44,4 @@ $(function () {
         $(this).toggleClass('is-active');
         $(this).next('.events').toggleClass('is-active');
     });
-
-    /** global: App **/
-    App.Favourites.init();
-    /** global: App **/
-    App.Modal.init();
 });

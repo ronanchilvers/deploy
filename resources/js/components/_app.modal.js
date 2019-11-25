@@ -18,7 +18,7 @@ App.Modal = {
         var that = this;
         $(this.options.selector).on('click', function (e) {
             e.preventDefault();
-            $el = $(this);
+            var $el = $(this);
             if (!$el.attr('disabled')) {
                 App.Debug.log('Showing modal for trigger element:', $el);
                 that._show($el);

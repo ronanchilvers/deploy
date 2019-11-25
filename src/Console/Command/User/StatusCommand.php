@@ -44,8 +44,11 @@ class StatusCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $email = trim($input->getArgument('email'));
-        $action = trim($input->getArgument('action'));
+        $email = $input->getArgument('email');
+        $email = trim($email);
+
+        $action = $input->getArgument('action');
+        $action = trim($action);
 
         if (!in_array($action, ['activate', 'deactivate'])) {
             throw new RuntimeException('Invalid action ' . $action);

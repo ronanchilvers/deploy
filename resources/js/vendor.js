@@ -1,6 +1,8 @@
 // Vendor libraries
 //=require jquery/dist/jquery.js
 
+var App = {};
+
 // Local libraries
 //=require components/_app.debug.js
 //=require components/_app.template.js
