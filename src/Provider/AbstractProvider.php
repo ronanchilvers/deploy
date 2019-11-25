@@ -374,7 +374,7 @@ abstract class AbstractProvider
     protected function getJSON($url, array $options = []): array
     {
         $response = $this->get($url, $options);
-        $content = $respone->getBody()->getContents();
+        $content = $response->getBody()->getContents();
         Log::debug('Source control API response', [
             'provider' => get_called_class(),
             'body'     => $content,
