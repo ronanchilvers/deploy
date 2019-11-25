@@ -178,8 +178,57 @@ abstract class AbstractProvider
         );
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
     public function getTagsAndBranches(string $repository)
     {
+        $params = [
+            'repository' => $this->encodeRepository($repository),
+        ];
+        $output = [];
+
+        $url = Str::moustaches(
+            $this->branchesUrl,
+            $params
+        );
+        $branches = $this->getJSON($url);
+        $branches = $this->processRefArray($branches);
+        if (is_array($branches) && 0 < count($branches)) {
+            $output['branch'] = $branches;
+        }
+
+        $url = Str::moustaches(
+            $this->tagsUrl,
+            $params
+        );
+        $tags = $this->getJSON($url);
+        $tags = $this->processRefArray($tags);
+        if (is_array($tags) && 0 < count($tags)) {
+            $output['tag'] = $tags;
+        }
+
+        return $output;
+    }
+
+    /**
+     * Process a ref arrays into simplified form
+     *
+     * @param array $data
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function processRefArray(array $data): array
+    {
+        $output = [];
+        foreach ($data as $datum) {
+            $output[$datum['name']] = $datum['name'];
+        }
+
+        return $output;
     }
 
     /**
@@ -329,9 +378,21 @@ abstract class AbstractProvider
         if (!$body instanceof StreamInterface) {
             throw new RuntimeException($this->getLabel() . ' : Unable to read response body');
         }
-        if (!$data = json_decode($body->getContents(), true)) {
-            throw new RuntimeException($this->getLabel() . ' : Invalid JSON response for HEAD information request');
+        $content = $body->getContents();
+        Log::debug('Source control API response', [
+            'provider' => get_called_class(),
+            'body'     => $content,
+        ]);
+        if (empty($content)) {
+            $content = '[]';
         }
+        if (null === ($data = json_decode($content, true))) {
+            throw new RuntimeException($this->getLabel() . ' : Invalid JSON response');
+        }
+        Log::debug('Source control JSON response', [
+            'provider' => get_called_class(),
+            'body'     => $content,
+        ]);
 
         return $data;
     }

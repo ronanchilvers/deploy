@@ -29,64 +29,25 @@
                     <div class="dropdown is-right">
                         <div class="dropdown-trigger">
                             <button
+                                id="dropdown-trigger-deploy"
                                 class="button is-primary is-block-mobile {% if false and not project.deployable %} tooltip is-tooltip-left{% endif %}"
                                 {% if false and not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}
                                 aria-haspopup="true"
                                 aria-controls="dropdown-deploy">
-                            <span>Deploy</span>
-                            <span class="icon is-small">
-                                <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </button>
-                            <!-- <button class="button" aria-haspopup="true" aria-controls="dropdown-menu6">
-                                <span>Right aligned</span>
+                                <span>Deploy</span>
                                 <span class="icon is-small">
                                     <i class="fas fa-angle-down" aria-hidden="true"></i>
                                 </span>
-                            </button> -->
+                            </button>
                         </div>
                         <div class="dropdown-menu" id="dropdown-deploy" role="menu">
                             <div class="dropdown-content">
-                                <div class="dropdown-item">
-                                    <form method="POST" action="{{ path_for('project.deploy', { key: project.key } ) }}">
-                                        <div class="field">
-                                            <p class="control has-icons-left is-block">
-                                                <span class="select">
-                                                    <select name="project[branch]">
-                                                    {% for type,options in tags_branches %}
-                                                       <optgroup label="{{ type|title }}">
-                                                        {% for name in options %}
-                                                            <option value="{{ type }}:{{ name }}"{% if project.branch == name %} selected="selected"{% endif %}>{{ name }}</option>
-                                                        {% endfor %}
-                                                    {% endfor %}
-<!--
-                                                        <optgroup label="Branches">
-                                                            <option value="{{ project.branch }}" selected="selected">{{ project.branch }}</option>
-                                                            <option value="branch-2">branch-2</option>
-                                                        </optgroup>
-                                                        <optgroup label="Tags">
-                                                            <option value="tag-1">tag-1</option>
-                                                            <option value="tag-2">tag-2</option>
-                                                        </optgroup> -->
-                                                    </select>
-                                                </span>
-                                                <span class="icon is-small is-left">
-                                                    <i class="fas fa-code-branch"></i>
-                                                </span>
-                                            </p>
-                                        </div>
-                                        <div class="field">
-                                            <button type="submit" class="button is-block is-primary is-once">Deploy Now</button>
-                                        </div>
-                                    </form>
+                                <div class="has-text-centered">
+                                    <p class="button is-white is-loading">&nbsp;</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!--<a class="button is-primary is-block-mobile js-modal-trigger{% if not project.deployable %} tooltip is-tooltip-left{% endif %}"
-                       href="{{ path_for('project.prepare-deploy', { key: project.key }) }}"
-                       {% if not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}
-                       >Deploy</a>-->
                 </div>
             </div>
         </div>

@@ -1,46 +1,18 @@
 {% extends 'page.html.twig' %}
 
 {% block body %}
-<div class="box">
-    <header class="project-heading">
-        <div class="columns">
-            <div class="column">
-                <div class="columns is-mobile is-vcentered">
-                    <div class="column is-narrow">
-                        <span class="icon is-inline-block is-size-3"><i class="fab fa-{{ project.provider }}"></i></span>
-                    </div>
-                    <div class="column is-narrow">
-                        <h1 class="is-size-3">Deploy {{ project.name }}</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-    <form method="POST" action="{{ path_for('project.deploy', { key: project.key } ) }}" class="container is-fluid">
-        <!-- <div class="columns is-mobile is-vcentered">
-            <div class="field control column is-4">
-                <label class="radio is-full-width">
-                    <input type="radio" name="project[branch]" value="{{ project.branch}}" checked="checked">
-                    Default branch
-                </label>
-            </div>
-            <div class="column">
-                <p>{{ project.branch}}</p>
-            </div>
-        </div> -->
-        <div class="field column is-4" id="project_choose_branch">
-            <label class="label">Branch or Tag</label>
-            <p class="control has-icons-left">
+<div class="dropdown-item">
+    <form method="POST" action="{{ path_for('project.deploy', { key: project.key } ) }}">
+        <div class="field">
+            <p class="control has-icons-left is-block">
                 <span class="select">
                     <select name="project[branch]">
-                        <optgroup label="Branches">
-                            <option value="{{ project.branch }}" selected="selected">{{ project.branch }}</option>
-                            <option value="branch-2">branch-2</option>
-                        </optgroup>
-                        <optgroup label="Tags">
-                            <option value="tag-1">tag-1</option>
-                            <option value="tag-2">tag-2</option>
-                        </optgroup>
+                    {% for type,options in tags_branches %}
+                       <optgroup label="{{ type|title }}">
+                        {% for name in options %}
+                            <option value="{{ type }}:{{ name }}"{% if project.branch == name %} selected="selected"{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    {% endfor %}
                     </select>
                 </span>
                 <span class="icon is-small is-left">
@@ -48,13 +20,8 @@
                 </span>
             </p>
         </div>
-        <div class="field is-grouped is-both-sides">
-            <div class="control">
-                <a class="button" href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { key: project.key }) }}{% endif %}">Cancel</a>
-            </div>
-            <div class="control">
-                <button type="submit" class="button is-primary is-once">Deploy Now</button>
-            </div>
+        <div class="field">
+            <button type="submit" class="button is-fullwidth is-primary is-once">Deploy Now</button>
         </div>
     </form>
 </div>

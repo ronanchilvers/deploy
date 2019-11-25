@@ -101,8 +101,6 @@ class ProjectController
             );
             // $events = $selectedDeployment->events;
         }
-        $provider = Provider::forProject($project);
-        $tagsBranches = $provider->getTagsAndBranches($project->repository);
 
         return View::render(
             $response,
@@ -112,8 +110,6 @@ class ProjectController
                 'deployments'         => $deployments,
                 'selected_deployment' => $selectedDeployment,
                 'events'              => $events,
-
-                'tags_branches'       => $tagsBranches,
             ]
         );
     }
@@ -209,12 +205,15 @@ class ProjectController
                 Router::pathFor('project.index')
             );
         }
+        $provider = Provider::forProject($project);
+        $tagsBranches = $provider->getTagsAndBranches($project->repository);
 
         return View::render(
             $response,
             'project/prepare-deploy.html.twig',
             [
-                'project' => $project,
+                'project'       => $project,
+                'tags_branches' => $tagsBranches,
             ]
         );
     }

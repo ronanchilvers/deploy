@@ -108,39 +108,4 @@ class Github extends AbstractProvider implements ProviderInterface
             'message'   => $data['commit']['message'],
         ];
     }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return array
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function getTagsAndBranches(string $repository)
-    {
-        $params = [
-            'repository' => $repository,
-        ];
-        $url = Str::moustaches(
-            $this->branchesUrl,
-            $params
-        );
-        $data = $this->getJSON($url);
-        $url = Str::moustaches(
-            $this->tagsUrl,
-            $params
-        );
-        $tags = $this->getJSON($url);
-        $data = array_merge($data, $tags);
-
-        $output = [
-            'branch' => [],
-            'tag' => [],
-        ];
-        foreach ($data as $datum) {
-            $type = isset($datum['protection']) ? 'branch' : 'tag';
-            $output[$type][$datum['commit']['sha']] = $datum['name'];
-        }
-
-        return $output;
-    }
 }

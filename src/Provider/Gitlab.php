@@ -43,6 +43,16 @@ class Gitlab extends AbstractProvider implements ProviderInterface
     /**
      * @var string
      */
+    protected $branchesUrl = 'https://gitlab.com/api/v4/projects/{repository}/repository/branches';
+
+    /**
+     * @var string
+     */
+    protected $tagsUrl = 'https://gitlab.com/api/v4/projects/{repository}/repository/tags';
+
+    /**
+     * @var string
+     */
     protected $downloadUrl = 'https://gitlab.com/api/v4/projects/{repository}/repository/archive.tar.gz?sha={sha}';
 
     /**
