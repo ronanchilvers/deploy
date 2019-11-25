@@ -30,8 +30,8 @@
                         <div class="dropdown-trigger">
                             <button
                                 id="dropdown-trigger-deploy"
-                                class="button is-primary is-block-mobile {% if false and not project.deployable %} tooltip is-tooltip-left{% endif %}"
-                                {% if false and not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}
+                                class="button is-primary is-block-mobile {% if not project.deployable %} tooltip is-tooltip-left{% endif %}"
+                                {% if not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}
                                 aria-haspopup="true"
                                 aria-controls="dropdown-deploy">
                                 <span>Deploy</span>
