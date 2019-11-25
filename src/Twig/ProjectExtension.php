@@ -2,11 +2,13 @@
 
 namespace App\Twig;
 
+use App\Facades\Security;
 use App\Model\Project;
 use App\Provider\Factory;
 use App\Security\Manager;
 use Carbon\Carbon;
 use Ronanchilvers\Foundation\Traits\Optionable;
+use Ronanchilvers\Orm\Orm;
 use Ronanchilvers\Utility\Str;
 use Twig\Extension\AbstractExtension;
 use Twig\Markup;
@@ -68,6 +70,10 @@ class ProjectExtension extends AbstractExtension
             new TwigFunction(
                 'sha_link',
                 [$this, 'shaLink']
+            ),
+            new TwigFunction(
+                'current_favourites',
+                [$this, 'getCurrentFavourites']
             ),
         ];
     }
@@ -198,5 +204,27 @@ class ProjectExtension extends AbstractExtension
         }
 
         return $carbon->diffForHumans(['parts' => 2]);
+    }
+
+    /**
+     * Get the favourite projects for the current user
+     *
+     * @return []
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getCurrentFavourites()
+    {
+        $user = Security::user();
+        $userFavourites = $user->preference(
+            'favourites',
+            []
+        );
+        if (empty($userFavourites)) {
+            return [];
+        }
+
+        return Orm::finder(Project::class)->all(
+            $userFavourites
+        );
     }
 }

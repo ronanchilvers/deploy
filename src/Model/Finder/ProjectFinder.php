@@ -19,12 +19,16 @@ class ProjectFinder extends Finder
      * @return array
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function all()
+    public function all(array $ids = null)
     {
-        return $this->select()
+        $select = $this->select()
             ->orderBy(Project::prefix('last_deployment'), 'desc')
             ->orderBy(Project::prefix('repository'), 'asc')
-            ->execute();
+            ;
+        if (is_array($ids)) {
+            $select->where(Project::primaryKey(), 'IN', $ids);
+        }
+        return $select->execute();
     }
 
     /**

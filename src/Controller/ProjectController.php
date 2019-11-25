@@ -233,6 +233,9 @@ class ProjectController
                     Router::pathFor('project.index')
                 );
             }
+            if (!$project->isDeployable()) {
+                throw new RuntimeException('Project is not deployable at the moment');
+            }
             $input  = $request->getParsedBodyParam('project', []);
             $type   = 'branch';
             $branch = (!isset($input['branch']) || empty($input['branch'])) ? $project->branch : $input['branch'];
