@@ -101,6 +101,8 @@ class ProjectController
             );
             // $events = $selectedDeployment->events;
         }
+        $provider = Provider::forProject($project);
+        $tagsBranches = $provider->getTagsAndBranches($project->repository);
 
         return View::render(
             $response,
@@ -110,6 +112,8 @@ class ProjectController
                 'deployments'         => $deployments,
                 'selected_deployment' => $selectedDeployment,
                 'events'              => $events,
+
+                'tags_branches'       => $tagsBranches,
             ]
         );
     }
@@ -232,12 +236,16 @@ class ProjectController
                 );
             }
             $input  = $request->getParsedBodyParam('project', []);
-            $branch = (!isset($input['branch']) || empty($input['branch'])) ? 'master' : $input['branch'];
+            $type   = 'branch';
+            $branch = (!isset($input['branch']) || empty($input['branch'])) ? $project->branch : $input['branch'];
+            if (strpos($branch, ':')) {
+                list($type, $branch) = explode(':', $branch);
+            }
             $provider = Provider::forProject(
                 $project
             );
             $finder = Orm::finder(Event::class);
-            Orm::transaction(function() use ($project, $provider, $branch, $response, $finder) {
+            Orm::transaction(function() use ($project, $provider, $type, $branch, $response, $finder) {
                 try {
                     $deployment = Orm::finder(Deployment::class)->nextForProject(
                         $project
@@ -255,7 +263,7 @@ class ProjectController
                         'Initialise',
                         sprintf("Querying %s for head commit data", $provider->getLabel())
                     );
-                    $head = $provider->getHeadInfo($project->repository, $branch);
+                    $head = $provider->getHeadInfo($project->repository, $type, $branch);
                     $finder->event(
                         'info',
                         $deployment,
@@ -305,7 +313,7 @@ class ProjectController
             Session::flash(
                 [
                     'heading' => 'Failed to initialise new deployment',
-                    'content' => $message,
+                    'content' => get_class($ex) . ' : ' . $message,
                 ],
                 'error'
             );

@@ -12,6 +12,7 @@ use App\Provider\ProviderInterface;
 use Closure;
 use Exception;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\stream_for;
 use Psr\Http\Message\StreamInterface;
 use Ronanchilvers\Foundation\Config;
@@ -36,7 +37,7 @@ class Github extends AbstractProvider implements ProviderInterface
     /**
      * @var string
      */
-    protected $headUrl = 'https://api.github.com/repos/{repository}/git/refs/heads/{branch}';
+    protected $headUrl = 'https://api.github.com/repos/{repository}/git/refs/{ref}';
 
     /**
      * @var string
@@ -81,11 +82,12 @@ class Github extends AbstractProvider implements ProviderInterface
     /**
      * @see \App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(string $repository, string $branch)
+    public function getHeadInfo(string $repository, string $type, string $ref)
     {
+        $type = ('tag' == $type) ? 'tags' : 'heads';
         $params = [
             'repository' => $repository,
-            'branch'     => $branch,
+            'ref'     => $type . '/' . $ref,
         ];
         $url = Str::moustaches(
             $this->headUrl,
@@ -131,11 +133,11 @@ class Github extends AbstractProvider implements ProviderInterface
         $data = array_merge($data, $tags);
 
         $output = [
-            'branches' => [],
-            'tags' => [],
+            'branch' => [],
+            'tag' => [],
         ];
         foreach ($data as $datum) {
-            $type = isset($datum['protection']) ? 'branches' : 'tags';
+            $type = isset($datum['protection']) ? 'branch' : 'tag';
             $output[$type][$datum['commit']['sha']] = $datum['name'];
         }
 

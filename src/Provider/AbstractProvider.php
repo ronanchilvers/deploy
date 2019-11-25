@@ -10,6 +10,7 @@ use App\Model\Project;
 use Closure;
 use Exception;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use ReflectionClass;
@@ -18,6 +19,7 @@ use Ronanchilvers\Utility\Str;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -185,18 +187,18 @@ abstract class AbstractProvider
      */
     public function scanConfiguration(Project $project, Deployment $deployment, Closure $closure = null)
     {
-        $repository = $this->encodeRepository($project->repository);
-        $params = [
-            'repository' => $repository,
-            'sha'        => $deployment->sha,
-        ];
-        $url = Str::moustaches(
-            $this->configUrl,
-            $params
-        );
-        $data = $this->getJSON($url);
-        $yaml = base64_decode($data['content']);
         try {
+            $repository = $this->encodeRepository($project->repository);
+            $params = [
+                'repository' => $repository,
+                'sha'        => $deployment->sha,
+            ];
+            $url = Str::moustaches(
+                $this->configUrl,
+                $params
+            );
+            $data = $this->getJSON($url);
+            $yaml = base64_decode($data['content']);
             $yaml = Yaml::parse($yaml);
             $closure(
                 'info',
@@ -205,7 +207,23 @@ abstract class AbstractProvider
                     "JSON: " . json_encode($data, JSON_PRETTY_PRINT)
                 ])
             );
-        } catch (Exception $ex) {
+
+            return new Config($yaml);
+        } catch (ClientException $ex) {
+            $closure(
+                'info',
+                implode("\n", [
+                    'No deployment configuration found - using defaults',
+                    "Exception: " . $ex->getMessage(),
+                ])
+            );
+            Log::error('No deployment configuration found - using defaults', [
+                'project'   => $project->toArray(),
+                'exception' => $ex,
+            ]);
+
+            return;
+        } catch (ParseException $ex) {
             $closure(
                 'error',
                 implode("\n", [
@@ -217,10 +235,9 @@ abstract class AbstractProvider
                 'project'   => $project->toArray(),
                 'exception' => $ex,
             ]);
-            return;
-        }
 
-        return new Config($yaml);
+            throw $ex;
+        }
     }
 
     /**

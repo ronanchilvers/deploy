@@ -16,44 +16,38 @@
             </div>
         </div>
     </header>
-    <form method="POST" action="{{ path_for('project.deploy', { key: project.key } ) }}">
-        <div class="field control">
-            <label class="radio is-full-width">
-                <input type="radio" name="project[branch]" value="{{ project.branch}}" checked="checked">
-                Default branch ({{ project.branch}})
-            </label>
-        </div>
-        <p>Or</p>
-        <div class="field control">
-            <!-- <label class="radio is-full-width">
-                <input type="radio" name="project[branch]" data-target="#project_choose_branch" value="{{ project.branch}}">
-                Choose a branch
-            </label> -->
-        <!-- </div>
-        <div class="field control select" id="project_choose_branch"> -->
-            <div class="select">
-                <select name="project[branch]">
-                    <option value="branch-1">branch-1</option>
-                    <option value="branch-2">branch-2</option>
-                </select>
+    <form method="POST" action="{{ path_for('project.deploy', { key: project.key } ) }}" class="container is-fluid">
+        <!-- <div class="columns is-mobile is-vcentered">
+            <div class="field control column is-4">
+                <label class="radio is-full-width">
+                    <input type="radio" name="project[branch]" value="{{ project.branch}}" checked="checked">
+                    Default branch
+                </label>
             </div>
-        </div>
-        <p>Or</p>
-        <div class="field control">
-            <!-- <label class="radio is-full-width">
-                <input type="radio" name="project[branch]" data-target="#project_choose_tag" value="{{ project.branch}}">
-                Choose a tag
-            </label> -->
-        <!-- </div>
-        <div class="field control select" id="project_choose_tag"> -->
-            <div class="select">
-                <select name="project[branch]">
-                    <option value="tag-1">tag-1</option>
-                    <option value="tag-2">tag-2</option>
-                </select>
+            <div class="column">
+                <p>{{ project.branch}}</p>
             </div>
+        </div> -->
+        <div class="field column is-4" id="project_choose_branch">
+            <label class="label">Branch or Tag</label>
+            <p class="control has-icons-left">
+                <span class="select">
+                    <select name="project[branch]">
+                        <optgroup label="Branches">
+                            <option value="{{ project.branch }}" selected="selected">{{ project.branch }}</option>
+                            <option value="branch-2">branch-2</option>
+                        </optgroup>
+                        <optgroup label="Tags">
+                            <option value="tag-1">tag-1</option>
+                            <option value="tag-2">tag-2</option>
+                        </optgroup>
+                    </select>
+                </span>
+                <span class="icon is-small is-left">
+                    <i class="fas fa-code-branch"></i>
+                </span>
+            </p>
         </div>
-
         <div class="field is-grouped is-both-sides">
             <div class="control">
                 <a class="button" href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { key: project.key }) }}{% endif %}">Cancel</a>

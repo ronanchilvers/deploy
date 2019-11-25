@@ -68,11 +68,11 @@ class Gitlab extends AbstractProvider implements ProviderInterface
     /**
      * @see \App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(string $repository, string $branch)
+    public function getHeadInfo(string $repository, string $type, string $ref)
     {
         $params = [
             'repository' => $this->encodeRepository($repository),
-            'branch'     => $branch,
+            'branch'     => $ref,
         ];
         $url = Str::moustaches(
             $this->headUrl,
