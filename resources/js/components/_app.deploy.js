@@ -24,7 +24,7 @@ App.Deploy = {
     unBindUI: function () {
     },
 
-    _load: function (el) {
+    _load: function () {
         var url = '/prepare-deploy/' + this.options.project;
         $(this.options.content_selector).load(url);
     }

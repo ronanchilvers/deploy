@@ -313,7 +313,7 @@ abstract class AbstractProvider
             );
             throw new RuntimeException('Unable to open temporary file');
         }
-        $response = $this->get(
+        $this->get(
             $url,
             [
                 'sink' => $handle,
@@ -374,11 +374,7 @@ abstract class AbstractProvider
     protected function getJSON($url, array $options = []): array
     {
         $response = $this->get($url, $options);
-        $body = $response->getBody();
-        if (!$body instanceof StreamInterface) {
-            throw new RuntimeException($this->getLabel() . ' : Unable to read response body');
-        }
-        $content = $body->getContents();
+        $content = $respone->getBody()->getContents();
         Log::debug('Source control API response', [
             'provider' => get_called_class(),
             'body'     => $content,

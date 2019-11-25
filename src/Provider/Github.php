@@ -13,7 +13,6 @@ use Closure;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\stream_for;
 use Psr\Http\Message\StreamInterface;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\Str;

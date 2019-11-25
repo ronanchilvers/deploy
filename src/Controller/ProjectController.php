@@ -79,7 +79,6 @@ class ProjectController
                 Router::pathFor('project.index')
             );
         }
-
         $finder = Orm::finder(Deployment::class);
         $deployments = $finder->forProject($project);
 
@@ -124,7 +123,7 @@ class ProjectController
         ResponseInterface $response
     ) {
         $project = new Project;
-        if ($request->isMethod('POST')) {
+        if ('POST' == $request->getMethod()) {
             $data = $request->getParsedBody()['project'];
             $project->fromArray($data);
             if ($project->saveWithValidation()) {
@@ -165,7 +164,7 @@ class ProjectController
                 Router::pathFor('project.index')
             );
         }
-        if ($request->isMethod('POST')) {
+        if ('POST' == $request->getMethod()) {
             $data = $request->getParsedBody()['project'];
             $project->fromArray($data);
             if ($project->saveWithValidation()) {
