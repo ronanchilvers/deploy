@@ -1,14 +1,17 @@
 {% extends 'page.html.twig' %}
 
 {% block javascripts %}
-{% if not selected_deployment.deployed and not selected_deployment.failed %}
 <script type="text/javascript">
+App.Deploy.init({
+    project: '{{ project.key }}'
+});
+{% if not selected_deployment.deployed and not selected_deployment.failed %}
 App.Monitor.init({
     project: '{{ project.key }}',
     number: {{ selected_deployment.number }}
 });
-</script>
 {% endif %}
+</script>
 {% endblock %}
 
 {% block body %}

@@ -79,7 +79,6 @@ class ProjectController
                 Router::pathFor('project.index')
             );
         }
-
         $finder = Orm::finder(Deployment::class);
         $deployments = $finder->forProject($project);
 
@@ -124,7 +123,7 @@ class ProjectController
         ResponseInterface $response
     ) {
         $project = new Project;
-        if ($request->isMethod('POST')) {
+        if ('POST' == $request->getMethod()) {
             $data = $request->getParsedBody()['project'];
             $project->fromArray($data);
             if ($project->saveWithValidation()) {
@@ -165,7 +164,7 @@ class ProjectController
                 Router::pathFor('project.index')
             );
         }
-        if ($request->isMethod('POST')) {
+        if ('POST' == $request->getMethod()) {
             $data = $request->getParsedBody()['project'];
             $project->fromArray($data);
             if ($project->saveWithValidation()) {
@@ -205,12 +204,15 @@ class ProjectController
                 Router::pathFor('project.index')
             );
         }
+        $provider = Provider::forProject($project);
+        $tagsBranches = $provider->getTagsAndBranches($project->repository);
 
         return View::render(
             $response,
             'project/prepare-deploy.html.twig',
             [
-                'project' => $project,
+                'project'       => $project,
+                'tags_branches' => $tagsBranches,
             ]
         );
     }
@@ -232,12 +234,16 @@ class ProjectController
                 );
             }
             $input  = $request->getParsedBodyParam('project', []);
-            $branch = (!isset($input['branch']) || empty($input['branch'])) ? 'master' : $input['branch'];
+            $type   = 'branch';
+            $branch = (!isset($input['branch']) || empty($input['branch'])) ? $project->branch : $input['branch'];
+            if (strpos($branch, ':')) {
+                list($type, $branch) = explode(':', $branch);
+            }
             $provider = Provider::forProject(
                 $project
             );
             $finder = Orm::finder(Event::class);
-            Orm::transaction(function() use ($project, $provider, $branch, $response, $finder) {
+            Orm::transaction(function() use ($project, $provider, $type, $branch, $response, $finder) {
                 try {
                     $deployment = Orm::finder(Deployment::class)->nextForProject(
                         $project
@@ -255,7 +261,7 @@ class ProjectController
                         'Initialise',
                         sprintf("Querying %s for head commit data", $provider->getLabel())
                     );
-                    $head = $provider->getHeadInfo($project->repository, $branch);
+                    $head = $provider->getHeadInfo($project->repository, $type, $branch);
                     $finder->event(
                         'info',
                         $deployment,
@@ -305,7 +311,7 @@ class ProjectController
             Session::flash(
                 [
                     'heading' => 'Failed to initialise new deployment',
-                    'content' => $message,
+                    'content' => get_class($ex) . ' : ' . $message,
                 ],
                 'error'
             );

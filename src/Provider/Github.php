@@ -12,7 +12,7 @@ use App\Provider\ProviderInterface;
 use Closure;
 use Exception;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Psr7\stream_for;
+use GuzzleHttp\Exception\ClientException;
 use Psr\Http\Message\StreamInterface;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Utility\Str;
@@ -36,7 +36,17 @@ class Github extends AbstractProvider implements ProviderInterface
     /**
      * @var string
      */
-    protected $headUrl = 'https://api.github.com/repos/{repository}/git/refs/heads/{branch}';
+    protected $headUrl = 'https://api.github.com/repos/{repository}/git/refs/{ref}';
+
+    /**
+     * @var string
+     */
+    protected $branchesUrl = 'https://api.github.com/repos/{repository}/branches';
+
+    /**
+     * @var string
+     */
+    protected $tagsUrl = 'https://api.github.com/repos/{repository}/tags';
 
     /**
      * @var string
@@ -71,11 +81,12 @@ class Github extends AbstractProvider implements ProviderInterface
     /**
      * @see \App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(string $repository, string $branch)
+    public function getHeadInfo(string $repository, string $type, string $ref)
     {
+        $type = ('tag' == $type) ? 'tags' : 'heads';
         $params = [
             'repository' => $repository,
-            'branch'     => $branch,
+            'ref'     => $type . '/' . $ref,
         ];
         $url = Str::moustaches(
             $this->headUrl,
