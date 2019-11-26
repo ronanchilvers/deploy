@@ -105,8 +105,6 @@ class Bitbucket extends AbstractProvider implements ProviderInterface
      */
     protected function getConfiguration(Project $project, Deployment $deployment)
     {
-        return '---
-';
         $repository = $this->encodeRepository($project->repository);
         $params = [
             'repository' => $repository,
