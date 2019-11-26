@@ -100,10 +100,10 @@ notify:
 ```
 
 - `composer` - This directive allows you to control the behaviour of the composer dependency manager, assuming that it is used in your project. If `deploy` doesn't find a `composer.json` file in the root of your working copy, composer support is disabled and this directive has no effect.
-  - `install` - Define the command composer will install dependencies with. The default is `install --no-interaction --prefer-dist --no-dev --optimize-autoloader`
+  - `command` - Define the command composer will install dependencies with. The default is `install --no-interaction --prefer-dist --no-dev --optimize-autoloader`
 ```yaml
 composer:
-  install: install --no-dev -o
+  command: install --no-dev -o
 ```
 
 - `shared` - Define shared folders or files. These are locations that persist between deployments, for example a cache directory or configuration file. The `files` and `folders` subkeys can be used to define a list or files or folders that should be shared. Paths are always relative to the root of the deployment working copy.

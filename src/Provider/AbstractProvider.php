@@ -237,23 +237,19 @@ abstract class AbstractProvider
     public function scanConfiguration(Project $project, Deployment $deployment, Closure $closure = null)
     {
         try {
-            $repository = $this->encodeRepository($project->repository);
-            $params = [
-                'repository' => $repository,
-                'sha'        => $deployment->sha,
-            ];
-            $url = Str::moustaches(
-                $this->configUrl,
-                $params
+            $raw = $this->getConfiguration(
+                $project,
+                $deployment
             );
-            $data = $this->getJSON($url);
-            $yaml = base64_decode($data['content']);
-            $yaml = Yaml::parse($yaml);
+            $yaml = Yaml::parse($raw);
+            if (is_null($yaml)) {
+                $yaml = [];
+            }
             $closure(
                 'info',
                 implode("\n", [
                     'YAML deployment configuration read successfully',
-                    "JSON: " . json_encode($data, JSON_PRETTY_PRINT)
+                    "YAML: " . $raw
                 ])
             );
 
@@ -287,6 +283,30 @@ abstract class AbstractProvider
 
             throw $ex;
         }
+    }
+
+    /**
+     * Try to download the deploy.yaml file from the remote repository
+     *
+     * @param \App\Model\Project $project
+     * @param \App\Model\Deployment $deployment
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function getConfiguration(Project $project, Deployment $deployment)
+    {
+        $repository = $this->encodeRepository($project->repository);
+        $params = [
+            'repository' => $repository,
+            'sha'        => $deployment->sha,
+        ];
+        $url = Str::moustaches(
+            $this->configUrl,
+            $params
+        );
+        $data = $this->getJSON($url);
+        $yaml = base64_decode($data['content']);
+
+        return $yaml;
     }
 
     /**

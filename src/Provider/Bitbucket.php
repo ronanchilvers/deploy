@@ -33,11 +33,6 @@ class Bitbucket extends AbstractProvider implements ProviderInterface
     /**
      * @var string
      */
-    protected $token;
-
-    /**
-     * @var string
-     */
     protected $headUrl = 'https://api.bitbucket.org/2.0/repositories/{repository}/commits/{branch}?pagelen=1';
 
     /**
@@ -53,27 +48,27 @@ class Bitbucket extends AbstractProvider implements ProviderInterface
     /**
      * @var string
      */
-    protected $downloadUrl = 'https://api.bitbucket.org/2.0/{repository}/repository/archive.tar.gz?sha={sha}';
+    protected $downloadUrl = 'https://bitbucket.org/{repository}/get/{sha}.zip';
 
     /**
      * @var string
      */
-    protected $configUrl = 'https://api.bitbucket.org/2.0/{repository}/repository/files/deploy.yaml?ref={sha}';
+    protected $configUrl = 'https://api.bitbucket.org/2.0/repositories/{repository}/src/{sha}/deploy.yaml';
 
     /**
      * @var string
      */
-    protected $repoUrl = 'https://gitlab.com/{repository}';
+    protected $repoUrl = 'https://bitbucket.org/{repository}';
 
     /**
      * @var string
      */
-    protected $branchUrl = 'https://gitlab.com/{repository}/tree/{branch}';
+    protected $branchUrl = 'https://bitbucket.org/{repository}/src/{branch}';
 
     /**
      * @var string
      */
-    protected $shaUrl = 'https://gitlab.com/{repository}/commit/{sha}';
+    protected $shaUrl = 'https://bitbucket.org/{repository}/commits/{sha}';
 
     /**
      * @see \App\Provider\ProviderInterface::getHeadInfo()
@@ -89,13 +84,41 @@ class Bitbucket extends AbstractProvider implements ProviderInterface
             $params
         );
         $data = $this->getJSON($url);
+        if (!is_array($data) || !isset($data['values'], $data['values'][0])) {
+            throw new RuntimeException('No data found for head commit');
+        }
 
         return [
-            'sha'       => $data['id'],
-            'author'    => $data['author_email'],
-            'committer' => $data['committer_email'],
-            'message'   => $data['title'],
+            'sha'       => $data['values'][0]['hash'],
+            'author'    => $data['values'][0]['author']['raw'],
+            'committer' => $data['values'][0]['author']['raw'],
+            'message'   => $data['values'][0]['summary']['raw'],
         ];
+    }
+
+    /**
+     * Try to download the deploy.yaml file from the remote repository
+     *
+     * @param \App\Model\Project $project
+     * @param \App\Model\Deployment $deployment
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function getConfiguration(Project $project, Deployment $deployment)
+    {
+        return '---
+';
+        $repository = $this->encodeRepository($project->repository);
+        $params = [
+            'repository' => $repository,
+            'sha'        => $deployment->sha,
+        ];
+        $url = Str::moustaches(
+            $this->configUrl,
+            $params
+        );
+        $response = $this->get($url);
+
+        return $response->getBody()->getContents();
     }
 
     /**
