@@ -25,14 +25,33 @@
             </div>
             <div id="navbar_menu" class="navbar-menu">
                 <div class="navbar-start">
-                {% for item in main_nav %}
-                    {% set selected = is_current_path(item.route) %}
-                    <a class="navbar-item{% if item.class %} {{ item.class }}{% endif %}{% if selected %} is-active{% endif %}" href="{{ path_for(item.route) }}"{% if selected %} aria-current="page"{% endif %}>{{ item.name }}</a>
-                {% endfor %}
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">Projects</a>
+
+                        <div class="navbar-dropdown">
+                            <div class="navbar-item"><strong>Favourites</strong></div>
+                        {% set faves = current_favourites() %}
+                        {% if 0 < faves|length %}
+                        {% for fave in faves %}
+                            <a class="navbar-item" href="{{ path_for('project.view', { key: fave.key }) }}">
+                                {{ fave.name }}
+                            </a>
+                        {% endfor %}
+                        {% else %}
+                            <div class="navbar-item"><p>Click the star icon on the project list or<br /> project view to set your favourites</p></div>
+                        {% endif %}
+                            <hr class="navbar-divider">
+                            <a class="navbar-item" href="{{ path_for('project.index') }}">
+                                All Projects
+                            </a>
+                        </div>
+                    </div>
+
+                    <a class="navbar-item" href="{{ path_for('project.add') }}" >Add Project</a>
                 </div>
 
                 <div class="navbar-end">
-                    <div class="navbar-item has-dropdown">
+                    <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             {{ security.name }}
                         </a>
@@ -73,6 +92,11 @@
         </footer>
         <script type="text/javascript" src="/js/vendor.js"></script>
         <script type="text/javascript" src="/js/app.js"></script>
+        <script type="text/javascript">
+            /** global: App **/
+            App.Favourites.init();
+            App.Modal.init();
+        </script>
         {% if debug %}<script type="text/javascript">App.Debug.init({ enabled: true });</script>
         {% endif %}
         {% block javascripts %}{% endblock %}

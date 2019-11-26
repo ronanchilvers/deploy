@@ -88,16 +88,6 @@ class Provider implements ServiceProviderInterface
                     'session'  => $c->get('session'),
                     'request'  => $c->get('request'),
                     'security' => $c->get(Manager::class),
-                    'main_nav' => [
-                        [
-                            'name' => 'Project List',
-                            'route' => 'project.index',
-                        ],
-                        [
-                            'name' => 'Add Project',
-                            'route' => 'project.add',
-                        ],
-                    ],
                     'php' => [
                         'version' => phpversion(),
                     ],

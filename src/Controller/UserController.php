@@ -29,7 +29,7 @@ class UserController
         ResponseInterface $response
     ) {
         $user = new User();
-        if ($request->isMethod('POST')) {
+        if ('POST' == $request->getMethod()) {
             try {
                 $data = $request->getParsedBody();
                 if (!isset($data['email'], $data['password'])) {
@@ -142,7 +142,7 @@ class UserController
     ) {
         $user = Security::user();
 
-        if ($request->isMethod('POST')) {
+        if ('POST' == $request->getMethod()) {
             $data = $request->getParsedBody()['user'];
             $user->fromArray($data);
             if ($user->saveWithValidation()) {
@@ -179,7 +179,7 @@ class UserController
         $user = Security::user();
 
         try {
-            if ($request->isMethod('POST')) {
+            if ('POST' == $request->getMethod()) {
                 $data = $request->getParsedBody()['user'];
                 if (!$user->setNewPassword($data['password'], $data['password_new'], $data['password_confirm'])) {
                     throw new RuntimeException('Invalid input');

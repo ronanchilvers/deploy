@@ -26,10 +26,28 @@
                     </a>
                 </div>
                 <div class="control">
-                    <a class="button is-primary is-block-mobile js-modal-trigger{% if not project.deployable %} tooltip is-tooltip-left{% endif %}"
-                       href="{{ path_for('project.prepare-deploy', { key: project.key }) }}"
-                       {% if not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}
-                       >Deploy</a>
+                    <div class="dropdown is-right">
+                        <div class="dropdown-trigger">
+                            <button
+                                id="dropdown-trigger-deploy"
+                                class="button is-primary is-block-mobile {% if not project.deployable %} tooltip is-tooltip-left{% endif %}"
+                                {% if not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}
+                                aria-haspopup="true"
+                                aria-controls="dropdown-deploy">
+                                <span>Deploy</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-deploy" role="menu">
+                            <div class="dropdown-content">
+                                <div class="has-text-centered">
+                                    <p class="button is-white is-loading">&nbsp;</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

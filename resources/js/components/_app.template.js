@@ -1,3 +1,4 @@
+/** global: App **/
 var App = App || {};
 
 App.Template = {

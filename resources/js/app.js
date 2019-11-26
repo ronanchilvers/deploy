@@ -12,7 +12,7 @@ $(function () {
                 $(this).remove();
             });
         }, 3000);
-    }
+    };
     $(".button.is-once").on('click', function () {
         $(this).addClass('is-loading');
     });
@@ -21,6 +21,9 @@ $(function () {
             $(this).removeClass('is-loading');
             e.preventDefault();
         }
+    });
+    $('.dropdown-trigger').on('click', function() {
+        $(this).closest('.dropdown').toggleClass('is-active');
     });
     $('.modal-trigger').on('click', function (e) {
         e.preventDefault();
@@ -41,9 +44,4 @@ $(function () {
         $(this).toggleClass('is-active');
         $(this).next('.events').toggleClass('is-active');
     });
-
-    /** global: App **/
-    App.Favourites.init();
-    /** global: App **/
-    App.Modal.init();
 });

@@ -63,12 +63,21 @@ interface ProviderInterface
      * Get the HEAD commit data for a given project, returned as an array
      *
      * @param string $repository
-     * @param string $branch
+     * @param string $type One of 'branch' or 'tag'
+     * @param string $ref
      * @param Closure $closure Callback for progress feedback - is passed $header and $detail strings
      * @return array
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getHeadInfo(string $repository, string $branch);
+    public function getHeadInfo(string $repository, string $type, string $ref);
+
+    /**
+     * Get the tags and branches for a given repository from this provider
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getTagsAndBranches(string $repository);
 
     /**
      * Download project code into a given directory
