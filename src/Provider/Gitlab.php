@@ -33,11 +33,6 @@ class Gitlab extends AbstractProvider implements ProviderInterface
     /**
      * @var string
      */
-    protected $token;
-
-    /**
-     * @var string
-     */
     protected $headUrl = 'https://gitlab.com/api/v4/projects/{repository}/repository/commits/{branch}';
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Provider;
 
 use App\Facades\Settings;
+use App\Provider\Bitbucket;
 use App\Provider\Github;
 use App\Provider\Gitlab;
 use GuzzleHttp\Client;
@@ -24,19 +25,6 @@ class ProviderProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        // Github
-        // $container->share(Github::class, function($c) {
-        //     $token = Settings::get('providers.github.token');
-
-        //     return new Github($token);
-        // });
-        // Gitlab
-        // $container->share(Gitlab::class, function($c) {
-        //     $token = Settings::get('providers.gitlab.token');
-
-        //     return new Gitlab($token);
-        // });
-
         $container->share(Factory::class, function($c) {
             $factory = new Factory();
 
@@ -56,6 +44,14 @@ class ProviderProvider implements ServiceProviderInterface
                     ]
                 ]);
                 $factory->addProvider(new Gitlab($client, $token));
+            }
+
+            if ($token = Settings::get('providers.bitbucket.token', false)) {
+                $username = Settings::get('providers.bitbucket.username', false);
+                $client = new Client([
+                    'auth' => [ $username, $token ],
+                ]);
+                $factory->addProvider(new Bitbucket($client, $token));
             }
 
             return $factory;

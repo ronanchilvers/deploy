@@ -29,6 +29,40 @@ In addition it is *strongly* recommended that you use a proper RDBMS like MySQL,
 
 Once you have the required software installed on the host you can then get on with the installation.
 
+### Generating Provider Tokens
+
+`deploy` currently supports the three main VCS providers - Github, Gitlab and Bitbucket. Not all have to be configured for `deploy` to work but you will need at least one!
+
+**NB:** In the examples below we add each configuration variable to the `providers` section. Just in case its not clear, you should only have a single `providers` section and each set of credentials should be added below it. See the `local.yaml.dist` file as a reference.
+
+#### Github Personal Access Token
+
+To generate a personal access token, navigate to [your Personal access tokens settings page](https://github.com/settings/tokens). Generate a token with the `repo` scope enabled - no others are needed. Add the token to your `deploy` configuration in the `providers` section like this:
+```yaml
+providers:
+  github:
+    token: thisismysuperlongtokensecret
+```
+
+#### Gitlab Personal Access Token
+
+Visit the [Personal Access Tokens page](https://gitlab.com/profile/personal_access_tokens) in your Gitlab account and generate a token with `api` scope. You can add an expiry date if you want to but don't forget to replace it when the time comes!! (I'd recommend not setting an expiry or setting a very long one). Then add your token to the `providers` section like this:
+```yaml
+providers:
+  gitlab:
+    token: fancygitlabtokengoeshere
+```
+
+#### Bitbucket App Password
+
+For Bitbucket support `deploy` currently uses an app password. This may change in future though. At the moment you can generate one by visiting Bitbucket Settings > Access Management | App Passwords. Once in there generate a new token with `Repositories > Read` scope. Then add your username and app password to your `deploy` configuration like this:
+```yaml
+providers:
+  bitbucket:
+    username: myusername
+    token: shineyapppasswordhere
+```
+
 ### Codebase setup
 
 * Create a database and database user in your chosen DBMS. `deploy` needs CREATE, DROP, ALTER, SELECT, INSERT, UPDATE, DELETE, INDEX permissions. For MariaDB / MySQL it's likely to be something like this:
@@ -49,7 +83,7 @@ cd deploy
 composer install
 ```
 
-* Create the local configuration. Instructions are provided within the file.
+* Create the local configuration. Instructions are provided within the file. See above for some guidance on generating tokens to use with the various VCS providers.
 ```bash
 cp local.yaml.dist local.yaml
 ```
@@ -100,10 +134,10 @@ notify:
 ```
 
 - `composer` - This directive allows you to control the behaviour of the composer dependency manager, assuming that it is used in your project. If `deploy` doesn't find a `composer.json` file in the root of your working copy, composer support is disabled and this directive has no effect.
-  - `install` - Define the command composer will install dependencies with. The default is `install --no-interaction --prefer-dist --no-dev --optimize-autoloader`
+  - `command` - Define the command composer will install dependencies with. The default is `install --no-interaction --prefer-dist --no-dev --optimize-autoloader`
 ```yaml
 composer:
-  install: install --no-dev -o
+  command: install --no-dev -o
 ```
 
 - `shared` - Define shared folders or files. These are locations that persist between deployments, for example a cache directory or configuration file. The `files` and `folders` subkeys can be used to define a list or files or folders that should be shared. Paths are always relative to the root of the deployment working copy.
@@ -242,3 +276,7 @@ cleanup:
 * https://developer.github.com/v3/repos/contents/#get-contents
 * https://mattstauffer.com/blog/introducing-envoyer.io/
 * https://docs.gitlab.com/ee/api/repositories.html#get-file-archive
+* https://stackoverflow.com/questions/35160169/bitbucket-how-to-download-latest-tar-gz-file-of-a-bitbucket-repo-programmatical
+* https://stackoverflow.com/questions/17682143/download-private-bitbucket-repository-zip-file-using-http-authentication
+* https://community.atlassian.com/t5/Bitbucket-questions/How-to-download-repository-as-zip-file-using-the-API/qaq-p/862113
+* https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html
