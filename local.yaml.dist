@@ -27,3 +27,6 @@ providers:
     token: <github_personal_access_token>
   gitlab:
     token: <gitlab_personal_access_token>
+  bitbucket:
+    username: <bitbucket_username>
+    token: <bitbucket_app_password>
