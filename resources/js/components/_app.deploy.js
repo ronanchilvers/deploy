@@ -25,7 +25,7 @@ App.Deploy = {
     },
 
     _load: function () {
-        var url = '/prepare-deploy/' + this.options.project;
+        var url = '/projects/' + this.options.project + '/prepare-deploy';
         $(this.options.content_selector).load(url);
     }
 }

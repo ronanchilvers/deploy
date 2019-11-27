@@ -1,5 +1,13 @@
 {% extends 'page.html.twig' %}
 
+{% block javascripts %}
+<script type="text/javascript">
+App.Deploy.init({
+    project: '{{ project.key }}'
+});
+</script>
+{% endblock %}
+
 {% block body %}
 <div class="project">
     {{ include('fragments/project/header.html.twig', { project: project } )}}
