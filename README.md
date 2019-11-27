@@ -23,7 +23,7 @@ A tool for simple deployments to a single server (for now) from common source co
 * A backend database supported by [PDO](https://www.php.net/pdo) and [phinx](https://github.com/cakephp/phinx)
 * [composer](https://getcomposer.org/) for `deploy` dependency installation
 
-In addition it is *strongly* recommended that you use a proper RDBMS like MySQL, MariaDB or PostgreSQL to host the database. The default SQLite database is suitable for development but you will almost certainly run into database contention locks if you use it in production.
+In addition it is *strongly* recommended that you use an RDBMS like MySQL, MariaDB or PostgreSQL to host the database. The default SQLite database is suitable for development but you will almost certainly run into database contention locks if you use it in production.
 
 `deploy` includes a queue runner that does the heavy lifting. You can run this via cron if you want to but I recommend using supervisord (again available in most linux distributions in the standard package catalogue).
 
