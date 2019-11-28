@@ -81,18 +81,41 @@ class Github extends AbstractProvider implements ProviderInterface
     /**
      * @see \App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(string $repository, string $type, string $ref)
+    public function getHeadInfo(string $repository, string $ref)
     {
-        $type = ('tag' == $type) ? 'tags' : 'heads';
-        $params = [
-            'repository' => $repository,
-            'ref'     => $type . '/' . $ref,
-        ];
-        $url = Str::moustaches(
-            $this->headUrl,
-            $params
-        );
-        $data = $this->getJSON($url);
+        foreach (['heads', 'tags'] as $type) {
+            $params = [
+                'repository' => $repository,
+                'ref'     => $type . '/' . $ref,
+            ];
+            $url = Str::moustaches(
+                $this->headUrl,
+                $params
+            );
+            Log::debug('Querying Github for head data', [
+                'type' => $type,
+                'url' => $url,
+            ]);
+            try {
+                $data = $this->getJSON($url);
+                break;
+            } catch (ClientException $ex) {
+                Log::debug(
+                    $ex->getMessage(),
+                    [
+                        'exception' => $ex,
+                    ]
+                );
+            }
+        }
+        if (is_null($data)) {
+            throw new RuntimeException('Unable to find head commit data from Github');
+        }
+        Log::debug('Head data queried successfully from Github', [
+            'type' => $type,
+            'url' => $url,
+            'data' => $data,
+        ]);
         $params['sha'] = $data['object']['sha'];
         $url = Str::moustaches(
             $this->commitUrl,

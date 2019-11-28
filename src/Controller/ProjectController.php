@@ -237,16 +237,12 @@ class ProjectController
                 throw new RuntimeException('Project is not deployable at the moment');
             }
             $input  = $request->getParsedBodyParam('project', []);
-            $type   = 'branch';
             $branch = (!isset($input['branch']) || empty($input['branch'])) ? $project->branch : $input['branch'];
-            if (strpos($branch, ':')) {
-                list($type, $branch) = explode(':', $branch);
-            }
             $provider = Provider::forProject(
                 $project
             );
             $finder = Orm::finder(Event::class);
-            Orm::transaction(function() use ($project, $provider, $type, $branch, $response, $finder) {
+            Orm::transaction(function() use ($project, $provider, $branch, $response, $finder) {
                 try {
                     $deployment = Orm::finder(Deployment::class)->nextForProject(
                         $project
@@ -264,7 +260,7 @@ class ProjectController
                         'Initialise',
                         sprintf("Querying %s for head commit data", $provider->getLabel())
                     );
-                    $head = $provider->getHeadInfo($project->repository, $type, $branch);
+                    $head = $provider->getHeadInfo($project->repository, $branch);
                     $finder->event(
                         'info',
                         $deployment,
