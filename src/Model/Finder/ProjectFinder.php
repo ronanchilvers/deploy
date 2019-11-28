@@ -46,6 +46,20 @@ class ProjectFinder extends Finder
     }
 
     /**
+     * Get a project by project token
+     *
+     * @param string $token
+     * @return \App\Model\Project
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function forToken($token)
+    {
+        return $this->select()
+            ->where(Project::prefix('token'), $token)
+            ->one();
+    }
+
+    /**
      * Check that a given key is unique
      *
      * @param string $key

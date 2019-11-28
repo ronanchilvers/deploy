@@ -6,6 +6,7 @@ use App\Controller\Traits\ApiTrait;
 use App\Controller\Traits\ProjectTrait;
 use App\Model\Deployment;
 use App\Model\Event;
+use App\Model\Project;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Ronanchilvers\Orm\Orm;
@@ -70,5 +71,122 @@ class ApiController
             $response,
             $data
         );
+    }
+
+    /**
+     * Trigger a build of a project specified by the project token
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function build(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ) {
+        try {
+            $project = Orm::finder(Project::class)->forToken($args['token']);
+            if (!$project instanceof Project) {
+                throw new RuntimeException(
+                    'Invalid or unknown project token',
+                    400
+                );
+            }
+            if (!$project->isDeployable()) {
+                throw new RuntimeException(
+                    'Project is not deployable at the moment',
+                    400
+                );
+            }
+            $provider = Provider::forProject(
+                $project
+            );
+            $finder = Orm::finder(Event::class);
+            Orm::transaction(function() use ($project, $provider, $finder) {
+                try {
+                    $deployment = Orm::finder(Deployment::class)->nextForProject(
+                        $project
+                    );
+                    $deployment->source = Security::email();
+                    if (!$deployment->save()) {
+                        Log::debug('Unable to create new deployment object', [
+                            'project' => $project->toArray(),
+                        ]);
+                        throw new RuntimeException('Unable to create new deployment');
+                    }
+                    $finder->event(
+                        'info',
+                        $deployment,
+                        'Initialise',
+                        sprintf("Querying %s for head commit data", $provider->getLabel())
+                    );
+                    $head = $provider->getHeadInfo($project->repository, $type, $branch);
+                    $finder->event(
+                        'info',
+                        $deployment,
+                        'Initialise',
+                        "Commit data : " . json_encode($head, JSON_PRETTY_PRINT)
+                    );
+                    Log::debug('Updating deployment commit information', $head);
+                    $deployment->sha       = $head['sha'];
+                    $deployment->author    = $head['author'];
+                    $deployment->committer = $head['committer'];
+                    $deployment->message   = $head['message'];
+                    if (!$deployment->save()) {
+                        throw new RuntimeException(
+                            'Unable to create new deployment',
+                            500
+                        );
+                    }
+                    if (!$project->markDeploying()) {
+                        throw new RuntimeException(
+                            'Unable to mark project as deploying',
+                            500
+                        );
+                    }
+                    Queue::dispatch(
+                        new DeployJob($deployment)
+                    );
+                } catch (Exception $ex) {
+                    if (isset($deployment) && $deployment instanceof Deployment) {
+                        $finder->event(
+                            'error',
+                            $deployment,
+                            'Initialise',
+                            $ex->getMessage()
+                        );
+                    }
+                    throw $ex;
+                }
+            });
+
+            Session::flash([
+                'heading' => 'Deploy queued successfully'
+            ]);
+        } catch (Exception $ex) {
+            $message = [$ex->getMessage()];
+            if ($previous = $ex->getPrevious()) {
+                $message[] = $previous->getMessage();
+            }
+            $message = implode(' - ', $message);
+            Session::flash(
+                [
+                    'heading' => 'Failed to initialise new deployment',
+                    'content' => get_class($ex) . ' : ' . $message,
+                ],
+                'error'
+            );
+            Log::error('Failed to initialise new deployment', [
+                'exception' => $ex,
+            ]);
+        }
+
+        return $response->withRedirect(
+            Router::pathFor('project.view', [
+                'key' => $project->key
+            ])
+        );
+
+
+
     }
 }
