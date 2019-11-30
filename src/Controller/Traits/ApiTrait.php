@@ -42,7 +42,7 @@ trait ApiTrait
     protected function apiError(
         ResponseInterface $response,
         string $message,
-        integer $code = null
+        int $code = null
     ): ResponseInterface {
         if (is_null($code)) {
             $code = 400;

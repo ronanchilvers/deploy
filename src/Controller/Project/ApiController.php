@@ -4,12 +4,19 @@ namespace App\Controller\Project;
 
 use App\Controller\Traits\ApiTrait;
 use App\Controller\Traits\ProjectTrait;
+use App\Facades\Log;
+use App\Facades\Provider;
+use App\Facades\Security;
 use App\Model\Deployment;
 use App\Model\Event;
 use App\Model\Project;
+use App\Queue\DeployJob;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Ronanchilvers\Foundation\Facade\Queue;
 use Ronanchilvers\Orm\Orm;
+use RuntimeException;
 
 /**
  * API Controller supporting the project UI
@@ -78,7 +85,7 @@ class ApiController
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function build(
+    public function webhookDeploy(
         ServerRequestInterface $request,
         ResponseInterface $response,
         $args
@@ -97,6 +104,9 @@ class ApiController
                     400
                 );
             }
+            Log::debug('Queueing project from webhook', [
+                'project' => $project->toArray(),
+            ]);
             $provider = Provider::forProject(
                 $project
             );
@@ -106,7 +116,7 @@ class ApiController
                     $deployment = Orm::finder(Deployment::class)->nextForProject(
                         $project
                     );
-                    $deployment->source = Security::email();
+                    $deployment->source = 'webhook'; //Security::email();
                     if (!$deployment->save()) {
                         Log::debug('Unable to create new deployment object', [
                             'project' => $project->toArray(),
@@ -119,7 +129,7 @@ class ApiController
                         'Initialise',
                         sprintf("Querying %s for head commit data", $provider->getLabel())
                     );
-                    $head = $provider->getHeadInfo($project->repository, $type, $branch);
+                    $head = $provider->getHeadInfo($project->repository, $project->branch);
                     $finder->event(
                         'info',
                         $deployment,
@@ -159,34 +169,22 @@ class ApiController
                 }
             });
 
-            Session::flash([
-                'heading' => 'Deploy queued successfully'
+            Log::error('Queued deployment from webhook', [
+                'project' => $project->toArray(),
             ]);
-        } catch (Exception $ex) {
-            $message = [$ex->getMessage()];
-            if ($previous = $ex->getPrevious()) {
-                $message[] = $previous->getMessage();
-            }
-            $message = implode(' - ', $message);
-            Session::flash(
-                [
-                    'heading' => 'Failed to initialise new deployment',
-                    'content' => get_class($ex) . ' : ' . $message,
-                ],
-                'error'
+            return $this->apiResponse(
+                $response,
+                []
             );
+        } catch (Exception $ex) {
             Log::error('Failed to initialise new deployment', [
                 'exception' => $ex,
             ]);
+            return $this->apiError(
+                $response,
+                $ex->getMessage(),
+                $ex->getCode()
+            );
         }
-
-        return $response->withRedirect(
-            Router::pathFor('project.view', [
-                'key' => $project->key
-            ])
-        );
-
-
-
     }
 }

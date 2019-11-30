@@ -39,9 +39,9 @@ $app->group('/projects', function (App $app) {
 $app->group('/api/project', function (App $app) {
     $app->map(['GET'], '/{key}/events/{number}', ApiController::class . ':events');
 });
-// Build route is outside normal API routing, mainly for obscurity and brevity
-$app->get('/build/{token}', ProjectController::class . ':build')
-    ->setName('project.build');
+// Webhook route is outside normal API routing, mainly for obscurity and brevity
+$app->get('/d/{token}', ApiController::class . ':webhookDeploy')
+    ->setName('project.webhook');
 
 $app->group('/user', function(App $app) {
     $app->map(['GET', 'POST'], '/login', UserController::class . ':login')
