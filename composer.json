@@ -1,6 +1,6 @@
 {
-    "name": "ronanchilvers/slim-base",
-    "description": "Base framework that extends slim and adds some useful components",
+    "name": "ronanchilvers/deploy",
+    "description": "A tool for simple deployments from common source control providers.",
     "type": "project",
     "require": {
         "defuse/php-encryption": "^2.1",
