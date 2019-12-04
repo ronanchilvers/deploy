@@ -120,6 +120,14 @@ sudo supervisorctl update
 sudo supervisorctl status
 ```
 
+## Creating deployments
+
+`deploy` organises deployments by project. Each project is deployed into its own directory in the filesystem. `deploy` maintains a set of deployments for a project, one of which can be the active one. You can control how many deployments are kept for each project using the `deploy.yaml` configuration file (see below for details).
+
+Creating a project is simply a matter of clicking 'Add Project' in the navigation bar at the top, filling in the details and clicking 'Save'. You will then be show the project view. To deploy the project, click the 'Deploy' button at the top right, choose the branch or tag you want to deploy and then click the red 'Deploy Now' button. The 'Output' tab below will show you the progess of the deployment steps.
+
+You can also deploy your project using a webhook. When you have added a project, on the project view, click the cog icon next to the 'Deploy' button to edit the project. At the bottom of the page is a 'Webhook Deployments' section which shows the unique URL for triggering a project deployment. You can call this URL in a commit hook or from your CI pipeline as a post-build hook so that the project is deployed automatically.
+
 ## Controlling deployments
 
 `deploy` can be customised per project by using directives in a file named `deploy.yaml` placed in the root of the project working copy. Using this file you can assign paths that should be writable (folders only), define shared paths (files or folders), assign hooks to run before or after specific stages, define specific paths that should be removed when deploying (files or folders) and several other things.
@@ -249,11 +257,11 @@ cleanup:
 ### Things to do
 
 * [ ] Unit tests!
-* [ ] Ability to trigger a deployment using a webhook
 * [ ] Bitbucket support
 
 ### Things that are done
 
+* [x] Ability to trigger a deployment using a webhook
 * [x] Implement re-activation rather than deployment for old releases (change of symlink)
 * [x] Block deployments for a project when one is queued or in progress
 * [x] Better user account support

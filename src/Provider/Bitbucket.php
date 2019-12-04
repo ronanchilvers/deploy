@@ -73,7 +73,7 @@ class Bitbucket extends AbstractProvider implements ProviderInterface
     /**
      * @see \App\Provider\ProviderInterface::getHeadInfo()
      */
-    public function getHeadInfo(string $repository, string $type, string $ref)
+    public function getHeadInfo(string $repository, string $ref)
     {
         $params = [
             'repository' => $this->encodeRepository($repository),

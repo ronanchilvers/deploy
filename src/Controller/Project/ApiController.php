@@ -4,11 +4,19 @@ namespace App\Controller\Project;
 
 use App\Controller\Traits\ApiTrait;
 use App\Controller\Traits\ProjectTrait;
+use App\Facades\Log;
+use App\Facades\Provider;
+use App\Facades\Security;
 use App\Model\Deployment;
 use App\Model\Event;
+use App\Model\Project;
+use App\Queue\DeployJob;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Ronanchilvers\Foundation\Facade\Queue;
 use Ronanchilvers\Orm\Orm;
+use RuntimeException;
 
 /**
  * API Controller supporting the project UI
@@ -70,5 +78,113 @@ class ApiController
             $response,
             $data
         );
+    }
+
+    /**
+     * Trigger a build of a project specified by the project token
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function webhookDeploy(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ) {
+        try {
+            $project = Orm::finder(Project::class)->forToken($args['token']);
+            if (!$project instanceof Project) {
+                throw new RuntimeException(
+                    'Invalid or unknown project token',
+                    400
+                );
+            }
+            if (!$project->isDeployable()) {
+                throw new RuntimeException(
+                    'Project is not deployable at the moment',
+                    400
+                );
+            }
+            Log::debug('Queueing project from webhook', [
+                'project' => $project->toArray(),
+            ]);
+            $provider = Provider::forProject(
+                $project
+            );
+            $finder = Orm::finder(Event::class);
+            Orm::transaction(function() use ($project, $provider, $finder) {
+                try {
+                    $deployment = Orm::finder(Deployment::class)->nextForProject(
+                        $project
+                    );
+                    $deployment->source = 'webhook'; //Security::email();
+                    if (!$deployment->save()) {
+                        Log::debug('Unable to create new deployment object', [
+                            'project' => $project->toArray(),
+                        ]);
+                        throw new RuntimeException('Unable to create new deployment');
+                    }
+                    $finder->event(
+                        'info',
+                        $deployment,
+                        'Initialise',
+                        sprintf("Querying %s for head commit data", $provider->getLabel())
+                    );
+                    $head = $provider->getHeadInfo($project->repository, $project->branch);
+                    $finder->event(
+                        'info',
+                        $deployment,
+                        'Initialise',
+                        "Commit data : " . json_encode($head, JSON_PRETTY_PRINT)
+                    );
+                    Log::debug('Updating deployment commit information', $head);
+                    $deployment->sha       = $head['sha'];
+                    $deployment->author    = $head['author'];
+                    $deployment->committer = $head['committer'];
+                    $deployment->message   = $head['message'];
+                    if (!$deployment->save()) {
+                        throw new RuntimeException(
+                            'Unable to create new deployment',
+                            500
+                        );
+                    }
+                    if (!$project->markDeploying()) {
+                        throw new RuntimeException(
+                            'Unable to mark project as deploying',
+                            500
+                        );
+                    }
+                    Queue::dispatch(
+                        new DeployJob($deployment)
+                    );
+                } catch (Exception $ex) {
+                    if (isset($deployment) && $deployment instanceof Deployment) {
+                        $finder->event(
+                            'error',
+                            $deployment,
+                            'Initialise',
+                            $ex->getMessage()
+                        );
+                    }
+                    throw $ex;
+                }
+            });
+
+            Log::error('Queued deployment from webhook', [
+                'project' => $project->toArray(),
+            ]);
+            return $this->apiResponse(
+                $response,
+                []
+            );
+        } catch (Exception $ex) {
+            Log::error('Failed to initialise new deployment', [
+                'exception' => $ex,
+            ]);
+            return $this->apiError(
+                $response,
+                $ex->getMessage(),
+                $ex->getCode()
+            );
+        }
     }
 }

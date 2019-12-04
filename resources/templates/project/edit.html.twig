@@ -15,4 +15,10 @@ App.Deploy.init({
         {% include 'fragments/project/form.html.twig' %}
     </div>
 </div>
+<br />
+<section class="box">
+    <p class="is-size-4">Webhook Deployments</p>
+    <p>The deployment webhook url for this project is:</p>
+    <p><code>{{ request.uri.scheme }}://{{ request.header('host')[0] }}{{ path_for('project.webhook', { token: project.token })}}</code></p>
+</section>
 {% endblock %}

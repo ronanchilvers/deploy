@@ -10,7 +10,7 @@
                     {% for type,options in tags_branches %}
                        <optgroup label="{{ type|title }}">
                         {% for name in options %}
-                            <option value="{{ type }}:{{ name }}"{% if project.branch == name %} selected="selected"{% endif %}>{{ name }}</option>
+                            <option value="{{ name }}"{% if project.branch == name %} selected="selected"{% endif %}>{{ name }}</option>
                         {% endfor %}
                     {% endfor %}
                     </select>

@@ -30,11 +30,11 @@
             {% endif %}
             </div>
             <div class="column">
-                <span class="is-size-7">Author</span><br />
+                <span class="is-size-7">Last Deployed Author</span><br />
                 {% if not project.last_author %}Not yet deployed{% else %}{{ project.last_author }}{% endif %}
             </div>
             <div class="column">
-                <span class="is-size-7">SHA</span><br />
+                <span class="is-size-7">Last Deployed SHA</span><br />
                 {% if not project.last_sha %}Not yet deployed{% else %}{{ sha_link(project, project.last_sha) }}{% endif %}
             </div>
             {# <div class="column is-narrow">

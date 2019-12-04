@@ -42,13 +42,13 @@ App.Monitor.init({
                 </p>
             </div>
             <div class="column">
-                <p class="heading">Last Author</p>
+                <p class="heading">Last Deployed Author</p>
                 <p>
                     {% if project.last_sha %}{{ project.last_author }}{% else %}Not yet deployed{% endif %}
                 </p>
             </div>
             <div class="column">
-                <p class="heading">Last SHA</p>
+                <p class="heading">Last Deployed SHA</p>
                 <p>
                     {% if project.last_sha %}{{ sha_link(project, project.last_sha) }}{% else %}Not yet deployed{% endif %}
                 </p>

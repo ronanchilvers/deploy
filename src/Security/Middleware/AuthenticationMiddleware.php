@@ -34,6 +34,7 @@ class AuthenticationMiddleware
         $this->setDefaults([
             'anonymous_routes' => [
                 'user.login',
+                'project.webhook',
             ],
             'login_route'    => 'user.login',
             'store_redirect' => true,
