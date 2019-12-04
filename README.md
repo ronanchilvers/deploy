@@ -5,7 +5,7 @@
 
 A tool for simple deployments to a single server (for now) from common source control providers.
 
-* Github and Gitlab support (Bitbucket planned)
+* Github, Gitlab and Bitbucket support
 * Zero downtime deployments with rollbacks
 * Fine grained control of deployments using a repository based configuration file
 * Responsive UI - fully usable on any device
@@ -257,10 +257,10 @@ cleanup:
 ### Things to do
 
 * [ ] Unit tests!
-* [ ] Bitbucket support
 
 ### Things that are done
 
+* [x] Bitbucket support
 * [x] Ability to trigger a deployment using a webhook
 * [x] Implement re-activation rather than deployment for old releases (change of symlink)
 * [x] Block deployments for a project when one is queued or in progress
