@@ -274,6 +274,7 @@ cleanup:
 
 ## Things to think about
 
+* [ ] Show git history since the current active deployment
 * [ ] Environment variable support
 * [ ] Ability to keep specific releases
 * [ ] Allow different / extended defaults for specific frameworks
