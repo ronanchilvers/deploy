@@ -9,6 +9,8 @@ use App\Test\Action\TestAbstractAction;
 /**
  * Test suite for base action class
  *
+ * @group actions
+ * @group abstract_action
  * @author Ronan Chilvers <ronan@d3r.com>
  */
 class ActionTest extends TestCase

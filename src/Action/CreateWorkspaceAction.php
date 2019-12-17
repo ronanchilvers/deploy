@@ -29,14 +29,7 @@ class CreateWorkspaceAction extends AbstractAction
         $deploymentDir = $context->getOrThrow('deployment_base_dir', 'Invalid or missing deployment base directory');
         $deployment    = $context->getOrThrow('deployment', 'Invalid or missing deployment');
         $locations     = [$projectDir, $deploymentDir];
-        // $this->info(
-        //     $deployment,
-        //     [
-        //         'Checking workspace exists for project',
-        //         'Locations - ' . implode(', ', $locations),
-        //     ]
-        // );
-        $mode = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
+        $mode          = Settings::get('build.chmod.default_folder', Builder::MODE_DEFAULT);
         foreach ($locations as $location) {
             if (is_dir($location)) {
                 $this->info(

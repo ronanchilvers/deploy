@@ -4,10 +4,12 @@ namespace App\Test;
 
 use App\Action\Context;
 use App\Model\Deployment;
+use App\Model\Finder\EventFinder;
 use App\Model\Project;
 use PDO;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use Ronanchilvers\Foundation\Config;
 
@@ -30,6 +32,19 @@ class TestCase extends BaseTestCase
     }
 
     /**
+     * Get a mock logger
+     *
+     * @return Psr\Log\LoggerInterface
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function mockLogger()
+    {
+        return $this->createMock(
+            LoggerInterface::class
+        );
+    }
+
+    /**
      * Get a mock container instance
      *
      * @return Psr\Container\ContainerInterface
@@ -39,7 +54,14 @@ class TestCase extends BaseTestCase
     {
         $builder = $this->getMockBuilder('Psr\Container\ContainerInterface')
                      ->setMethods(['get', 'has']);
-        return $builder->getMock();
+        $mock = $builder->getMock();
+        $mock->expects($this->any())
+             ->method('get')
+             ->with('Psr\Log\LoggerInterface')
+             ->willReturn(
+                $this->mockLogger()
+             );
+        return $mock;
     }
 
     /**
@@ -91,6 +113,19 @@ class TestCase extends BaseTestCase
     {
         return $this->createMock(
             Context::class
+        );
+    }
+
+    /**
+     * Get a mock event finder object
+     *
+     * @return \App\Model\Finder\EventFinder
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function mockEventFinder()
+    {
+        return $this->createMock(
+            EventFinder::class
         );
     }
 
