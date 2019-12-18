@@ -12,6 +12,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use Ronanchilvers\Foundation\Config;
+use RuntimeException;
 
 /**
  * Base test case with utility methods
@@ -55,12 +56,7 @@ class TestCase extends BaseTestCase
         $builder = $this->getMockBuilder('Psr\Container\ContainerInterface')
                      ->setMethods(['get', 'has']);
         $mock = $builder->getMock();
-        $mock->expects($this->any())
-             ->method('get')
-             ->with('Psr\Log\LoggerInterface')
-             ->willReturn(
-                $this->mockLogger()
-             );
+
         return $mock;
     }
 
@@ -91,16 +87,41 @@ class TestCase extends BaseTestCase
     }
 
     /**
+     * Get a mock settings object
+     *
+     * @return \Ronanchilvers\Foundation\Config
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function mockSettings()
+    {
+        return $this->createMock(
+            Config::class
+        );
+    }
+
+    /**
      * Get a mock config object
      *
      * @return \Ronanchilvers\Foundation\Config
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function mockConfig()
+    protected function mockConfig($data = [])
     {
-        return $this->createMock(
+        $callback = function ($key) use ($data) {
+            if (array_key_exists($key, $data)) {
+                return $data[$key];
+            }
+
+            throw new RuntimeException('Unexpected key passed to config : ' . $key);
+        };
+        $mock = $this->createMock(
             Config::class
         );
+        $mock->expects($this->any())
+            ->method('get')
+            ->willReturnCallback($callback);
+
+        return $mock;
     }
 
     /**

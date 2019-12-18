@@ -7,11 +7,12 @@ use App\Action\Context;
 use App\Action\CreateWorkspaceAction;
 use App\Model\Finder\EventFinder;
 use App\Test\Action\TestAbstractAction;
+use org\bovigo\vfs\vfsStream;
 use Psr\Log\LoggerInterface;
 use Ronanchilvers\Container\Container;
 use Ronanchilvers\Foundation\Config;
 use Ronanchilvers\Foundation\Facade\Facade;
-use org\bovigo\vfs\vfsStream;
+use RuntimeException;
 
 /**
  * Test suite for the CreateWorkspace action
@@ -28,19 +29,49 @@ class CreateWorkspaceTest extends TestCase
     protected $root;
 
     /**
-     * Get a mock action object to test
+     * Get the mock config
      *
-     * @return \App\Action\AbstractAction
+     * @return Ronanchilvers\Foundation\Config
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function newInstance()
+    protected function mockSettings()
     {
-        $instance = new CreateWorkspaceAction();
-        $instance->setEventFinder(
-            $this->mockEventFinder()
-        );
+        $mock = parent::mockSettings();
+        $mock->expects($this->any())
+               ->method('get')
+               ->with('build.chmod.default_folder')
+               ->willReturn(0770);
 
-        return $instance;
+        return $mock;
+    }
+
+    /**
+     * Get a mock action context
+     *
+     * @return App\Action\Context
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function mockContext($data = [])
+    {
+        $callback = function ($key) use ($data) {
+            if (array_key_exists($key, $data)) {
+                return $data[$key];
+            }
+
+            throw new RuntimeException('Unexpected key passed to mock context : ' . $key);
+        };
+
+        $mock = $this->createMock(
+            Context::class
+        );
+        $mock->expects($this->any())
+             ->method('get')
+             ->willReturnCallback($callback);
+        $mock->expects($this->any())
+             ->method('getOrThrow')
+             ->willReturnCallback($callback);
+
+        return $mock;
     }
 
     /**
@@ -51,27 +82,55 @@ class CreateWorkspaceTest extends TestCase
      */
     protected function mockContainer()
     {
-        $config = $this->mockConfig();
-        $config->expects($this->any())
-               ->method('get')
-               ->with('build.chmod.default_folder')
-               ->willReturn(0770);
+        $settings = $this->mockSettings();
+        $logger = $this->mockLogger();
 
-        $container = new Container();
-        $container->set(LoggerInterface::class, $this->mockLogger());
-        $container->set('settings', $config);
+        $container = parent::mockContainer();
+        $container->expects($this->any())
+                  ->method('has')
+                  ->willReturnCallback(function ($key) {
+                    if (in_array($key, ['settings', LoggerInterface::class])) {
+                        return true;
+                    }
+                    return false;
+                  });
+        $container->expects($this->any())
+                  ->method('get')
+                  ->willReturnCallback(function ($key) {
+                    switch ($key) {
 
-        // $container = parent::mockContainer();
-        // $container->expects($this->any())
-        //           ->method('has')
-        //           ->with($this->equalTo('settings'))
-        //           ->willReturn(true);
-        // $container->expects($this->any())
-        //           ->method('get')
-        //           ->with($this->equalTo('settings'))
-        //           ->willReturn($config);
+                        case 'settings':
+                            return $this->mockSettings();
+
+                        case LoggerInterface::class:
+                            return $this->mockLogger();
+
+                        default:
+                            throw new RuntimeException('Mock container did not expect key ' . $key);
+
+                    }
+                  });
 
         return $container;
+    }
+
+    /**
+     * Get a mock action object to test
+     *
+     * @return \App\Action\AbstractAction
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function newInstance(EventFinder $mockEventFinder = null)
+    {
+        $instance = new CreateWorkspaceAction();
+        if (is_null($mockEventFinder)) {
+            $mockEventFinder = $this->mockEventFinder();
+        }
+        $instance->setEventFinder(
+            $mockEventFinder
+        );
+
+        return $instance;
     }
 
     /**
@@ -81,12 +140,11 @@ class CreateWorkspaceTest extends TestCase
      */
     protected function setUp()
     {
-        $this->root = vfsStream::setup(
-            'root'
-        );
-        // $this->deployment_base_dir = vfsStream::setup('deployment_base_dir');
         Facade::setContainer(
             $this->mockContainer()
+        );
+        $this->root = vfsStream::setup(
+            'root'
         );
     }
 
@@ -96,16 +154,18 @@ class CreateWorkspaceTest extends TestCase
      * @test
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function testProjectAndDeploymentDirectoriesCreated()
+    public function testLocationsAreCreatedWhenMissing()
     {
-        $config = new Config();
-        $context = (new Context())
-            ->set('project_base_dir', vfsStream::url('root') . '/project_base_dir')
-            ->set('deployment_base_dir', vfsStream::url('root') . '/deployment_base_dir')
-            ->set('deployment', $this->mockDeployment());
+        $data = [
+            'project_base_dir'    => $this->root->url('root') . '/project_base_dir',
+            'deployment_base_dir' => $this->root->url('root') . '/deployment_base_dir',
+            'deployment'          => $this->mockDeployment(),
+        ];
         $instance = $this->newInstance();
-        $instance->run($config, $context);
-
+        $instance->run(
+            $this->mockConfig(),
+            $this->mockContext($data)
+        );
         $this->assertTrue($this->root->hasChild('project_base_dir'));
         $this->assertTrue($this->root->hasChild('deployment_base_dir'));
         $this->assertEquals(
@@ -117,6 +177,39 @@ class CreateWorkspaceTest extends TestCase
             0770,
             $this->root->getChild('deployment_base_dir')->getPermissions(),
             'Permissions are incorrect on deployment_base_dir'
+        );
+    }
+
+    /**
+     * Test that locations are skipped when they exist
+     *
+     * @test
+     * @group current
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function testLocationsAreSkippedWhenTheyExist()
+    {
+        mkdir($this->root->url('root') . '/project_base_dir');
+        mkdir($this->root->url('root') . '/deployment_base_dir');
+        $mockDeployment = $this->mockDeployment();
+        $mockEventFinder = $this->mockEventFinder();
+        $mockEventFinder->expects($this->exactly(2))
+                        ->method('event')
+                        ->withConsecutive(
+                            [EventFinder::INFO, $mockDeployment, 'Create Workspace', 'Location exists: vfs://root/project_base_dir'],
+                            [EventFinder::INFO, $mockDeployment, 'Create Workspace', 'Location exists: vfs://root/deployment_base_dir']
+                        );
+        $data = [
+            'project_base_dir'    => $this->root->url('root') . '/project_base_dir',
+            'deployment_base_dir' => $this->root->url('root') . '/deployment_base_dir',
+            'deployment'          => $mockDeployment,
+        ];
+        $instance = $this->newInstance(
+            $mockEventFinder
+        );
+        $instance->run(
+            $this->mockConfig(),
+            $this->mockContext($data)
         );
     }
 }
