@@ -51,7 +51,7 @@ class CreateWorkspaceAction extends AbstractAction
                 $this->error(
                     $deployment,
                     [
-                        "Failed to create location: {$location} (mode {$mode})",
+                        "Failed to create location: {$location}",
                     ]
                 );
                 Log::error('Unable to create build directory', [
@@ -65,7 +65,7 @@ class CreateWorkspaceAction extends AbstractAction
             $this->info(
                 $deployment,
                 [
-                    "Created location: {$location} (mode {$mode})",
+                    "Created location: {$location}",
                 ]
             );
         }

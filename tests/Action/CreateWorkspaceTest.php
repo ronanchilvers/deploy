@@ -184,13 +184,14 @@ class CreateWorkspaceTest extends TestCase
      * Test that locations are skipped when they exist
      *
      * @test
-     * @group current
      * @author Ronan Chilvers <ronan@d3r.com>
      */
     public function testLocationsAreSkippedWhenTheyExist()
     {
-        mkdir($this->root->url('root') . '/project_base_dir');
-        mkdir($this->root->url('root') . '/deployment_base_dir');
+        vfsStream::newDirectory('project_base_dir')
+            ->at($this->root);
+        vfsStream::newDirectory('deployment_base_dir')
+            ->at($this->root);
         $mockDeployment = $this->mockDeployment();
         $mockEventFinder = $this->mockEventFinder();
         $mockEventFinder->expects($this->exactly(2))
@@ -199,6 +200,40 @@ class CreateWorkspaceTest extends TestCase
                             [EventFinder::INFO, $mockDeployment, 'Create Workspace', 'Location exists: vfs://root/project_base_dir'],
                             [EventFinder::INFO, $mockDeployment, 'Create Workspace', 'Location exists: vfs://root/deployment_base_dir']
                         );
+        $data = [
+            'project_base_dir'    => $this->root->url('root') . '/project_base_dir',
+            'deployment_base_dir' => $this->root->url('root') . '/deployment_base_dir',
+            'deployment'          => $mockDeployment,
+        ];
+        $instance = $this->newInstance(
+            $mockEventFinder
+        );
+        $instance->run(
+            $this->mockConfig(),
+            $this->mockContext($data)
+        );
+    }
+
+    /**
+     * Test that we log an error and throw an exception if a location can't be created
+     *
+     * @test
+     * @group current
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function testHandlesFailureToCreateLocation()
+    {
+        // vfsStream::newDirectory('project_base_dir', 0000)
+        //     ->at($this->root);
+        $this->root->chmod(0000);
+        $mockDeployment = $this->mockDeployment();
+        $mockEventFinder = $this->mockEventFinder();
+        $mockEventFinder->expects($this->exactly(1))
+                        ->method('event')
+                        ->withConsecutive(
+                            [EventFinder::ERROR, $mockDeployment, 'Create Workspace', 'Failed to create location: vfs://root/project_base_dir']
+                        );
+        $this->expectException(RuntimeException::class);
         $data = [
             'project_base_dir'    => $this->root->url('root') . '/project_base_dir',
             'deployment_base_dir' => $this->root->url('root') . '/deployment_base_dir',
