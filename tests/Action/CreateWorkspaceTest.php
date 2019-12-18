@@ -29,23 +29,6 @@ class CreateWorkspaceTest extends TestCase
     protected $root;
 
     /**
-     * Get the mock config
-     *
-     * @return Ronanchilvers\Foundation\Config
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    protected function mockSettings()
-    {
-        $mock = parent::mockSettings();
-        $mock->expects($this->any())
-               ->method('get')
-               ->with('build.chmod.default_folder')
-               ->willReturn(0770);
-
-        return $mock;
-    }
-
-    /**
      * Get a mock action context
      *
      * @return App\Action\Context
@@ -75,46 +58,6 @@ class CreateWorkspaceTest extends TestCase
     }
 
     /**
-     * Get a mock container
-     *
-     * @return Psr\Container\ContainerInterface
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    protected function mockContainer()
-    {
-        $settings = $this->mockSettings();
-        $logger = $this->mockLogger();
-
-        $container = parent::mockContainer();
-        $container->expects($this->any())
-                  ->method('has')
-                  ->willReturnCallback(function ($key) {
-                    if (in_array($key, ['settings', LoggerInterface::class])) {
-                        return true;
-                    }
-                    return false;
-                  });
-        $container->expects($this->any())
-                  ->method('get')
-                  ->willReturnCallback(function ($key) {
-                    switch ($key) {
-
-                        case 'settings':
-                            return $this->mockSettings();
-
-                        case LoggerInterface::class:
-                            return $this->mockLogger();
-
-                        default:
-                            throw new RuntimeException('Mock container did not expect key ' . $key);
-
-                    }
-                  });
-
-        return $container;
-    }
-
-    /**
      * Get a mock action object to test
      *
      * @return \App\Action\AbstractAction
@@ -141,7 +84,9 @@ class CreateWorkspaceTest extends TestCase
     protected function setUp()
     {
         Facade::setContainer(
-            $this->mockContainer()
+            $this->mockContainer([
+                'settings' => $this->mockSettings([ 'build.chmod.default_folder' => 0770 ]),
+            ])
         );
         $this->root = vfsStream::setup(
             'root'

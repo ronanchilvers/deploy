@@ -6,6 +6,7 @@ use App\Action\Context;
 use App\Model\Deployment;
 use App\Model\Finder\EventFinder;
 use App\Model\Project;
+use App\Provider\ProviderInterface;
 use PDO;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Container\ContainerInterface;
@@ -51,11 +52,34 @@ class TestCase extends BaseTestCase
      * @return Psr\Container\ContainerInterface
      * @author Ronan Chilvers <ronan@thelittledot.com>
      */
-    protected function mockContainer()
+    protected function mockContainer($data = null)
     {
         $builder = $this->getMockBuilder('Psr\Container\ContainerInterface')
                      ->setMethods(['get', 'has']);
         $mock = $builder->getMock();
+        if (is_array($data)) {
+            if (!array_key_exists(LoggerInterface::class, $data)) {
+                $data[LoggerInterface::class] = $this->mockLogger();
+            }
+        } else {
+            $data = [
+                LoggerInterface::class => $this->mockLogger()
+            ];
+        }
+        $mock->expects($this->any())
+              ->method('has')
+              ->willReturnCallback(function ($key) use ($data) {
+                return array_key_exists($key, $data);
+              });
+        $mock->expects($this->any())
+              ->method('get')
+              ->willReturnCallback(function ($key) use ($data) {
+                if (array_key_exists($key, $data)) {
+                    return $data[$key];
+                }
+
+                throw new RuntimeException('Unexpected key passed to mock container : ' . $key);
+              });
 
         return $mock;
     }
@@ -92,11 +116,25 @@ class TestCase extends BaseTestCase
      * @return \Ronanchilvers\Foundation\Config
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function mockSettings()
+    protected function mockSettings($data = null)
     {
-        return $this->createMock(
+        $mock = $this->createMock(
             Config::class
         );
+        if (is_array($data)) {
+            $callback = function ($key) use ($data) {
+                if (array_key_exists($key, $data)) {
+                    return $data[$key];
+                }
+
+                throw new RuntimeException('Unexpected key passed to config : ' . $key);
+            };
+            $mock->expects($this->any())
+               ->method('get')
+               ->willReturnCallback($callback);
+        }
+
+        return $mock;
     }
 
     /**
@@ -130,11 +168,27 @@ class TestCase extends BaseTestCase
      * @return \App\Action\Context
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function mockContext()
+    protected function mockContext($data = [])
     {
-        return $this->createMock(
+        $callback = function ($key) use ($data) {
+            if (array_key_exists($key, $data)) {
+                return $data[$key];
+            }
+
+            throw new RuntimeException('Unexpected key passed to mock context : ' . $key);
+        };
+
+        $mock = $this->createMock(
             Context::class
         );
+        $mock->expects($this->any())
+             ->method('get')
+             ->willReturnCallback($callback);
+        $mock->expects($this->any())
+             ->method('getOrThrow')
+             ->willReturnCallback($callback);
+
+        return $mock;
     }
 
     /**
@@ -148,6 +202,21 @@ class TestCase extends BaseTestCase
         return $this->createMock(
             EventFinder::class
         );
+    }
+
+    /**
+     * Get a mock provider
+     *
+     * @return App\Provider\ProviderInterface
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function mockProvider()
+    {
+        $mock = $this->createMock(
+            ProviderInterface::class
+        );
+
+        return $mock;
     }
 
     /**
