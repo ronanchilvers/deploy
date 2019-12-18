@@ -25,12 +25,7 @@ class CreateWorkspaceTest extends TestCase
     /**
      * @var mixed
      */
-    protected $project_dir;
-
-    /**
-     * @var mixed
-     */
-    protected $deployment_base_dir;
+    protected $root;
 
     /**
      * Get a mock action object to test
