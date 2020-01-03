@@ -17,7 +17,7 @@ jobs:
       uses: shivammathur/setup-php@master
       with:
         php-version: ${{ matrix.php-versions }}
-        extension: mbstring, dom, simplexml, xdebug
+        extensions: mbstring, dom, simplexml, xdebug
         coverage: xdebug
     - name: Download scrutinizer ocular
       run: wget -q -O ocular.phar https://scrutinizer-ci.com/ocular.phar
