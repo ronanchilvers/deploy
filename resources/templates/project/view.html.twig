@@ -8,7 +8,7 @@ App.Deploy.init({
 {% if selected_deployment and not selected_deployment.deployed and not selected_deployment.failed %}
 App.Monitor.init({
     project: '{{ project.key }}',
-    number: {{ selected_deployment.number }}
+    number: {{ selected_deployment.number ?? 0 }}
 });
 {% endif %}
 </script>
