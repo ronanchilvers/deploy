@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1501bf4115d235ab560b87170ead861f",
+    "content-hash": "a960747298cf6aba00fb1675e2da18ed",
     "packages": [
         {
             "name": "cakephp/cache",
@@ -1785,16 +1785,16 @@
         },
         {
             "name": "ronanchilvers/sessions",
-            "version": "1.2",
+            "version": "v2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanchilvers/sessions.git",
-                "reference": "604537246fef792f56ae025fd35f7530347ca7b7"
+                "reference": "ccdf5ad26ef1b8a60008d3812ed8d9326b9d6899"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanchilvers/sessions/zipball/604537246fef792f56ae025fd35f7530347ca7b7",
-                "reference": "604537246fef792f56ae025fd35f7530347ca7b7",
+                "url": "https://api.github.com/repos/ronanchilvers/sessions/zipball/ccdf5ad26ef1b8a60008d3812ed8d9326b9d6899",
+                "reference": "ccdf5ad26ef1b8a60008d3812ed8d9326b9d6899",
                 "shasum": ""
             },
             "require": {
@@ -1804,7 +1804,10 @@
             "require-dev": {
                 "defuse/php-encryption": "^2.1",
                 "dflydev/fig-cookies": "^1.0",
-                "phpunit/phpunit": "^6.0"
+                "php-parallel-lint/php-parallel-lint": "^1.3",
+                "phpunit/phpunit": "^6.0",
+                "psr/http-server-handler": "^1.0",
+                "psr/http-server-middleware": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -1828,10 +1831,10 @@
             ],
             "description": "Simple session handling",
             "support": {
-                "source": "https://github.com/ronanchilvers/sessions/tree/1.2",
+                "source": "https://github.com/ronanchilvers/sessions/tree/v2.1",
                 "issues": "https://github.com/ronanchilvers/sessions/issues"
             },
-            "time": "2019-10-01T07:23:21+00:00"
+            "time": "2021-05-31T19:47:59+00:00"
         },
         {
             "name": "ronanchilvers/utility",

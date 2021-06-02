@@ -1,8 +1,8 @@
 <?php
 use App\Security\Middleware\AuthenticationMiddleware;
-use Ronanchilvers\Sessions\SessionMiddleware;
+use Ronanchilvers\Sessions\Middleware\Psr7;
 
 $app->add(new AuthenticationMiddleware());
-$app->add(new SessionMiddleware(
+$app->add(new Psr7(
     $container->get('session')
 ));

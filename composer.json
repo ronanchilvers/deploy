@@ -14,7 +14,7 @@
         "ronanchilvers/container-bridge-slim": "~1.0",
         "ronanchilvers/foundation": "^1.0",
         "ronanchilvers/orm": "^1.0",
-        "ronanchilvers/sessions": "^1.0",
+        "ronanchilvers/sessions": "^2.0",
         "ronanchilvers/utility": "^1.0",
         "slim/slim": "^3.9",
         "slim/twig-view": "^2.3",
