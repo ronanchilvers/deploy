@@ -50,7 +50,7 @@ jobs:
       run: |
         [ ! -d build ] && (echo "creating build directory" && mkdir build)
     - name: Lint PHP Files
-      run: vendor/bin/parallel-lint src
+      run: vendor/bin/parallel-lint src resources/database bin config web/index.php
     - name: Run Testsuite
       run: vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover build/clover.xml
     - name: Upload coverage data
