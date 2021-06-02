@@ -8,7 +8,7 @@
         "guzzlehttp/guzzle": "^6.4",
         "monolog/monolog": "^1.23",
         "pda/pheanstalk": "^4.0",
-        "php": "^7.1",
+        "php": "^7.3||^8.0",
         "respect/validation": "^1.1",
         "robmorgan/phinx": "^0.11.0",
         "ronanchilvers/container-bridge-slim": "~1.0",
@@ -24,8 +24,9 @@
     },
     "require-dev": {
         "jakub-onderka/php-parallel-lint": "^1.0",
-        "phpunit/phpunit": "^7.5",
-        "mikey179/vfsstream": "^1.6"
+        "mikey179/vfsstream": "^1.6",
+        "php-parallel-lint/php-parallel-lint": "^1.3",
+        "phpunit/phpunit": "^9.0"
     },
     "authors": [
         {
@@ -46,7 +47,7 @@
     "config": {
         "process-timeout" : 0,
         "platform": {
-            "php": "7.1.8"
+            "php": "7.3.0"
         }
     },
     "scripts": {
