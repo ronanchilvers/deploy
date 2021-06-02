@@ -32,7 +32,7 @@ class GlobalsExtension extends AbstractExtension implements GlobalsInterface
     /**
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function getGlobals()
+    public function getGlobals(): array
     {
         return $this->globals;
     }
