@@ -18,9 +18,9 @@
         "ronanchilvers/utility": "^1.0",
         "slim/slim": "^3.9",
         "slim/twig-view": "^2.3",
-        "symfony/console": "^3.4",
-        "symfony/process": "^3.4",
-        "symfony/yaml": "^3.4"
+        "symfony/console": "^5.0",
+        "symfony/process": "^5.0",
+        "symfony/yaml": "^5.0"
     },
     "require-dev": {
         "jakub-onderka/php-parallel-lint": "^1.0",
