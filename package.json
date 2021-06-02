@@ -1,13 +1,13 @@
 {
   "devDependencies": {
-    "bulma": "^0.7.5",
+    "bulma": "^0.9.2",
     "bulma-extensions": "^6.2.7",
     "gulp": "^4.0",
-    "gulp-autoprefixer": "^6.0",
-    "gulp-clean-css": "^3.9",
-    "gulp-hub": "^4.0",
-    "gulp-include": "^2.0",
-    "gulp-notify": "^3.0",
+    "gulp-autoprefixer": "^8.0",
+    "gulp-clean-css": "^4.3",
+    "gulp-hub": "^4.2",
+    "gulp-include": "^2.4",
+    "gulp-notify": "^4.0",
     "gulp-sass": "^4.1",
     "gulp-uglify": "^3.0"
   },
