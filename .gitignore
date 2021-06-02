@@ -9,3 +9,4 @@ local.config.php
 local.yaml
 phpunit.xml
 .DS_Store
+.phpunit.*

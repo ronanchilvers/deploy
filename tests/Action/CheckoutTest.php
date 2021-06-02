@@ -54,7 +54,7 @@ class CheckoutTest extends TestCase
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         Facade::setContainer(
             $this->mockContainer([
