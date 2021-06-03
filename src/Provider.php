@@ -41,7 +41,7 @@ class Provider implements ServiceProviderInterface
     public function register(Container $container)
     {
         // Logger
-        $container->set(LoggerInterface::class, function (ContainerInterface $c) {
+        $container->set(LoggerInterface::class, function(ContainerInterface $c) {
             $settings = $c->get('settings');
             $loggerSettings = $settings['logger'];
             $logger = new Logger('default');
@@ -67,7 +67,7 @@ class Provider implements ServiceProviderInterface
         });
 
         // Twig
-        $container->set(Twig::class, function (ContainerInterface $c) {
+        $container->set(Twig::class, function(ContainerInterface $c) {
             $settings = $c->get('settings')['twig'];
             $view = new Twig(
                 $settings['templates'],
@@ -104,24 +104,24 @@ class Provider implements ServiceProviderInterface
         });
 
         // Session
-        $container->set('session.storage.options', function ($c) {
+        $container->set('session.storage.options', function($c) {
             return $c->get('settings')['session'];
         });
-        $container->share('session.storage', function ($c) {
+        $container->share('session.storage', function($c) {
             $options = $c->get('session.storage.options');
 
             return new CookieStorage(
                 $options
             );
         });
-        $container->share('session', function ($c) {
+        $container->share('session', function($c) {
             return new Session(
                 $c->get('session.storage')
             );
         });
 
         // Database
-        $container->share(PDO::class, function ($c) {
+        $container->share(PDO::class, function($c) {
             $settings = $c->get('settings')['database'];
             return new PDO(
                 $settings['dsn'],

@@ -49,7 +49,7 @@ class ProviderProvider implements ServiceProviderInterface
             if ($token = Settings::get('providers.bitbucket.token', false)) {
                 $username = Settings::get('providers.bitbucket.username', false);
                 $client = new Client([
-                    'auth' => [ $username, $token ],
+                    'auth' => [$username, $token],
                 ]);
                 $factory->addProvider(new Bitbucket($client, $token));
             }
