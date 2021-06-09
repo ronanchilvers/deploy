@@ -51,6 +51,7 @@
         }
     },
     "scripts": {
-        "serve": "/usr/bin/env php -S localhost:8001 -t web"
+        "serve": "/usr/bin/env php -S localhost:8001 -t web",
+        "gulp": "([ -d ./node_modules ] || npm install) && ./node_modules/.bin/gulp"
     }
 }
