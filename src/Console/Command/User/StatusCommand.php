@@ -73,5 +73,7 @@ class StatusCommand extends Command
             throw new RuntimeException('Unable to save user - ' . $errors);
         }
         $output->writeln("User {$email} updated");
+
+        return 0;
     }
 }

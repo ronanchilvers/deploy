@@ -13,13 +13,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 
-$app->get('/', function (ServerRequestInterface $request, ResponseInterface $response) {
+$app->get('/', function(ServerRequestInterface $request, ResponseInterface $response) {
     return $response->withRedirect(
         Router::pathFor('project.index')
     );
 });
 
-$app->group('/projects', function (App $app) {
+$app->group('/projects', function(App $app) {
     $app->get('', ProjectController::class . ':index')
         ->setName('project.index');
     $app->map(['GET', 'POST'], '/add', ProjectController::class . ':add')
@@ -36,7 +36,7 @@ $app->group('/projects', function (App $app) {
         ->setName('project.view');
 });
 
-$app->group('/api/project', function (App $app) {
+$app->group('/api/project', function(App $app) {
     $app->map(['GET'], '/{key}/events/{number}', ApiController::class . ':events');
 });
 // Webhook route is outside normal API routing, mainly for obscurity and brevity

@@ -65,5 +65,7 @@ class WatchCommand extends Command
             $iterations,
             $output
         );
+
+        return 0;
     }
 }

@@ -47,7 +47,7 @@ trait ApiTrait
         if (is_null($code)) {
             $code = 400;
         }
-        $data = [ 'message' => $message ];
+        $data = ['message' => $message];
         return $this->renderJson(
             $response,
             'error',

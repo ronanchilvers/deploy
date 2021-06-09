@@ -93,5 +93,7 @@ class CreateCommand extends Command
             throw new RuntimeException('Unable to create user - ' . $errors);
         }
         $output->writeln("User {$email} created");
+
+        return 0;
     }
 }

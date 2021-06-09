@@ -21,7 +21,7 @@ class SecurityProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container->share(Manager::class, function ($c) {
+        $container->share(Manager::class, function($c) {
             return new Manager($c->get('session'));
         });
     }

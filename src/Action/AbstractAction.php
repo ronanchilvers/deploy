@@ -96,7 +96,7 @@ abstract class AbstractAction implements ActionInterface
                 $deployment,
                 sprintf('Hook: %s hook running - %s', $key, $command)
             );
-            $process = new Process($command, $deploymentDir);
+            $process = new Process([$command], $deploymentDir);
             $process->run();
             if (!$process->isSuccessful()) {
                 $this->error(
