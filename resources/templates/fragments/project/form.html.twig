@@ -36,9 +36,9 @@
     </div>
 
     <div class="field is-grouped is-both-sides">
-        <div class="control">
+        {#<div class="control">
             <a class="button" href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { key: project.key }) }}{% endif %}">{% if not project.loaded %}Cancel{% else %}Back{% endif %}</a>
-        </div>
+        </div>#}
         <div class="control">
             <button type="submit" class="button is-primary is-once">Save</button>
         </div>
