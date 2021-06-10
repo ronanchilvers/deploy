@@ -96,13 +96,17 @@ abstract class AbstractAction implements ActionInterface
                 $deployment,
                 sprintf('Hook: %s hook running - %s', $key, $command)
             );
-            $process = new Process([$command], $deploymentDir);
+            $command = preg_replace('#[\s]{2,}#',' ', $command);
+            $command = explode(" ", $command, 2);
+            // @TODO Remove var_dump
+            // var_dump($command); exit();
+            $process = new Process($command, $deploymentDir);
             $process->run();
             if (!$process->isSuccessful()) {
                 $this->error(
                     $deployment,
                     [
-                        sprintf('Hook: %s hook failed to run : %s', $key, $command),
+                        sprintf('Hook: %s hook failed to run : %s', $key, implode(' ', $command)),
                         $process->getOutput(),
                         $process->getErrorOutput()
                     ]
