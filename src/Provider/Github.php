@@ -83,6 +83,8 @@ class Github extends AbstractProvider implements ProviderInterface
      */
     public function getHeadInfo(string $repository, string $ref)
     {
+        $ref = $this->cleanBranchName($ref);
+        $data = null;
         foreach (['heads', 'tags'] as $type) {
             $params = [
                 'repository' => $repository,

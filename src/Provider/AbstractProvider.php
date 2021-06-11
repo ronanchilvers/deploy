@@ -449,4 +449,66 @@ abstract class AbstractProvider
     {
         return $repository;
     }
+
+    /**
+     * Clean git branch name
+     *
+     * @param string $name
+     * @return string
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    protected function cleanBranchName(string $name): string
+    {
+        $callbacks = [];
+        // Refs can't start with a hyphen
+        $callbacks['/^[-]{1,}/'] = function ($match) {
+            return '';
+        };
+        // No path component can start with a '.'
+        $callbacks['/\/\./'] = function ($match) {
+            return '/';
+        };
+        // No path component can end with '.lock'
+        $callbacks['/\/([^\/]+)\.lock/'] = function ($match) {
+            return '/' . $match[1];
+        };
+        // '..' is illegal anywhere
+        $callbacks['/\.\./'] = function ($match) {
+            return '';
+        };
+        // Control characters, space, tilde, caret, colon or backslash
+        $callbacks['/[\x00-\x20\x7E\x7F\x5E\x3A\x3F\x2A\x5B\x5C]{1,}/'] = function ($match) {
+            return '';
+        };
+        // Can't begin with a slash
+        $callbacks['/^\//'] = function ($match) {
+            return '';
+        };
+        // Can't end with a slash
+        $callbacks['/\/$/'] = function ($match) {
+            return '';
+        };
+        // Can't end with a dot
+        $callbacks['/\.$/'] = function ($match) {
+            return '';
+        };
+        // Can't contain '@{'
+        $callbacks['/@{/'] = function ($match) {
+            return '';
+        };
+        // Can't be just '@'
+        $callbacks['/^@$/'] = function ($match) {
+            return '-invalid-';
+        };
+        // Run regex, looping to make sure we don't create an illegal branch
+        // while cleaning
+        $previous = $name;
+        $cleaned = preg_replace_callback_array($callbacks, $name);
+        while ($cleaned != $previous) {
+            $previous = $cleaned;
+            $cleaned = preg_replace_callback_array($callbacks, $cleaned);
+        }
+
+        return $cleaned;
+    }
 }
