@@ -131,19 +131,22 @@ class ProjectExtension extends AbstractExtension
      * @return string
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function branchLink(Project $project)
+    public function branchLink(Project $project, string $branch = null)
     {
+        if (is_null($branch)) {
+            $branch = $project->branch;
+        }
         $provider = $this->factory->forProject(
             $project
         );
         $url = $provider->getBranchLink(
             $project->repository,
-            $project->branch
+            $branch
         );
         $link = Str::moustaches(
             $this->branchLinkHtml,
             [
-                'branch' => $project->branch,
+                'branch' => $branch,
                 'url'    => $url
             ]
         );

@@ -95,7 +95,7 @@ App.Monitor.init({
                         <ul class="content-list">
                             <li>
                                 <span class="icon is-inline-block"><i class="fas fa-hashtag"></i></span>
-                                <span class="is-inline-block tooltip" data-tooltip="Commit SHA">{{ sha_link(project, selected_deployment.sha) }}</span>
+                                <span class="is-inline-block tooltip" data-tooltip="Commit SHA (branch)">{{ sha_link(project, selected_deployment.sha) }} ({{ branch_link(project, selected_deployment.branch) }})</span>
                             </li>
                             <li>
                                 <span class="icon is-inline-block"><i class="fas fa-user-edit"></i></span>
