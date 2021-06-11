@@ -10,17 +10,26 @@ App.Deploy.init({
 
 {% block body %}
 <div class="project">
+
     {{ include('fragments/project/header.html.twig', {
         project: project
     } )}}
+
+    <div class="tabs is-boxed">
+        <ul>
+            <li class="is-active"><a href="#">Settings</a></li>
+            <li><a href="#">Webhooks</a></li>
+        </ul>
+    </div>
+
     <div class="box">
         {% include 'fragments/project/form.html.twig' %}
     </div>
+    <div class="box">
+        <p class="is-size-4">Webhook Deployments</p>
+        <p>The deployment webhook url for this project is:</p>
+        <p><code>{{ request.uri.scheme }}://{{ request.header('host')[0] }}{{ path_for('project.webhook', { token: project.token })}}</code></p>
+    </div>
+
 </div>
-<br />
-<section class="box">
-    <p class="is-size-4">Webhook Deployments</p>
-    <p>The deployment webhook url for this project is:</p>
-    <p><code>{{ request.uri.scheme }}://{{ request.header('host')[0] }}{{ path_for('project.webhook', { token: project.token })}}</code></p>
-</section>
 {% endblock %}
