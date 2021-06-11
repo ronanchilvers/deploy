@@ -268,6 +268,7 @@ class ProjectController
                         "Commit data : " . json_encode($head, JSON_PRETTY_PRINT)
                     );
                     Log::debug('Updating deployment commit information', $head);
+                    $deployment->branch    = $branch;
                     $deployment->sha       = $head['sha'];
                     $deployment->author    = $head['author'];
                     $deployment->committer = $head['committer'];

@@ -75,6 +75,7 @@ class Gitlab extends AbstractProvider implements ProviderInterface
      */
     public function getHeadInfo(string $repository, string $ref)
     {
+        $ref = $this->cleanBranchName($ref);
         $params = [
             'repository' => $this->encodeRepository($repository),
             'branch'     => $ref,

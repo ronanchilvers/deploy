@@ -104,14 +104,20 @@ class ApiController
                     400
                 );
             }
-            Log::debug('Queueing project from webhook', [
+            $branch = $request->getQueryParam('branch', null);
+            if (!is_null($branch)) {
+                $branch = filter_var($branch, FILTER_SANITIZE_STRING);
+            } else {
+                $branch = $project->branch;
+            }
+            Log::debug("Queueing project from webhook for branch {$branch}", [
                 'project' => $project->toArray(),
             ]);
             $provider = Provider::forProject(
                 $project
             );
             $finder = Orm::finder(Event::class);
-            Orm::transaction(function() use ($project, $provider, $finder) {
+            Orm::transaction(function() use ($project, $provider, $finder, $branch) {
                 try {
                     $deployment = Orm::finder(Deployment::class)->nextForProject(
                         $project
@@ -129,7 +135,7 @@ class ApiController
                         'Initialise',
                         sprintf("Querying %s for head commit data", $provider->getLabel())
                     );
-                    $head = $provider->getHeadInfo($project->repository, $project->branch);
+                    $head = $provider->getHeadInfo($project->repository, $branch);
                     $finder->event(
                         'info',
                         $deployment,
@@ -137,6 +143,7 @@ class ApiController
                         "Commit data : " . json_encode($head, JSON_PRETTY_PRINT)
                     );
                     Log::debug('Updating deployment commit information', $head);
+                    $deployment->branch    = $branch;
                     $deployment->sha       = $head['sha'];
                     $deployment->author    = $head['author'];
                     $deployment->committer = $head['committer'];

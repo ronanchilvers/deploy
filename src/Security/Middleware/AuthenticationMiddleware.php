@@ -45,6 +45,11 @@ class AuthenticationMiddleware
     public function __invoke(ServerRequestInterface $request, Response $response, $next)
     {
         $anonymousRoutes = $this->getOption('anonymous_routes', []);
+        if (is_null($request->getAttribute('route'))) {
+            return $response->withRedirect(
+                Router::pathFor($this->getOption('login_route'))
+            );
+        }
         if (!in_array($request->getAttribute('route')->getName(), $anonymousRoutes)) {
             if (!Security::hasLogin()) {
                 return $response->withRedirect(

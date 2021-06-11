@@ -44,7 +44,7 @@ trait ApiTrait
         string $message,
         int $code = null
     ): ResponseInterface {
-        if (is_null($code)) {
+        if (is_null($code) || 0 == $code) {
             $code = 400;
         }
         $data = ['message' => $message];

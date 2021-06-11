@@ -32,10 +32,10 @@ class Deployments extends AbstractMigration
      */
     public function change()
     {
-        $projects = $this->table('deployments', [
+        $deployments = $this->table('deployments', [
             'id' => 'deployment_id',
         ]);
-        $projects
+        $deployments
             ->addColumn('deployment_project', 'integer')
             ->addColumn('deployment_number', 'integer', [
                 'default' => 0,
