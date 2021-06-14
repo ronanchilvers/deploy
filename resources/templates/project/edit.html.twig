@@ -11,19 +11,23 @@ App.Deploy.init({
 {% block body %}
 <div class="project">
 
-    {{ include('fragments/project/header.html.twig', {
-        project: project,
-        show_backlink: true,
-    } )}}
+    <div class="header">
+        {{ include('fragments/project/header.html.twig', {
+            project: project,
+            show_button_backlink: true,
+        } )}}
+    </div>
 
     {{ include('fragments/project/tabs.html.twig', {
         project: project,
         active: 'project.edit',
     } )}}
 
-    <div class="box">
-        {% include 'fragments/project/form.html.twig' %}
-    </div>
+    <section class="section">
+        <div class="box">
+            {% include 'fragments/project/form.html.twig' %}
+        </div>
+    </section>
 
 </div>
 {% endblock %}

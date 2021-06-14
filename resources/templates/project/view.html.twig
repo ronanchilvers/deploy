@@ -18,7 +18,12 @@ App.Monitor.init({
 <div class="status-{{ project.status }}">
 
     <div class="header">
-        {{ include('fragments/project/header.html.twig', { project: project } )}}
+        {{ include('fragments/project/header.html.twig', {
+            project: project,
+            show_button_favourite: true,
+            show_button_settings: true,
+            show_button_deploy: true,
+        } )}}
 
         <section class="project section">
             <div class="columns">
@@ -60,7 +65,7 @@ App.Monitor.init({
     </div>
 
     {% if 0 < deployments|length %}
-    <div class="tabs tabs-deployment is-boxed">
+    <div class="tabs tabs-fullwidth is-boxed">
         <ul>
             <!-- <li class="tabs-heading">Deployment:</li> -->
         {% set first = 0 %}

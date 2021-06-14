@@ -12,16 +12,19 @@
         </div>
         <div class="column is-narrow is-clearfix">
             <div class="field is-grouped is-pulled-right-mobile">
-            {% if show_backlink %}
+            {% if show_button_backlink %}
                 <div class="control">
                     <a href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { key: project.key }) }}{% endif %}"
                        class="button">{% if not project.loaded %}Cancel{% else %}Back{% endif %}</a>
                 </div>
             {% endif %}
+            {% if show_button_favourite %}
                 <div class="control">
                     <a href="{{ path_for('user.favourite', { project: project.id }) }}"
                        class="button is-favourite is-favourite-{{ is_favourite(project) ? 'on' : 'off' }}"><span class="icon"><i class="{{ is_favourite(project) ? 'fas' : 'far' }} fa-star"></i></span></a>
                 </div>
+            {% endif %}
+            {% if show_button_settings %}
                 <div class="control">
                     <a class="button is-block-mobile is-once"
                        href="{{ path_for('project.edit', { key: project.key }) }}"
@@ -31,6 +34,9 @@
                         </span>
                     </a>
                 </div>
+            {% endif %}
+
+            {% if true or show_button_deploy %}
                 <div class="control">
                     <div class="dropdown is-right">
                         <div class="dropdown-trigger">
@@ -55,6 +61,8 @@
                         </div>
                     </div>
                 </div>
+            {% endif %}
+
             </div>
         </div>
     </div>
