@@ -1,6 +1,7 @@
 #main-wrapper {
+    margin-top: 3.25rem;
     background-color: rgb(250, 250, 250);
-    @include until($desktop) {
-        margin: 0 8px;
-    }
+    // @include until($desktop) {
+    //     margin: 0 8px;
+    // }
 }

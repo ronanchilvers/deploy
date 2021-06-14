@@ -1,0 +1,11 @@
+{% set tabs = {
+    'project.edit': 'Settings',
+    'project.webhooks': 'Webhooks',
+} %}
+<div class="tabs tabs-fullwidth is-boxed">
+    <ul>
+    {% for route,label in tabs %}
+        <li {% if active == route %}class="is-active"{% endif %}><a href="{{ path_for(route, { key: project.key }) }}">{{ label }}</a></li>
+    {% endfor %}
+    </ul>
+</div>

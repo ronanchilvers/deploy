@@ -16,55 +16,63 @@ App.Monitor.init({
 
 {% block body %}
 <div class="status-{{ project.status }}">
-    {{ include('fragments/project/header.html.twig', { project: project } )}}
 
-    <section class="project section">
-        <div class="columns">
-            <div class="column">
-                <p class="heading">Repository</p>
-                <p>
-                    <span class="icon is-inline-block is-size-7"><i class="fab fa-{{ project.provider }}"></i></span>
-                    <span class="is-inline-block">{{ repo_link(project) }}</span>
-                </p>
+    <div class="header">
+        {{ include('fragments/project/header.html.twig', {
+            project: project,
+            show_button_favourite: true,
+            show_button_settings: true,
+            show_button_deploy: true,
+        } )}}
+
+        <section class="project section">
+            <div class="columns">
+                <div class="column">
+                    <p class="heading">Repository</p>
+                    <p>
+                        <span class="icon is-inline-block is-size-7"><i class="fab fa-{{ project.provider }}"></i></span>
+                        <span class="is-inline-block">{{ repo_link(project) }}</span>
+                    </p>
+                </div>
+                <div class="column">
+                    <p class="heading">Default Branch</p>
+                    <p>
+                        <span class="icon is-inline-block is-size-7"><i class="fas fa-code-branch"></i></span>
+                        <span class="is-inline-block">{{ branch_link(project) }}</span>
+                    </p>
+                </div>
+                <div class="column status {% if project.last_status %}status--{{ project.last_status }}{% endif %}">
+                    <p class="heading">Last Deployment</p>
+                    <p>
+                        <span class="status__icon"></span>
+                        <span class="status__label is-inline">{% if project.last_deployment %}{{ project.last_deployment|human_date }}{% else %}Not yet deployed{% endif %}</span>
+                    </p>
+                </div>
+                <div class="column">
+                    <p class="heading">Last Deployed Author</p>
+                    <p>
+                        {% if project.last_sha %}{{ project.last_author }}{% else %}Not yet deployed{% endif %}
+                    </p>
+                </div>
+                <div class="column">
+                    <p class="heading">Last Deployed SHA</p>
+                    <p>
+                        {% if project.last_sha %}{{ sha_link(project, project.last_sha) }}{% else %}Not yet deployed{% endif %}
+                    </p>
+                </div>
             </div>
-            <div class="column">
-                <p class="heading">Default Branch</p>
-                <p>
-                    <span class="icon is-inline-block is-size-7"><i class="fas fa-code-branch"></i></span>
-                    <span class="is-inline-block">{{ branch_link(project) }}</span>
-                </p>
-            </div>
-            <div class="column status {% if project.last_status %}status--{{ project.last_status }}{% endif %}">
-                <p class="heading">Last Deployment</p>
-                <p>
-                    <span class="status__icon"></span>
-                    <span class="status__label is-inline">{% if project.last_deployment %}{{ project.last_deployment|human_date }}{% else %}Not yet deployed{% endif %}</span>
-                </p>
-            </div>
-            <div class="column">
-                <p class="heading">Last Deployed Author</p>
-                <p>
-                    {% if project.last_sha %}{{ project.last_author }}{% else %}Not yet deployed{% endif %}
-                </p>
-            </div>
-            <div class="column">
-                <p class="heading">Last Deployed SHA</p>
-                <p>
-                    {% if project.last_sha %}{{ sha_link(project, project.last_sha) }}{% else %}Not yet deployed{% endif %}
-                </p>
-            </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     {% if 0 < deployments|length %}
-    <div class="tabs is-boxed">
+    <div class="tabs tabs-fullwidth is-boxed">
         <ul>
             <!-- <li class="tabs-heading">Deployment:</li> -->
         {% set first = 0 %}
         {% for deployment in deployments %}
             {% if first == 0 %}{% set first = deployment.id %}{% endif %}
             <li class="tab-is-{{ deployment.status }} {% if selected_deployment.number == deployment.number %} is-active {% endif %}">
-                <a href="{{ path_for('project.view', { key: project.key }, { deployment: deployment.number } ) }}">#{{ deployment.number }}</a>
+                <a href="{{ path_for('project.view', { key: project.key }, { deployment: deployment.number } ) }}"><span>#</span>{{ deployment.number }}</a>
             </li>
         {% endfor %}
         </ul>
@@ -72,24 +80,6 @@ App.Monitor.init({
     <div class="deployment is-{{ selected_deployment.status }}">
         <section class="section">
             <div class="box" id="container-overview">
-            {% if not selected_deployment.reactivation %}
-            {% if selected_deployment.id != first and selected_deployment.deployed %}
-                <a class="button is-once is-block-mobile is-pulled-right confirm{% if not project.deployable %} tooltip is-tooltip-bottom{% endif %}>"
-                   {% if project.deployable %}href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}"{% endif %}
-                   {% if not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}>
-                    <span class="icon"><i class="fas fa-redo-alt"></i></span>
-                    <span>Re-Activate</span>
-                </a>
-            {% endif %}
-            {% elseif selected_deployment.original %}
-                <div class="is-text is-pulled-right">
-                    <span>Reactivation of #{{ selected_deployment.original.number }}</span>
-                </div>
-            {% else %}
-                <div class="is-text is-pulled-right">
-                    <span>Reactivation of previous deployment</span>
-                </div>
-            {% endif %}
                 <div class="columns">
                     <div class="column is-half">
                         <ul class="content-list">
@@ -132,6 +122,24 @@ App.Monitor.init({
                         </ul>
                     </div>
                 </div>
+            {% if not selected_deployment.reactivation %}
+            {% if selected_deployment.id != first and selected_deployment.deployed %}
+                <a class="button is-once is-fullwidth-mobile is-pulled-right-desktop confirm{% if not project.deployable %} tooltip is-tooltip-bottom{% endif %}>"
+                   {% if project.deployable %}href="{{ path_for('project.redeploy', { key: project.key, deployment: selected_deployment.id } )}}"{% endif %}
+                   {% if not project.deployable %}disabled="disabled" data-tooltip="Project is not currently deployable"{% endif %}>
+                    <span class="icon"><i class="fas fa-redo-alt"></i></span>
+                    <span>Re-Activate</span>
+                </a>
+            {% endif %}
+            {% elseif selected_deployment.original %}
+                <div class="is-text is-pulled-right">
+                    <span>Reactivation of #{{ selected_deployment.original.number }}</span>
+                </div>
+            {% else %}
+                <div class="is-text is-pulled-right">
+                    <span>Reactivation of previous deployment</span>
+                </div>
+            {% endif %}
             </div>
         </section>
 
