@@ -12,10 +12,12 @@
         </div>
         <div class="column is-narrow is-clearfix">
             <div class="field is-grouped is-pulled-right-mobile">
+            {% if show_backlink %}
                 <div class="control">
                     <a href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { key: project.key }) }}{% endif %}"
                        class="button">{% if not project.loaded %}Cancel{% else %}Back{% endif %}</a>
                 </div>
+            {% endif %}
                 <div class="control">
                     <a href="{{ path_for('user.favourite', { project: project.id }) }}"
                        class="button is-favourite is-favourite-{{ is_favourite(project) ? 'on' : 'off' }}"><span class="icon"><i class="{{ is_favourite(project) ? 'fas' : 'far' }} fa-star"></i></span></a>

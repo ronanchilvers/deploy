@@ -4,3 +4,9 @@
     display: block;
     width: 100%;
 }
+.is-fullwidth-mobile {
+    @include until($desktop) {
+        display: block;
+        width: 100%;
+    }
+}

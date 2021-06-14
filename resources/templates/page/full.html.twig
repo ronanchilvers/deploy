@@ -11,7 +11,7 @@
     </head>
     <body>
     {% if security.hasLogin() %}
-        <nav class="navbar" role="navigation" aria-label="main navigation">
+        <nav class="navbar is-dark is-fixed-top" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a class="navbar-item" href="/">
                     Deploy
@@ -70,7 +70,7 @@
         </nav>
     {% endif %}
         {{ include('fragments/notifications.html.twig') }}
-        <div id="main-wrapper" class="container is-fluid">
+        <div id="main-wrapper" class="container1 is-fluid">
             {% block body %}{% endblock %}
         </div>
     {% if security.hasLogin() %}

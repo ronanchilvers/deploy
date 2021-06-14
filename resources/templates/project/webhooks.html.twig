@@ -12,12 +12,13 @@ App.Deploy.init({
 <div class="project">
 
     {{ include('fragments/project/header.html.twig', {
-        project: project
+        project: project,
+        show_backlink: true,
     } )}}
 
     {{ include('fragments/project/tabs.html.twig', {
         project: project,
-        active: 'project.webhooks'
+        active: 'project.webhooks',
     } )}}
 
     <div class="box">

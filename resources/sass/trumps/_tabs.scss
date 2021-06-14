@@ -6,11 +6,44 @@
 // .tabs.is-boxed li.is-active a {
 //     background-color: #fafafa;
 // }
+.tabs-deployment {
+    background: rgb(240,240,240);
+
+    ul {
+        border-color: rgb(175, 175, 175) !important;
+    }
+    li:first-child {
+        padding-left: 2rem;
+    }
+    li:last-child {
+        padding-right: 2rem;
+    }
+    @include until($desktop) {
+        li:first-child {
+            padding-left: 0.5rem;
+        }
+        li:last-child {
+            padding-right: 0.5rem;
+        }
+    }
+}
 @each $status,$color in $status_colors {
     .tab-is-#{$status} {
-        // border-top: 1px solid $color !important;
         a {
             color: $color !important;
+            padding-right: 1.5rem;
+
+            span {
+                color: $grey-light !important;
+            }
+        }
+        a:hover {
+            background-color: rgb(250, 250, 250) !important;
+            border-bottom-color: rgb(175, 175, 175) !important;
+        }
+        &.is-active a {
+            border-color: rgb(175, 175, 175) !important;
+            background-color: rgb(250, 250, 250) !important;
         }
     }
 }
