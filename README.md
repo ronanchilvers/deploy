@@ -166,11 +166,11 @@ writables:
     - var/cache
     - var/uploads
 ```
-NB: Changing the writable mode used cannot be done via `deploy.yaml` but can be done in your local.yaml file with the following keys. Note that using '0777' is *never* recommended - if you need it, you should that that as a sign that your permission structure is wrong.
+NB: Changing the writable mode used cannot be done via `deploy.yaml` but can be done in your local.yaml file with the following keys. Note that using '0777' is *never* recommended - if you need it, you should take that as a sign that your permission structure is wrong.
 ```yaml
 build:
   chmod:
-    writable_folder: '0777'
+    writable_folder: '0770'
 ```
 
 * `clear_paths` - Define a list of files or folders that should be removed on deployment. This action happens right before activation (switching the new deployment live) and therefore its safe to delete files like composer.json / composer.lock / package.json, etc (unless you have a hook that needs them of course - see below). You can also remove the `deploy.yaml` file if you want to - its not required to be on disk.
