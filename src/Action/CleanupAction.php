@@ -26,7 +26,7 @@ class CleanupAction extends AbstractAction
         $thisDeployment    = $context->getOrThrow('deployment', 'Invalid or missing deployment');
         $deploymentBaseDir = $context->getOrThrow('deployment_base_dir', 'Invalid or missing deployment dir');
         $project           = $context->getOrThrow('project', 'Invalid or missing project');
-        $number            = $configuration->get('cleanup.keep_deployments', 5);
+        $number            = $project->keep_deployments;
         $deployments       = Orm::finder(Deployment::class)->earlierThan(
             $project,
             $number

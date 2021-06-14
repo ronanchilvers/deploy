@@ -184,12 +184,6 @@ clear_paths:
     - deploy.yaml
 ```
 
-- `cleanup` - Control how old releases are cleaned up after the deployment is completed. Currently the only key here is `keep_deployments` which allows you to set the number of old deployments to keep. This is limited only by disk space! The default is 5.
-```yaml
-cleanup:
-  keep_deployments: 10
-```
-
 ### Hooks
 
 `deploy` supports running arbitrary hooks before and after each deployment action. You can specify any CLI command and it will run using the permissions of the user your queue worker runs as via supervisor. The deployment actions are:
@@ -248,8 +242,6 @@ clear_paths:
     - deploy.yaml
   after:
     - /usr/bin/php vendor/bin/phinx migrate
-cleanup:
-  keep_deployments: 10
 ```
 
 ## Roadmap (sort of!)
