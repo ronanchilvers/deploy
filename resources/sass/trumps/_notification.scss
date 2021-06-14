@@ -1,0 +1,17 @@
+.notification-wrapper {
+    position: relative;
+    margin: 0 auto;
+    width: 40%;
+    z-index: 20;
+
+    @include until($desktop) {
+        width: 80%;
+    }
+}
+.notification {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 0;
+    min-height: 100px;
+}

@@ -34,6 +34,8 @@ class Project extends Model
 {
     use HasValidationTrait;
 
+    const DEFAULT_KEEP_DEPLOYMENTS = 5;
+
     static protected $finder       = ProjectFinder::class;
     static protected $columnPrefix = 'project';
 
@@ -59,11 +61,12 @@ class Project extends Model
     {
         $providerKeys = array_keys(Provider::getOptions());
         $this->registerRules([
-            'name'       => Validator::notEmpty(),
-            'provider'   => Validator::notEmpty()->in($providerKeys),
-            'repository' => Validator::notEmpty(),
-            'branch'     => Validator::notEmpty(),
-            'status'     => Validator::notEmpty()->in(['active', 'deploying']),
+            'name'             => Validator::notEmpty(),
+            'provider'         => Validator::notEmpty()->in($providerKeys),
+            'repository'       => Validator::notEmpty(),
+            'branch'           => Validator::notEmpty(),
+            'status'           => Validator::notEmpty()->in(['active', 'deploying']),
+            'keep_deployments' => Validator::notEmpty()->intVal()->min(1),
         ]);
     }
 
@@ -84,6 +87,16 @@ class Project extends Model
         }
         $this->key = $key;
         $this->status = 'active';
+    }
+
+    /**
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function beforeSave()
+    {
+        if (empty($this->keep_deployments)) {
+            $this->keep_deployments = static::DEFAULT_KEEP_DEPLOYMENTS;
+        }
     }
 
     /**

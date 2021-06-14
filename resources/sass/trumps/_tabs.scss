@@ -8,7 +8,9 @@
 // }
 .tabs-fullwidth {
     background: rgb(240,240,240);
-
+    background: linear-gradient(0, rgba(230,230,230,1) 0%,
+                                   rgba(240,240,240,1) 20%,
+                                   rgba(240,240,240,1) 100%);
     li:first-child {
         padding-left: 2rem;
     }

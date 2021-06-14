@@ -8,7 +8,7 @@ $(function () {
     });
     if (0<$('.notification').length) {
         setTimeout(function () {
-            $('.notification').slideUp(function () {
+            $('.notification').fadeOut(function () {
                 $(this).remove();
             });
         }, 3000);

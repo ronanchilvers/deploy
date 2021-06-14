@@ -35,6 +35,12 @@
         <p class="help is-danger" id="project_branch_error">{{ project.getError('branch')|join(', ') }}</p>
     </div>
 
+    <div class="field required {% if project.hasError('keep_deployments') %}errored{% endif %}">
+        <label class="label" for="project_keep_deployments">How many rollback deployments do you want to keep?</label>
+        <div class="control"><input class="input{% if project.hasError('keep_deployments') %} is-danger{% endif %}" type="text" placeholder="5" value="{{ project.keep_deployments}}" id="project_keep_deployments" name="project[keep_deployments]"></div>
+        <p class="help is-danger" id="project_keep_deployments_error">{{ project.getError('keep_deployments')|join(', ') }}</p>
+    </div>
+
     <div class="field is-grouped is-both-sides">
         {#<div class="control">
             <a class="button" href="{% if not project.loaded %}{{ path_for('project.index') }}{% else %}{{ path_for('project.view', { key: project.key }) }}{% endif %}">{% if not project.loaded %}Cancel{% else %}Back{% endif %}</a>
