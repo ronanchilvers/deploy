@@ -17,6 +17,7 @@ use Ronanchilvers\Utility\Str;
  * @property string password
  * @property string status
  * @property null|string preferences
+ * @property string level
  * @property null|\Carbon\Carbon created
  * @property null|\Carbon\Carbon updated
  * @author Ronan Chilvers <ronan@d3r.com>
@@ -25,6 +26,10 @@ class User extends Model
 {
     const STATUS_ACTIVE   = 'active';
     const STATUS_INACTIVE = 'inactive';
+    const STATUS_PENDING  = 'pending';
+
+    const LEVEL_USER      = 'user';
+    const LEVEL_ADMIN     = 'admin';
 
     use HasValidationTrait;
 
@@ -32,7 +37,8 @@ class User extends Model
     static protected $columnPrefix = 'user';
 
     protected $data = [
-        'user_status' => 'active',
+        'user_status' => 'pending',
+        'user_level'  => 'user',
     ];
 
     /**
@@ -52,7 +58,15 @@ class User extends Model
             'name'     => Validator::notEmpty(),
             'email'    => Validator::notEmpty()->email(),
             'password' => Validator::notEmpty(),
-            'status'   => Validator::notEmpty()->in([static::STATUS_INACTIVE, static::STATUS_ACTIVE]),
+            'status'   => Validator::notEmpty()->in([
+                static::STATUS_PENDING,
+                static::STATUS_INACTIVE,
+                static::STATUS_ACTIVE,
+            ]),
+            'level'   => Validator::notEmpty()->in([
+                static::LEVEL_USER,
+                static::LEVEL_ADMIN,
+            ]),
         ]);
         $this->registerRules([
             'password' => Validator::notEmpty(),

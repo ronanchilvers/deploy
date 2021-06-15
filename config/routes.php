@@ -5,9 +5,10 @@
 //   - $app
 
 use App\App;
-use App\Controller\ProjectController;
 use App\Controller\Project\ApiController;
 use App\Controller\Project\SettingsController;
+use App\Controller\ProjectController;
+use App\Controller\User\AdminController;
 use App\Controller\UserController;
 use App\Facades\Router;
 use Psr\Http\Message\ResponseInterface;
@@ -53,6 +54,7 @@ $app->group('/api/project', function(App $app) {
 $app->get('/d/{token}', ApiController::class . ':webhookDeploy')
     ->setName('project.webhook');
 
+// Individual user routes
 $app->group('/user', function(App $app) {
     $app->map(['GET', 'POST'], '/login', UserController::class . ':login')
         ->setName('user.login');
@@ -64,4 +66,10 @@ $app->group('/user', function(App $app) {
         ->setName('user.profile');
     $app->map(['GET', 'POST'], '/security', UserController::class . ':security')
         ->setName('user.security');
+});
+
+// User admin routes
+$app->group('/users', function(App $app) {
+    $app->map(['GET', 'POST'], '/list', AdminController::class . ':index')
+        ->setName('users.admin.index');
 });

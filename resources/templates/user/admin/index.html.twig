@@ -1,0 +1,7 @@
+{% extends 'layouts/user/admin.html.twig' %}
+
+{% block layout_body %}
+{% for user in users %}
+    {{  user.name  }}
+{% endfor %}
+{% endblock %}
