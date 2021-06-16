@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Model\Finder\UserFinder;
+use Carbon\Carbon;
 use Respect\Validation\Validator;
 use Ronanchilvers\Orm\Model;
 use Ronanchilvers\Orm\Traits\HasValidationTrait;
@@ -46,6 +47,7 @@ class User extends Model
      */
     protected function boot()
     {
+        $this->addType('datetime', 'last_login');
         $this->addType('array', 'preferences');
     }
 
@@ -71,6 +73,34 @@ class User extends Model
         $this->registerRules([
             'password' => Validator::notEmpty(),
         ], 'security');
+    }
+
+    /**
+     * Get the user level options for this user
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getLevelOptions(): array
+    {
+        return [
+            static::LEVEL_USER => static::LEVEL_USER,
+            static::LEVEL_ADMIN => static::LEVEL_ADMIN,
+        ];
+    }
+
+    /**
+     * Get the status options for this user
+     *
+     * @return array
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function getStatusOptions(): array
+    {
+        return [
+            static::STATUS_INACTIVE => static::STATUS_INACTIVE,
+            static::STATUS_ACTIVE   => static::STATUS_ACTIVE,
+        ];
     }
 
     /**
@@ -154,5 +184,17 @@ class User extends Model
         $this->password = password_hash($new, PASSWORD_DEFAULT);
 
         return true;
+    }
+
+    /**
+     * Record a last login timestamp
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function recordLogin(): bool
+    {
+        $this->last_login = Carbon::now();
+
+        return $this->save();
     }
 }

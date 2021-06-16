@@ -63,6 +63,7 @@ class Manager
                 'email' => $user->email,
             ]
         );
+        $user->recordLogin();
 
         return $user;
     }

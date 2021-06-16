@@ -4,7 +4,7 @@ declare(strict_types=1);
 use App\Model\User;
 use Phinx\Migration\AbstractMigration;
 
-final class UserLevel extends AbstractMigration
+final class UserManagement extends AbstractMigration
 {
     /**
      * Change Method.
@@ -25,6 +25,11 @@ final class UserLevel extends AbstractMigration
                 'length' => 16,
                 'null'   => false,
                 'after'  => 'user_preferences',
+            ])
+            ->addColumn('user_last_login', 'datetime', [
+                'null' => true,
+                'default' => null,
+                'after'  => 'user_level',
             ])
             ->update();
     }

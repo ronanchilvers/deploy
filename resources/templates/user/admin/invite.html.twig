@@ -1,0 +1,35 @@
+{% extends 'layouts/enclosed.html.twig' %}
+
+{% set layout_title = 'Invite Someone' %}
+{% set icon = 'envelope' %}
+
+{% block layout_body %}
+<form method="post" action="">
+    <div class="field required">
+        <div class="control">
+            <label class="label">Name</label>
+            <input class="input"
+                   type="text"
+                   value=""
+                   placeholder="Fred Bloggs"/>
+        </div>
+    </div>
+    <div class="field required">
+        <div class="control">
+            <label class="label">Email Address</label>
+            <input class="input"
+                   type="email"
+                   value=""
+                   placeholder="fred@example.com" />
+        </div>
+    </div>
+    <div class="field is-grouped is-both-sides">
+        <div class="control">
+            <a class="button" href="{{ path_for('users.admin.index') }}">Cancel</a>
+        </div>
+        <div class="control">
+            <button type="submit" class="button is-primary is-once">Send Invitation</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

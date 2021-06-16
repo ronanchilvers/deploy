@@ -70,6 +70,10 @@ $app->group('/user', function(App $app) {
 
 // User admin routes
 $app->group('/users', function(App $app) {
+
     $app->map(['GET', 'POST'], '/list', AdminController::class . ':index')
         ->setName('users.admin.index');
+    $app->map(['GET', 'POST'], '/invite', AdminController::class . ':invite')
+        ->setName('users.admin.invite');
+
 });

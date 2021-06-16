@@ -1,8 +1,11 @@
-{% extends 'page.html.twig' %}
+{% extends 'layouts/enclosed.html.twig' %}
 
-{% block body %}
+{% set layout_title = 'Add a project' %}
+{% set icon = 'plus-square' %}
+
+{% block layout_body %}
 <div class="project">
-    <header class="project-heading">
+{#     <header class="project-heading">
         <div class="columns">
             <div class="column">
                 <div class="columns is-mobile is-vcentered">
@@ -16,9 +19,9 @@
             </div>
         </div>
     </header>
-
-    <div class="box">
+ #}
+    {# <div class="box"> #}
         {% include 'fragments/project/form.html.twig' %}
-    </div>
+    {# </div> #}
 </div>
 {% endblock %}

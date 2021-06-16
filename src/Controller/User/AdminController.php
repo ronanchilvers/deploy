@@ -39,4 +39,20 @@ class AdminController
             ]
         );
     }
+
+    /**
+     * Invite a user
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function invite(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $args
+    ) {
+        return View::render(
+            $response,
+            'user/admin/invite.html.twig',
+        );
+    }
 }

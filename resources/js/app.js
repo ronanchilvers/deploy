@@ -30,6 +30,11 @@ $(function () {
         var $modal = $($(this).data('modal'));
         $modal.addClass('is-active');
     });
+    $('.modal').on('click', '.js-modal-close', function (e) {
+        e.preventDefault();
+        console.log(e.target, $(e.target).closest('.modal'));
+        $(e.target).closest('.modal').removeClass('is-active');
+    });
     $('.tabs').on('click', '.tab', function (e) {
         e.preventDefault();
         var $pane = $($(this).data('target'));
