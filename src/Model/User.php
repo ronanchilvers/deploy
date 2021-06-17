@@ -19,6 +19,7 @@ use Ronanchilvers\Utility\Str;
  * @property string status
  * @property null|string preferences
  * @property string level
+ * @property null|\Carbon\Carbon last_login
  * @property null|\Carbon\Carbon created
  * @property null|\Carbon\Carbon updated
  * @author Ronan Chilvers <ronan@d3r.com>
