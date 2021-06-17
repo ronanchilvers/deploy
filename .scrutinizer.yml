@@ -1,5 +1,6 @@
 tools:
   external_code_coverage: true
+  php_cs_fixer: false
 
 checks:
   php: true
