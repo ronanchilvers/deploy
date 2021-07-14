@@ -5,27 +5,31 @@
 
 {% block layout_body %}
 <form method="post" action="">
-    <div class="field required">
+    <div class="field required{% if user.hasError('name') %} errored{% endif %}">
         <div class="control">
             <label class="label">Name</label>
             <input class="input"
                    type="text"
-                   value=""
+                   value="{{ user.name }}"
+                   name="user[name]"
                    placeholder="Fred Bloggs"/>
+            <p class="help is-danger" id="user_name_error">{{ user.getError('name')|join(', ') }}</p>
         </div>
     </div>
-    <div class="field required">
+    <div class="field required{% if user.hasError('email') %} errored{% endif %}">
         <div class="control">
             <label class="label">Email Address</label>
             <input class="input"
-                   type="email"
-                   value=""
+                   type="text"
+                   value="{{ user.email }}"
+                   name="user[email]"
                    placeholder="fred@example.com" />
+            <p class="help is-danger" id="user_email_error">{{ user.getError('email')|join(', ') }}</p>
         </div>
     </div>
     <div class="field is-grouped is-both-sides">
         <div class="control">
-            <a class="button" href="{{ path_for('users.admin.index') }}">Cancel</a>
+            <a class="button" href="{{ path_for('users.index') }}">Cancel</a>
         </div>
         <div class="control">
             <button type="submit" class="button is-primary is-once">Send Invitation</button>

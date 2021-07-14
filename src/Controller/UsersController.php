@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\User;
+namespace App\Controller;
 
 use App\Facades\Router;
 use App\Facades\Security;
@@ -18,7 +18,7 @@ use RuntimeException;
  *
  * @author Ronan Chilvers <ronan@d3r.com>
  */
-class AdminController
+class UsersController
 {
     /**
      * Login action for users
@@ -33,26 +33,10 @@ class AdminController
 
         return View::render(
             $response,
-            'user/admin/index.html.twig',
+            'users/index.html.twig',
             [
                 'users' => $users,
             ]
-        );
-    }
-
-    /**
-     * Invite a user
-     *
-     * @author Ronan Chilvers <ronan@d3r.com>
-     */
-    public function invite(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        $args
-    ) {
-        return View::render(
-            $response,
-            'user/admin/invite.html.twig',
         );
     }
 }

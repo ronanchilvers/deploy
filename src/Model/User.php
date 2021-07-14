@@ -26,9 +26,9 @@ use Ronanchilvers\Utility\Str;
  */
 class User extends Model
 {
+    const STATUS_INVITED  = 'invited';
     const STATUS_ACTIVE   = 'active';
     const STATUS_INACTIVE = 'inactive';
-    const STATUS_PENDING  = 'pending';
 
     const LEVEL_USER      = 'user';
     const LEVEL_ADMIN     = 'admin';
@@ -39,7 +39,7 @@ class User extends Model
     static protected $columnPrefix = 'user';
 
     protected $data = [
-        'user_status' => 'pending',
+        'user_status' => 'invited',
         'user_level'  => 'user',
     ];
 
@@ -62,7 +62,7 @@ class User extends Model
             'email'    => Validator::notEmpty()->email(),
             'password' => Validator::notEmpty(),
             'status'   => Validator::notEmpty()->in([
-                static::STATUS_PENDING,
+                static::STATUS_INVITED,
                 static::STATUS_INACTIVE,
                 static::STATUS_ACTIVE,
             ]),
@@ -71,9 +71,23 @@ class User extends Model
                 static::LEVEL_ADMIN,
             ]),
         ]);
+
+        $this->registerRules([
+            'name'     => Validator::notEmpty(),
+            'email'    => Validator::notEmpty()->email(),
+        ], 'invitation');
+
         $this->registerRules([
             'password' => Validator::notEmpty(),
         ], 'security');
+    }
+
+    /**
+     * Override for beforeCreate model hook
+     */
+    public function beforeCreate(): void
+    {
+        $this->hash = Str::token(32);
     }
 
     /**
@@ -147,13 +161,35 @@ class User extends Model
      * @return boolean
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function verify($password)
+    public function verify(string $password): bool
     {
         if (!$this->isLoaded()) {
             return false;
         }
 
         return password_verify($password, $this->password);
+    }
+
+    /**
+     * Set the password for this user
+     *
+     * @param string $password
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function setPassword(string $password, string $confirm = null): bool
+    {
+        if (empty($password)) {
+            return false;
+        }
+        $password = trim($password);
+        if (!is_null($confirm) && trim($confirm) != $password) {
+            $this->addError('password', 'Password does not match confirmation');
+            return false;
+        }
+
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
+
+        return true;
     }
 
     /**
@@ -165,7 +201,7 @@ class User extends Model
      * @return bool
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function setNewPassword(string $old, string $new, string $confirm)
+    public function setNewPassword(string $old, string $new, string $confirm): bool
     {
         foreach (['old', 'new', 'confirm'] as $var) {
             $$var = trim($$var);
@@ -174,17 +210,7 @@ class User extends Model
             return false;
         }
 
-        if (empty($new)) {
-            return false;
-        }
-
-        if ($new !== $confirm) {
-            return false;
-        }
-
-        $this->password = password_hash($new, PASSWORD_DEFAULT);
-
-        return true;
+        return $this->setPassword($new, $confirm);
     }
 
     /**
@@ -197,5 +223,55 @@ class User extends Model
         $this->last_login = Carbon::now();
 
         return $this->save();
+    }
+
+    /**
+     * Is this user active?
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function isActive(): bool
+    {
+        return $this->status == static::STATUS_ACTIVE;
+    }
+
+    /**
+     * Is this user inactive?
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function isInvited(): bool
+    {
+        return $this->status == static::STATUS_INVITED;
+    }
+
+    /**
+     * Is this user an admin?
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function isAdmin(): bool
+    {
+        return static::LEVEL_ADMIN == $this->level;
+    }
+
+    /**
+     * Activate this user
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function activate()
+    {
+        $this->status = static::STATUS_ACTIVE;
+    }
+
+    /**
+     * Deactivate this user
+     *
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function deactivate()
+    {
+        $this->status = static::STATUS_INACTIVE;
     }
 }

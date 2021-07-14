@@ -5,11 +5,12 @@
 //   - $app
 
 use App\App;
+use App\Controller\ProjectController;
 use App\Controller\Project\ApiController;
 use App\Controller\Project\SettingsController;
-use App\Controller\ProjectController;
-use App\Controller\User\AdminController;
 use App\Controller\UserController;
+use App\Controller\UsersController;
+use App\Controller\Users\InvitationController;
 use App\Facades\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -71,9 +72,14 @@ $app->group('/user', function(App $app) {
 // User admin routes
 $app->group('/users', function(App $app) {
 
-    $app->map(['GET', 'POST'], '/list', AdminController::class . ':index')
-        ->setName('users.admin.index');
-    $app->map(['GET', 'POST'], '/invite', AdminController::class . ':invite')
-        ->setName('users.admin.invite');
+    // User administration
+    $app->map(['GET', 'POST'], '/list', UsersController::class . ':index')
+        ->setName('users.index');
+
+    // Invitations
+    $app->map(['GET', 'POST'], '/invitation/create', InvitationController::class . ':create')
+        ->setName('users.invite.create');
+    $app->map(['GET', 'POST'], '/invitation/{hash}', InvitationController::class . ':accept')
+        ->setName('users.invite');
 
 });

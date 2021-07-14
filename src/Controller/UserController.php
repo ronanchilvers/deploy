@@ -184,7 +184,7 @@ class UserController
                 if (!$user->setNewPassword($data['password'], $data['password_new'], $data['password_confirm'])) {
                     throw new RuntimeException('Invalid input');
                 }
-                if (!$user->saveWithValidation('password')) {
+                if (!$user->saveWithValidation('security')) {
                     throw new RuntimeException('Unable to save new password');
                 }
                 Session::flash([

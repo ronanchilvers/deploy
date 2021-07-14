@@ -12,6 +12,7 @@
     <body>
     {% if security.hasLogin() %}
         <nav class="navbar is-dark is-fixed-top" role="navigation" aria-label="main navigation">
+
             <div class="navbar-brand">
                 <a class="navbar-item" href="/">
                     Deploy
@@ -22,12 +23,13 @@
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                 </a>
-            </div>
+            </div> {# navbar-brand end #}
+
             <div id="navbar_menu" class="navbar-menu">
+
                 <div class="navbar-start">
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">Projects</a>
-
                         <div class="navbar-dropdown">
                             <div class="navbar-item"><strong>Favourites</strong></div>
                         {% set faves = current_favourites() %}
@@ -46,9 +48,8 @@
                             </a>
                         </div>
                     </div>
-
                     <a class="navbar-item" href="{{ path_for('project.add') }}" >Add Project</a>
-                </div>
+                </div> {# navbar-start end #}
 
                 <div class="navbar-end">
                     <div class="navbar-item has-dropdown is-hoverable">
@@ -59,8 +60,8 @@
                             <a href="{{ path_for('user.profile') }}" class="navbar-item">
                                 Account
                             </a>
-                            <a href="{{ path_for('users.admin.index') }}" class="navbar-item">
-                                Administer Users
+                            <a href="{{ path_for('users.index') }}" class="navbar-item">
+                                User Management
                             </a>
                             <hr class="navbar-divider">
                             <a href="{{ path_for('user.logout') }}" class="navbar-item">
@@ -68,8 +69,10 @@
                             </a>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div> {# navbar-end end #}
+
+            </div> {# navbar-menu end #}
+
         </nav>
     {% endif %}
         {{ include('fragments/notifications.html.twig') }}
@@ -83,6 +86,7 @@
             <button class="modal-close is-large js-modal-close" aria-label="close"></button>
         </div>
     {% endif %}
+
         <footer class="footer is-size-7">
             <div class="content has-text-centered">
                 <p>
@@ -95,6 +99,7 @@
                 </p>
             </div>
         </footer>
+
         <script type="text/javascript" src="/js/vendor.js"></script>
         <script type="text/javascript" src="/js/app.js"></script>
         <script type="text/javascript">
@@ -105,5 +110,6 @@
         {% if debug %}<script type="text/javascript">App.Debug.init({ enabled: true });</script>
         {% endif %}
         {% block javascripts %}{% endblock %}
+
     </body>
 </html>

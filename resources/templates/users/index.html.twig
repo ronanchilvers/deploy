@@ -1,0 +1,73 @@
+{% extends 'layouts/user/admin.html.twig' %}
+
+{% block layout_body %}
+
+<div class="box">
+    <form method="post" action="">
+        <table class="table is-striped is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Last Login</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>
+                        {{  user.name  }}
+                    {% if user.isAdmin() %}
+                        <span class="tag is-info is-light is-rounded">admin</span>
+                    {% endif %}
+                    </td>
+                    <td>{{  user.email  }}</td>
+                    <td>{{  user.last_login }}</td>
+                    <td>{{  user.status }}</td>
+                    {# <td>
+                        <div class="control">
+                            <div class="select">
+                                <select>
+                                {% for value, label in user.getLevelOptions() %}
+                                    <option
+                                        value="{{ value }}"
+                                        {% if value == user.level %} selected {% endif %}
+                                        >{{ label }}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </td> #}
+                    <td>
+                        <div class="dropdown is-right">
+                        {% if user.active %}
+                            <a class="button1 dropdown-trigger" aria-haspopup="true" aria-controls="dropdown-menu6">
+                                <span class="icon is-small">
+                                    <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" id="dropdown-menu6" role="menu">
+                                <div class="dropdown-content">
+                                    <a href="#" class="dropdown-item">Change to normal user</a>
+                                    <a href="#" class="dropdown-item">Disable account</a>
+                                </div>
+                            </div>
+                        {% elseif not user.invited %}
+                            <div class="dropdown-menu" id="dropdown-menu6" role="menu">
+                                <div class="dropdown-content">
+                                    <a href="#" class="dropdown-item">Enable account</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+</div>
+
+{% endblock %}

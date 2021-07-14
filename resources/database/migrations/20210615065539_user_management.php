@@ -26,10 +26,15 @@ final class UserManagement extends AbstractMigration
                 'null'   => false,
                 'after'  => 'user_preferences',
             ])
+            ->addColumn('user_hash', 'string', [
+                'length' => 32,
+                'null'   => false,
+                'after'  => 'user_level',
+            ])
             ->addColumn('user_last_login', 'datetime', [
                 'null' => true,
                 'default' => null,
-                'after'  => 'user_level',
+                'after'  => 'user_hash',
             ])
             ->update();
     }
