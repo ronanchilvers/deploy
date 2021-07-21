@@ -75,6 +75,10 @@ $app->group('/users', function(App $app) {
     // User administration
     $app->map(['GET', 'POST'], '/list', UsersController::class . ':index')
         ->setName('users.index');
+    $app->map(['GET'], '/toggle-level/{id}', UsersController::class . ':toggleLevel')
+        ->setName('users.toggle.level');
+    $app->map(['GET'], '/toggle-status/{id}', UsersController::class . ':toggleStatus')
+        ->setName('users.toggle.status');
 
     // Invitations
     $app->map(['GET', 'POST'], '/invitation/create', InvitationController::class . ':create')

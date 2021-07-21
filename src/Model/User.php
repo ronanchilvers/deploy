@@ -145,7 +145,7 @@ class User extends Model
      * @param mixed $value
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function setPreference($key, $value)
+    public function setPreference($key, $value): bool
     {
         $preferences       = $this->preferences;
         $preferences[$key] = $value;
@@ -256,11 +256,22 @@ class User extends Model
     }
 
     /**
+     * Toggle this user's level
+     *
+     * @return void
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function toggleLevel(): void
+    {
+        $this->level = ($this->isAdmin()) ? static::LEVEL_USER : static::LEVEL_ADMIN;
+    }
+
+    /**
      * Activate this user
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function activate()
+    public function activate(): void
     {
         $this->status = static::STATUS_ACTIVE;
     }
@@ -270,7 +281,7 @@ class User extends Model
      *
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function deactivate()
+    public function deactivate(): void
     {
         $this->status = static::STATUS_INACTIVE;
     }

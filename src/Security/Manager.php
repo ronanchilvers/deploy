@@ -202,4 +202,16 @@ class Manager
 
         return null;
     }
+
+    /**
+     * Is a given user currently logged in?
+     *
+     * @param \App\Model\User $user
+     * @return bool
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function isCurrent(User $user): bool
+    {
+        return $user->id == $this->id();
+    }
 }
