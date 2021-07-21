@@ -56,7 +56,7 @@ class ProjectController
 
         return View::render(
             $response,
-            'project/index.html.twig',
+            '@web/project/index.html.twig',
             [
                 'favourites' => $favourites,
                 'projects'   => $projects
@@ -103,7 +103,7 @@ class ProjectController
 
         return View::render(
             $response,
-            'project/view.html.twig',
+            '@web/project/view.html.twig',
             [
                 'project'             => $project,
                 'deployments'         => $deployments,
@@ -141,7 +141,7 @@ class ProjectController
 
         return View::render(
             $response,
-            'project/add.html.twig',
+            '@web/project/add.html.twig',
             [
                 'project' => $project,
                 'providers' => Provider::getOptions(),
@@ -181,7 +181,7 @@ class ProjectController
 
         return View::render(
             $response,
-            'project/edit.html.twig',
+            '@web/project/edit.html.twig',
             [
                 'project' => $project,
                 'providers' => Provider::getOptions(),
@@ -209,7 +209,7 @@ class ProjectController
 
         return View::render(
             $response,
-            'project/prepare-deploy.html.twig',
+            '@web/project/prepare-deploy.html.twig',
             [
                 'project'       => $project,
                 'tags_branches' => $tagsBranches,

@@ -1,24 +1,10 @@
-{% extends 'page.html.twig' %}
+{% extends 'layouts/enclosed.html.twig' %}
 
-{% block body %}
+{% set layout_title = 'Add a project' %}
+{% set icon = 'plus' %}
+
+{% block layout_body %}
 <div class="project">
-    <header class="project-heading">
-        <div class="columns">
-            <div class="column">
-                <div class="columns is-mobile is-vcentered">
-                    <div class="column is-narrow">
-                        <span class="icon is-inline-block is-size-3"><i class="far fa-plus-square"></i></span>
-                    </div>
-                    <div class="column is-narrow">
-                        <h1 class="is-size-3">Add project</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="box">
-        {% include 'fragments/project/form.html.twig' %}
-    </div>
+    {% include 'fragments/project/form.html.twig' %}
 </div>
 {% endblock %}

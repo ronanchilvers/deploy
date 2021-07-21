@@ -8,10 +8,18 @@
             <div class="column">
                 <div class="columns is-mobile is-vcentered">
                     <div class="column is-narrow">
-                        <span class="icon is-inline-block is-size-3"><i class="fas fa-user-circle"></i></span>
+                        <span class="icon is-inline-block is-size-3"><i class="fas fa-users"></i></span>
                     </div>
                     <div class="column is-narrow">
-                        <h1 class="is-size-3">Your account</h1>
+                        <h1 class="is-size-3">Administer Users</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-narrow is-clearfix">
+                <div class="field is-grouped is-pulled-right-mobile">
+                    <div class="control">
+                        <a class="button is-primary"
+                           href="{{ path_for('users.invite.create') }}">Invite Someone</a>
                     </div>
                 </div>
             </div>
@@ -20,13 +28,13 @@
 </div>
 {# <div class="columns"> #}
     {# <div class="column is-2"> #}
-        <div class="tabs tabs-fullwidth is-boxed is-vertical1">
+        {# <div class="tabs tabs-fullwidth is-boxed is-vertical1">
             <ul>
             {% for route,label in tabs %}
                 <li{% if 'user.' ~ route == current_route %} class="is-active"{% endif %}><a href="{{ path_for('user.' ~ route) }}">{{ label }}</a></li>
             {% endfor %}
             </ul>
-        </div>
+        </div> #}
     {# </div> #}
     {# <div class="column"> #}
         {% block layout_body %}{% endblock %}

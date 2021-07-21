@@ -20,7 +20,8 @@
         "slim/twig-view": "^2.3",
         "symfony/console": "^5.0",
         "symfony/process": "^5.0",
-        "symfony/yaml": "^5.0"
+        "symfony/yaml": "^5.0",
+        "swiftmailer/swiftmailer": "^6.2"
     },
     "require-dev": {
         "jakub-onderka/php-parallel-lint": "^1.0",

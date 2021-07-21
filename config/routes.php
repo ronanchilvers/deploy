@@ -9,6 +9,8 @@ use App\Controller\ProjectController;
 use App\Controller\Project\ApiController;
 use App\Controller\Project\SettingsController;
 use App\Controller\UserController;
+use App\Controller\UsersController;
+use App\Controller\Users\InvitationController;
 use App\Facades\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,6 +55,7 @@ $app->group('/api/project', function(App $app) {
 $app->get('/d/{token}', ApiController::class . ':webhookDeploy')
     ->setName('project.webhook');
 
+// Individual user routes
 $app->group('/user', function(App $app) {
     $app->map(['GET', 'POST'], '/login', UserController::class . ':login')
         ->setName('user.login');
@@ -64,4 +67,23 @@ $app->group('/user', function(App $app) {
         ->setName('user.profile');
     $app->map(['GET', 'POST'], '/security', UserController::class . ':security')
         ->setName('user.security');
+});
+
+// User admin routes
+$app->group('/users', function(App $app) {
+
+    // User administration
+    $app->map(['GET', 'POST'], '/list', UsersController::class . ':index')
+        ->setName('users.index');
+    $app->map(['GET'], '/toggle-level/{id}', UsersController::class . ':toggleLevel')
+        ->setName('users.toggle.level');
+    $app->map(['GET'], '/toggle-status/{id}', UsersController::class . ':toggleStatus')
+        ->setName('users.toggle.status');
+
+    // Invitations
+    $app->map(['GET', 'POST'], '/invitation/create', InvitationController::class . ':create')
+        ->setName('users.invite.create');
+    $app->map(['GET', 'POST'], '/invitation/{hash}', InvitationController::class . ':accept')
+        ->setName('users.invite');
+
 });

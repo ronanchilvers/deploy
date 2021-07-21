@@ -64,7 +64,7 @@ class SettingsController
 
         return View::render(
             $response,
-            'project/edit.html.twig',
+            '@web/project/edit.html.twig',
             [
                 'project' => $project,
                 'providers' => Provider::getOptions(),
@@ -104,7 +104,7 @@ class SettingsController
 
         return View::render(
             $response,
-            'project/webhooks.html.twig',
+            '@web/project/webhooks.html.twig',
             [
                 'project' => $project,
                 'providers' => Provider::getOptions(),

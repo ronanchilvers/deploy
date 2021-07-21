@@ -19,6 +19,9 @@ $divider-thickness: 0.05rem;
 // Notifications
 $notification-radius: 2px;
 
+$table-head-cell-border-width: 0 0 1px;
+$table-foot-cell-border-width: 1px 0 0;
+
 // Project / release settings
 $status_colors: (
     'pending': rgba(100,100,100,1),

@@ -15,13 +15,16 @@ database:
 # You can run 'php vendor/bin/vendor/bin/generate-defuse-key' to create a unique key
 session:
   encryption.key: "<generated_defuse_encryption_key>"
+  # If you are not using SSL/TLS you will need to disable secure cookies. It is
+  # STRONGLY recommended that you DO use SSL/TLS in production however.
+  # secure: false
 
-# This is the base directory that all deployments will be created in
+# This is the base directory in which all deployments will be created
 build:
   base_dir: <base_directory_for_all_deployments>
 
 # This is where you can set the access tokens for the code providers. You don't
-# have to set them all - only the ones you intend to use
+# have to set them all - only the ones you intend to use
 providers:
   github:
     token: <github_personal_access_token>
