@@ -60,7 +60,7 @@ class UserController
 
         return View::render(
             $response,
-            'user/login.html.twig',
+            '@web/user/login.html.twig',
             [
                 'user' => $user,
             ]
@@ -158,7 +158,7 @@ class UserController
 
         return View::render(
             $response,
-            'user/profile.html.twig',
+            '@web/user/profile.html.twig',
             [
                 'title'         => 'Profile',
                 'current_route' => 'user.profile',
@@ -205,7 +205,7 @@ class UserController
 
         return View::render(
             $response,
-            'user/security.html.twig',
+            '@web/user/security.html.twig',
             [
                 'title'         => 'Security',
                 'current_route' => 'user.security',

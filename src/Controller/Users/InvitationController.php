@@ -2,10 +2,12 @@
 
 namespace App\Controller\Users;
 
+use App\Facades\Mail;
 use App\Facades\Router;
 use App\Facades\Security;
 use App\Facades\Session;
 use App\Facades\View;
+use App\Mail\User\InvitationMail;
 use App\Model\User;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -38,6 +40,9 @@ class InvitationController
                 Session::flash([
                     'heading' => 'Invitation created'
                 ]);
+                Mail::send(
+                    new InvitationMail($user)
+                );
                 return $response->withRedirect(
                     Router::pathFor('users.index')
                 );
@@ -46,7 +51,7 @@ class InvitationController
 
         return View::render(
             $response,
-            'users/invitations/create.html.twig',
+            '@web/users/invitations/create.html.twig',
             [
                 'user' => $user,
             ]
@@ -96,7 +101,7 @@ class InvitationController
 
         return View::render(
             $response,
-            'users/invitations/accept.html.twig',
+            '@web/users/invitations/accept.html.twig',
             [
                 'user' => $user,
             ]

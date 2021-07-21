@@ -33,7 +33,7 @@ class UsersController
 
         return View::render(
             $response,
-            'users/index.html.twig',
+            '@web/users/index.html.twig',
             [
                 'users' => $users,
             ]

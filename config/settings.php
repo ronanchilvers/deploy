@@ -20,7 +20,10 @@ $settings = [
 
     // Twig
     'twig' => [
-        'templates' => __DIR__ . '/../resources/templates',
+        'templates' => [
+            'web'    => __DIR__ . '/../resources/templates',
+            'emails' => __DIR__ . '/../resources/emails',
+        ],
         'cache' => false,
     ],
 
@@ -45,6 +48,23 @@ $settings = [
         'port'          => 11300,
         'default.queue' => 'deploy',
         'timeout'       => 2,
+    ],
+
+    // Emails
+    'mail' => [
+
+        'transport' => [
+            'host'       => 'smtp.mailtrap.io',
+            'port'       => 587,
+            'username'   => '7a66388ce93347',
+            'password'   => '3a2601de65e889',
+            'tls'        => true,
+        ],
+
+        'options' => [
+            'from'      => 'no-reply@deploy',
+            'from_name' => 'deploy',
+        ]
     ],
 
     // Deployment settings
