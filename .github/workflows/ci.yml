@@ -14,6 +14,9 @@ jobs:
           - php-versions: '8.0'
             operating-system: 'ubuntu-latest'
             experimental: true
+          - php-versions: '8.1'
+            operating-system: 'ubuntu-latest'
+            experimental: true
     name: PHP ${{ matrix.php-versions }}
     steps:
     - name: Checkout codebase
