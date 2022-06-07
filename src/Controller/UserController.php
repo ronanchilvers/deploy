@@ -60,7 +60,7 @@ class UserController
 
         return View::render(
             $response,
-            'user/login.html.twig',
+            '@web/user/login.html.twig',
             [
                 'user' => $user,
             ]
@@ -158,7 +158,7 @@ class UserController
 
         return View::render(
             $response,
-            'user/profile.html.twig',
+            '@web/user/profile.html.twig',
             [
                 'title'         => 'Profile',
                 'current_route' => 'user.profile',
@@ -184,7 +184,7 @@ class UserController
                 if (!$user->setNewPassword($data['password'], $data['password_new'], $data['password_confirm'])) {
                     throw new RuntimeException('Invalid input');
                 }
-                if (!$user->saveWithValidation('password')) {
+                if (!$user->saveWithValidation('security')) {
                     throw new RuntimeException('Unable to save new password');
                 }
                 Session::flash([
@@ -205,7 +205,7 @@ class UserController
 
         return View::render(
             $response,
-            'user/security.html.twig',
+            '@web/user/security.html.twig',
             [
                 'title'         => 'Security',
                 'current_route' => 'user.security',

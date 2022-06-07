@@ -20,6 +20,7 @@ use Ronanchilvers\Utility\Str;
  * @property string provider
  * @property string repository
  * @property string branch
+ * @property string keep_deployments
  * @property string status
  * @property int last_number
  * @property null|\Carbon\Carbon last_deployment

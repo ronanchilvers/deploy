@@ -13,4 +13,17 @@ use ClanCats\Hydrahon\Query\Expression;
  */
 class UserFinder extends Finder
 {
+    /**
+     * Get a user by hash
+     *
+     * @param string $hash
+     * @return \App\Model\User
+     * @author Ronan Chilvers <ronan@d3r.com>
+     */
+    public function forHash($hash)
+    {
+        return $this->select()
+            ->where(User::prefix('hash'), $hash)
+            ->one();
+    }
 }

@@ -24,11 +24,11 @@ App.Deploy.init({
     } )}}
 
     <section class="section">
-        <div class="box">
+        {# <div class="box"> #}
             <p class="is-size-4">Webhook Deployments</p>
             <p>The deployment webhook url for this project is:</p>
             <p><code>{{ request.uri.scheme }}://{{ request.header('host')[0] }}{{ path_for('project.webhook', { token: project.token })}}</code></p>
-        </div>
+        {# </div> #}
     </section>
 
 </div>

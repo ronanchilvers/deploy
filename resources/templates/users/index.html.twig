@@ -1,0 +1,56 @@
+{% extends 'layouts/user/admin.html.twig' %}
+
+{% block layout_body %}
+
+<div class="box">
+    <form method="post" action="">
+        <table class="table is-striped is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Last Login</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.name  }}</td>
+                    <td>{{ user.email  }}</td>
+                    <td>{{ user.last_login }}</td>
+                    <td>{% if user.isAdmin() %}Admin{% else %}Standard{% endif %}</td>
+                    <td>{{ user.status }}</td>
+                    <td>
+                    {% if not security.isCurrent(user) %}
+                        <div class="dropdown is-hoverable is-right">
+                            <a class="button1 dropdown-trigger" aria-haspopup="true" aria-controls="dropdown-menu6">
+                                <span class="icon is-small">
+                                    <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" id="dropdown-menu6" role="menu">
+                                <div class="dropdown-content">
+                                {% if user.active %}
+                                    <a href="{{ path_for('users.toggle.level', { id: user.id })}}" class="dropdown-item">
+                                        {% if user.isAdmin() %}Demote to standard user{% else %}Promote to admin user{% endif %}
+                                    </a>
+                                {% endif %}
+                                    <a href="{{ path_for('users.toggle.status', { id: user.id })}}" class="dropdown-item">
+                                        {% if not user.active or user.invited %}Enable account{% else %}Disable account{% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+</div>
+
+{% endblock %}
