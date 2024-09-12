@@ -8,13 +8,13 @@ jobs:
       fail-fast: true
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['7.3', '7.4']
+        php-versions: ['8.0', '8.2']
         experimental: [false]
         include:
-          - php-versions: '8.0'
+          - php-versions: '8.1'
             operating-system: 'ubuntu-latest'
             experimental: true
-          - php-versions: '8.1'
+          - php-versions: '8.3'
             operating-system: 'ubuntu-latest'
             experimental: true
     name: PHP ${{ matrix.php-versions }}
