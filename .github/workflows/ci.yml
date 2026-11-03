@@ -46,7 +46,7 @@ jobs:
     - name: Run Testsuite
       run: vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover build/clover.xml
     - name: Upload coverage data
-      if: matrix.php-versions == '7.4'
+      if: matrix.php-versions == '8.4'
       run: |
         wget https://scrutinizer-ci.com/ocular.phar
         php ocular.phar code-coverage:upload --format=php-clover build/clover.xml

@@ -7,7 +7,7 @@ checks:
 build:
   environment:
     php:
-      version: 7.4.19
+      version: 8.4
   nodes:
     analysis:
       tests:
