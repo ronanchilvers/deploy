@@ -55,7 +55,7 @@ class TestCase extends BaseTestCase
     protected function mockContainer($data = null)
     {
         $builder = $this->getMockBuilder('Psr\Container\ContainerInterface')
-                     ->setMethods(['get', 'has']);
+                     ->onlyMethods(['get', 'has']);
         $mock = $builder->getMock();
         if (is_array($data)) {
             if (!array_key_exists(LoggerInterface::class, $data)) {
